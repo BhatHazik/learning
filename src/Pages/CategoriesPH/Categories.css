@@ -1,0 +1,21 @@
+.thumbnail-category{
+    height: 12rem;
+    object-fit: cover;
+}
+.cardClick {
+    transform-style: preserve-3d;
+  transform: scale(var(--s, 1)) perspective(600px)
+    rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  perspective: 600px;
+  transition: transform 0.7s;
+}
+.cardClick:active{
+    transition: 0.7s;
+  transform: scale(0.98);
+}
+
+@media screen and (max-width: 768px) {
+    .thumbnail-category{
+        height: 8rem;
+    }
+}

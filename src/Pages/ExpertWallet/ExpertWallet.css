@@ -1,0 +1,27 @@
+/* CSS file for SweetAlert2 customization */
+.custom-popup {
+    background: rgba(255, 255, 255, 0) !important; /* Transparent background */
+    box-shadow: none !important; /* Remove shadow if needed */
+  }
+  
+  .cancel-button {
+    box-shadow: 0px 0px 4px 0.2px #00000040;
+    background: #f0f0f0; /* Custom background color */
+    border-radius: 0.25rem; /* Rounded corners */
+    cursor: pointer;
+    padding: 0.5rem;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .send-request-button {
+    box-shadow: 0px 0px 4px 0.2px #00000040;
+    background: linear-gradient(91.96deg, #0C243C 0%, #7E8C9C 100%); /* Gradient background */
+    border-radius: 0.25rem; /* Rounded corners */
+    color: white;
+    cursor: pointer;
+    padding: 0.5rem;
+    display: flex;
+    justify-content: center;
+  }
+  

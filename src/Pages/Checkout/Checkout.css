@@ -1,0 +1,27 @@
+body {
+  background-color: #f8f9fa;
+}
+
+h2,
+h5 {
+  font-weight: bold;
+}
+
+.form-group label {
+  font-weight: 500;
+}
+
+.form-check-label {
+  font-weight: 500;
+}
+
+.summary h5 {
+  font-weight: bold;
+}
+.text-muted-custom {
+  font-size: 12px;
+  font-weight: 300;
+  line-height: 14.4px;
+  letter-spacing: 0.05em;
+  text-align: left;
+}

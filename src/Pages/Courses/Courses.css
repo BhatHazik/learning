@@ -1,0 +1,320 @@
+.wrapper-courses {
+  width: 100%;
+  /* padding: 0; */
+}
+
+.top-courses {
+  height: 10vh;
+  /* background-color: black; */
+  width: 100%;
+  display: flex;
+  margin-top: 5vh;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 1.5vw 0 1.5vw;
+}
+.top-courses h4 {
+  font-weight: 700;
+  font-size: 1.6rem; /* Converted */
+}
+.top-button {
+  padding: 0.5rem 0.5rem;
+  background-color: white;
+  width: max-content;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 0.26vw;
+  cursor: pointer;
+}
+.top-button h6 {
+  font-weight: 400;
+  font-size: 1rem; /* Converted */
+  color: black;
+}
+.bottom-courses {
+  /* padding: 0 2vw 0 1.5vw; */
+  margin-top: 2vh;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5vw; /* Adjust the gap between items */
+  margin-bottom: 4vh;
+}
+.card-bottom-courses {
+  /* height: ; */
+  /* width: 17vw; */
+  background-color: white;
+  border-radius: 0.5vw;
+  padding: 3%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1.1vh;
+}
+.card-bottom-courses:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+.card-bottom-courses img {
+  /* height: 20vh; */
+  height: 11vw;
+  width: 100%;
+  border-radius: 0.5vw;
+  object-fit: cover;
+}
+.middle-sec-card-courses {
+  /* height: 4vh; */
+  display: flex;
+  justify-content: space-between;
+  margin-top: 3%;
+  /* background-color: blue; */
+}
+.middle-sec-card-courses div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5vw;
+}
+.addCourse-card-courses {
+  height: 100%;
+  width: max-content;
+  padding: 0 0.5vw;
+  background: linear-gradient(97.89deg, #0c243c 0%, #7e8c9c 95.36%);
+  border-radius: 0.26vw;
+  color: white;
+}
+.card-bottom-courses h6 {
+  font-weight: 300;
+  font-size: 0.9rem; /* Converted */
+}
+.middle-sec-card-courses h5 {
+  font-weight: 400;
+  font-size: 1rem; /* Converted */
+}
+.pricing-card-courses h5{
+  display: flex;
+  align-items: center;
+}
+.pricing-card-courses h5:first-child {
+  text-decoration: line-through;
+  color: #7e8c9c;
+  font-size: 0.7rem;
+}
+.card-bottom-courses p {
+  font-size: 0.75rem; /* Converted */
+  font-weight: 300;
+  margin-top: 0.5vh;
+}
+.card-bottom-courses h5 {
+  font-size: 1rem; /* Converted */
+  /* height: 3.5vh; */
+  height: 2vw;
+}
+.card-bottom-courses h4 {
+  font-size: 0.9rem; /* Converted */
+  font-weight: 400;
+  /* height: 7vh; */
+  margin-bottom: 2vw;
+}
+.no-courses-courses {
+  height: 40vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 2vh;
+}
+.no-courses-courses div {
+  background: linear-gradient(95.64deg, #0c243c 0.92%, #7e8c9c 70.85%);
+  height: 100%;
+  width: 90%;
+  border-radius: 1.67vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1vw;
+  color: white;
+  padding: 0vw 12vw 0vw 12vw;
+}
+.add-icon-courses {
+  font-size: 3.5rem;
+  /* height: 25%; */
+  cursor: pointer;
+}
+.no-courses-courses div h5 {
+  font-weight: 100;
+  text-align: center;
+  font-size: 1.25rem; /* Converted */
+}
+.no-courses-courses div h1 {
+  font-weight: 400;
+  font-size: 2rem; /* Converted */
+}
+
+/* Shimmer effect */
+@keyframes shimmer {
+  0% {
+    background-position: -100% 0;
+  }
+  100% {
+    background-position: 100% 0;
+  }
+}
+
+.shimmer-card-courses {
+  background-color: #f0f0f0;
+  background-image: linear-gradient(
+    90deg,
+    #f0f0f0 0px,
+    #e0e0e0 40px,
+    #f0f0f0 80px
+  );
+  background-size: 200% 100%;
+  animation: shimmer 3s infinite;
+  border-radius: 8px;
+  padding: 16px;
+  width: 17vw;
+  height: 47.5vh;
+  padding-top: 25vh;
+}
+
+.shimmer-content-courses {
+  background-color: #e0e0e0;
+  height: 20px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+}
+
+.shimmer-content.short-courses {
+  width: 40%;
+}
+
+.shimmer-content-courses.medium {
+  width: 80%;
+}
+
+.shimmer-content-courses.long {
+  width: 100%;
+}
+
+@media (max-width:1200px){
+  .card-bottom-courses img {
+    height: 12vw;
+}
+.middle-sec-card-courses {
+  height: 3vw;
+}
+.card-bottom-courses h5 {
+  height: 3vw;
+}
+/* .card-bottom-courses h4 {
+  height: 5vw;
+} */
+}
+
+@media (max-width:1010px){
+  .bottom-courses {
+
+    grid-template-columns: repeat(3, 1fr);
+ 
+}
+.card-bottom-courses img {
+  height: 20vw;
+}
+.middle-sec-card-courses {
+  height: 4vw;
+}
+.card-bottom-courses h5 {
+  height: 3.5vw;
+}
+/* .card-bottom-courses h4 {
+  height: 8vw;
+} */
+}
+
+@media (max-width:840px){
+  .shimmer-card-usercourses.shimmer-learning{
+    height:2rem;
+    width:100%
+  }
+}
+@media (max-width: 768px) {
+  .top-courses {
+    margin: 0;
+  }
+  .top-button{
+    border-radius: 0.4rem;
+  }
+  .bottom-courses {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .categories-courses {
+    padding-inline: 0.8rem;
+  }
+ 
+  .card-bottom-courses{
+    border-radius: 0.5rem;
+  }
+  .addCourse-card-courses{
+    border-radius: 0.3rem;
+    padding: 0.7rem 0.5rem;
+  }
+    .card-bottom-courses img {
+        height: 22vw;
+        border-radius: 0.5rem;
+    }
+    .middle-sec-card-courses {
+      height: 5vw;
+    
+  }
+  .card-bottom-courses h5 {
+    height: 5vw;
+}
+/* .card-bottom-courses h4 {
+  height: 9vw;
+} */
+}
+
+@media (max-width: 530px) {
+  .bottom-courses {
+    grid-template-columns: repeat(1, 1fr);
+  }
+  .card-bottom-courses{
+    /* width: 90vw; */
+    width: 80vw;
+    gap: 1rem;
+  }
+  .card-bottom-courses  img{
+    height: 23vh;
+  }
+  .no-courses-courses  div{
+    width: 90%;
+    height: max-content;
+    padding: 2.5rem 3rem;
+  }
+  .no-courses-courses  div h1{
+    font-size: 1.1rem;
+  }
+  .bottom-courses{
+    justify-content: center;
+    align-items: center;
+    padding-left: 2rem;
+    padding-right: 1rem;
+    
+  }
+  .card-bottom-courses img {
+    height: 43vw;
+}
+.middle-sec-card-courses {
+  height: 5vw;
+}
+.card-bottom-courses h5 {
+  height: 4vw;
+}
+.card-bottom-courses h4 {
+  height: 12vw;
+}
+}

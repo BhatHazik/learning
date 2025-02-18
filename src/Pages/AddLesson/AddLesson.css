@@ -1,0 +1,12 @@
+.addlesson-content{
+    display: flex;
+}
+
+
+@media (max-width:600px) {
+  .addlesson-content {
+    flex-direction: column;
+    gap: 1rem;
+
+  }
+}

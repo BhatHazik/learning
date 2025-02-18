@@ -1,0 +1,347 @@
+.navbar {
+  width: calc(100% - 250px);
+  height: 60px;
+  color: #fff;
+  position: fixed;
+  top: 0;
+  left: 250px;
+
+  transition: left 0.3s ease, width 0.3s ease;
+  background: #FAF9F6;
+}
+
+.search-input {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  
+  position: relative;
+}
+
+.search-icon {
+  color: #aaa;
+
+  height: 44px;
+}
+
+.navbar-input {
+  width: 100%;
+  padding-left: 35px;
+  /* height: 100%; */
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: 400;
+  border: 1px solid #7e8c9c;
+}
+
+input::placeholder {
+  color: rgba(158, 158, 158, 1);
+  font-size: 18px;
+  opacity: 1;
+}
+
+.navbar.collapsed {
+  width: calc(100% - 80px);
+  left: 80px;
+}
+
+.navbar-item:hover {
+  color: #ddd;
+}
+
+.profile-bar {
+  overflow-y: scroll;
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 20rem;
+  min-height: 100vh;
+  height: 100%;
+  background-color: white;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+  transform: translateX(100%);
+  transition: transform 0.5s ease;
+  z-index: 1000;
+}
+
+.profile-bar.open {
+  transform: translateX(0);
+}
+
+.profile-picture-container {
+  position: relative;
+  display: inline-block;
+}
+
+.profile-picture {
+  object-fit: cover;
+  border-radius: 50%;
+  position: relative;
+  z-index: 1;
+  /* background-color: blue; */
+  /* height: 3rem; */
+  /* width: 3rem; */
+}
+
+.completion-bar {
+  position: absolute;
+  top: -7.6%;
+  left: -7.5%;
+  width: 115%;
+  height: 115%;
+  border-radius: 50%;
+  z-index: 0;
+}
+.cart-container {
+  position: relative;
+  display: inline-block;
+}
+
+.cart-icon {
+  width: 3rem;
+  height: 3rem;
+}
+
+.cart-badge {
+  position: absolute;
+  top: 0;
+  left: 72px;
+  width: 1rem;
+  height: 1rem;
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  font-weight: bold;
+  transform: translate(-50%, -50%);
+}
+
+/* From Uiverse.io by cssbuttons-io */ 
+.learn-more {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  outline: none;
+  border: 0;
+  vertical-align: middle;
+  text-decoration: none;
+  background: transparent;
+  padding: 0;
+  font-size: inherit;
+  font-family: inherit;
+ }
+ 
+.learn-more {
+  width: 15rem;
+  height: auto;
+ }
+ 
+ .learn-more .circle {
+  transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+  position: relative;
+  display: block;
+  margin: 0;
+  width: 3rem;
+  height: 3rem;
+  background: linear-gradient(90.83deg, #0C243C 0%, #7E8C9C 100%);
+  border-radius: 1.625rem;
+ }
+ 
+.learn-more .circle .icon {
+  transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  background: #fff;
+ }
+ 
+ .learn-more .circle .icon.arrow {
+  transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+  left: 0.625rem;
+  width: 1.125rem;
+  height: 0.125rem;
+  background: none;
+ }
+ 
+ .learn-more .circle .icon.arrow::before {
+  position: absolute;
+  content: "";
+  top: -0.29rem;
+  right: 0.0625rem;
+  width: 0.625rem;
+  height: 0.625rem;
+  border-top: 0.125rem solid #fff;
+  border-right: 0.125rem solid #fff;
+  transform: rotate(45deg);
+ }
+ 
+ .learn-more .button-text {
+  transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 0.75rem 0;
+  margin: 0 0 0 1.85rem;
+  color: #282936;
+  font-weight: 700;
+  line-height: 1.6;
+  text-align: center;
+  text-transform: uppercase;
+ }
+ 
+ .learn-more:hover .circle {
+  width: 100%;
+ }
+ 
+ .learn-more:hover .circle .icon.arrow {
+  background: #fff;
+  transform: translate(1rem, 0);
+ }
+ 
+ .learn-more:hover .button-text {
+  color: #fff;
+ }
+
+ 
+/* From Uiverse.io by cssbuttons-io */ 
+.learn-more-user {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  outline: none;
+  border: 0;
+  vertical-align: middle;
+  text-decoration: none;
+  background: transparent;
+  padding: 0;
+  font-size: inherit;
+  font-family: inherit;
+ }
+ 
+.learn-more-user {
+  width: 15rem;
+  height: auto;
+ }
+ 
+ .learn-more-user .circle {
+  transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+  position: relative;
+  display: block;
+  margin: 0;
+  width: 3rem;
+  height: 3rem;
+  background: linear-gradient(90.83deg, #0C243C 0%, #7E8C9C 100%);
+  border-radius: 1.625rem;
+ }
+ 
+.learn-more-user .circle .icon {
+  transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  background: #fff;
+ }
+ 
+ .learn-more-user .circle .icon.arrow {
+  transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+  left: 0.625rem;
+  width: 1.125rem;
+  height: 0.125rem;
+  background: none;
+ }
+ 
+ .learn-more-user .circle .icon.arrow::before {
+  position: absolute;
+  content: "";
+  top: -0.29rem;
+  right: 0.065rem;
+  width: 0.625rem;
+  height: 0.625rem;
+  border-top: 0.125rem solid #fff;
+  border-right: 0.125rem solid #fff;
+  transform: rotate(45deg);
+ }
+ 
+ .learn-more-user .button-text {
+  transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  right:-20px;
+  bottom: 0;
+  padding: 0.75rem 0;
+  margin: 0 0 0 1.85rem;
+  color: #282936;
+  font-weight: 700;
+  line-height: 1.6;
+  text-align: center;
+  text-transform: uppercase;
+ }
+ 
+ .learn-more-user:hover .circle {
+  width: 100%;
+ }
+ 
+ .learn-more-user:hover .circle .icon.arrow {
+  background: #fff;
+  transform: translate(1rem, 0);
+ }
+ 
+ .learn-more-user:hover .button-text {
+  color: #fff;
+ }
+.navbar.collapsed .admin-cart-container{
+  margin-left: 70vw;
+} 
+ .navbar-expand-lg .admin-cart-container{
+  margin-left: 55vw;
+} 
+@media (max-width:493px) {
+  .user-navbar{
+    margin-bottom: 1rem;
+  }
+  .search-input{
+    margin-top: 0.5rem;
+  }
+}
+@media (max-width: 780px) {
+ .navbar{
+  width: 100%;
+  left: 0;
+ }
+ .navbar-expand-lg .admin-cart-container {
+  margin-left: 0vw !important;
+}
+.search-input{
+  margin-top: 0.5rem;
+}
+ 
+  /* .navbar.collapsed .admin-cart-container{
+    margin-left: 0px;
+    width: 100%;
+  } 
+   .navbar-expand-lg .admin-cart-container{
+    margin-left: 0px;
+    width: 100%;
+  }  */
+}
+@media  (min-width:911px) and (max-width: 1082px) {
+  .navbar-expand-lg .admin-cart-container {
+    margin-left: 60vw !important;
+  }
+}
+@media  (min-width:1081px) and (max-width: 1200px) {
+  .navbar-expand-lg .admin-cart-container {
+    margin-left: 67vw !important;
+  }
+}
+
+

@@ -1,0 +1,24 @@
+.a-expert label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: lighter !important;
+  }
+  .input-category.a-expert{
+    margin-bottom: 2vw;
+  }
+    @media(min-width:781px){
+      .addExpert-resp{
+        margin-top: -3rem;
+      }
+    
+    }
+    @media (max-width:780px){
+      .expertcss{
+margin-top: -13vw;
+      }
+    }
+    @media(max-width:339px){
+      .expertcss{
+        margin-top: -2vw;
+              }
+    }

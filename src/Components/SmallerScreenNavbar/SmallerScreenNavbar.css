@@ -1,0 +1,78 @@
+.nav-hamburger-mobile{
+    cursor: pointer;
+    z-index: 1041;
+  }
+  
+  .nav-hamburger-mobile input {
+    display: none;
+  }
+  
+  .nav-hamburger-mobile svg {
+    /* The size of the SVG defines the overall size */
+    height: 3em;
+    /* Define the transition for transforming the SVG */
+    transition: transform 600ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .nav-line {
+    fill: none;
+    stroke: #F90815;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 3;
+    /* Define the transition for transforming the Stroke */
+    transition: stroke-dasharray 600ms cubic-bezier(0.4, 0, 0.2, 1),
+                stroke-dashoffset 600ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .nav-line-top-bottom {
+    stroke-dasharray: 12 63;
+  }
+  
+  .nav-hamburger-mobile input:checked + svg {
+    transform: rotate(-45deg);
+  }
+  
+  .nav-hamburger-mobile input:checked + svg .nav-line-top-bottom {
+    stroke-dasharray: 20 300;
+    stroke-dashoffset: -32.42;
+  }
+  
+  .nav-hamburger-mobile {
+    cursor: pointer;
+  }
+  
+  .nav-hamburger-mobile input {
+    display: none;
+  }
+  
+  .nav-hamburger-mobile svg {
+    /* The size of the SVG defines the overall size */
+    height: 3em;
+    /* Define the transition for transforming the SVG */
+    transition: transform 600ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .nav-line {
+    fill: none;
+    stroke: #F90815;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 3;
+    /* Define the transition for transforming the Stroke */
+    transition: stroke-dasharray 600ms cubic-bezier(0.4, 0, 0.2, 1),
+                stroke-dashoffset 600ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .nav-line-top-bottom {
+    stroke-dasharray: 12 63;
+  }
+  
+  .nav-hamburger-mobile input:checked + svg {
+    transform: rotate(-45deg);
+  }
+  
+  .nav-hamburger-mobile input:checked + svg .nav-line-top-bottom {
+    stroke-dasharray: 20 300;
+    stroke-dashoffset: -32.42;
+  }

@@ -1,0 +1,119 @@
+.signin-container {
+  /* padding-left: 0; */
+  margin-top: 10px;
+  /* height: 95%; */
+  width: 95%;
+  margin-bottom: 10px;
+  border-radius: 10px;
+
+  overflow-y: auto;
+  box-shadow: 2px 0px 10px 2px rgba(0, 0, 0, 0.25);
+}
+
+.signin-container::-webkit-scrollbar {
+  display: none;
+}
+
+.verify-image {
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(
+    149.12deg,
+    #0c243c 1.05%,
+    rgba(126, 140, 156, 0.71) 124.73%
+  );
+}
+
+.verify-image .img-fluid {
+  margin-top: 80px;
+  width: 250px;
+  height: 250px;
+  margin-bottom: 40px;
+}
+
+.verify-text {
+  /* width: 402px; */
+  /* height: 190px; */
+  text-align: center;
+}
+
+.verify-text .expertise {
+  /* font-family: Inter; */
+  /* font-size: 24px; */
+  font-weight: 700;
+  line-height: 29.05px;
+  color: white;
+}
+
+.verify-text .join-team {
+  color: white;
+  width: 100%;
+  /* font-family: Lato; */
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 16.8px;
+  /* text-align: left; */
+  /* padding-left: 22px; */
+}
+
+.verify-form {
+  display: flex;
+  flex-direction: column;
+  padding-left: 30px;
+  justify-content: center;
+  align-items: center;
+}
+
+.verify-email-box {
+  width: 376px !important;
+  height: 375px !important;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.verify-image {
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(
+    149.12deg,
+    #0c243c 1.05%,
+    rgba(126, 140, 156, 0.71) 124.73%
+  );
+}
+
+/* .google-img{
+    width: 30px;
+    height: 30px;
+    background: linear-gradient(149.12deg, #0C243C 1.05%, rgba(126, 140, 156, 0.71) 124.73%);
+
+  } */
+
+.img-fluid {
+  margin-top: 20px;
+  width: 250px;
+  height: 250px;
+}
+
+.verify-now {
+  width: 300px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  border: none;
+  font-size: 18px;
+  border-radius: 5px;
+  font-weight: 500;
+  color: white;
+  background: linear-gradient(92.36deg, #0c243c 0%, #7e8c9c 98.67%);
+}
