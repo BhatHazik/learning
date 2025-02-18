@@ -25,7 +25,7 @@ input::placeholder {
 }
 @font-face {
   font-family: newFont;
-  src: url('../src/assets/quick-starter/Quick\ Starter.otf');
+  src: url('../src/assets/quick-starter/quickstarter.otf');
 }
 .new-logo{
   font-family: newFont;
