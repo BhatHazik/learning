@@ -1,0 +1,1005 @@
+/* VideoComponent.css */
+.video-container-purchasedCourse .tumbnail-purchasedCourse {
+  width: 100% !important;
+  height: auto;
+  overflow: hidden;
+  border-radius: 0.5rem;
+}
+
+@keyframes heart-bounce {
+  0% {
+    transform: scale(1);
+  }
+  30% {
+    transform: scale(1.25);
+  }
+  60% {
+    transform: scale(0.95);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+
+#heart-PurchasedCourses{
+  /* position: absolute;
+  right: 5%;
+  top: 10%; */
+  cursor: pointer;
+  color: red;
+  font-size: 1.2rem;
+  animation: heart-bounce 0.4s ease-in-out;
+}
+
+#unHeart-PurchasedCourses{
+  animation: heart-bounce 0.4s ease-in-out;
+  /* position: absolute; */
+  cursor: pointer;
+  right: 5%;
+  top: 10%;
+  color: white;
+  font-size: 1.3rem;
+}
+
+.wrapper-purchasedCourse {
+  width: 100%;
+  height: 100%;
+}
+.top-purchasedCourse {
+  height: 10vh;
+  /* background-color: black; */
+  width: 100%;
+  display: flex;
+  /* margin-top: 5vh; */
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 0 0 0vw;
+}
+.top-purchasedCourse h4 {
+  font-weight: 700;
+}
+.top-purchasedCourse span {
+  height: 60%;
+  width: 30%;
+  /* background-color: yellow; */
+}
+/* .hover-div-purchased-course{
+    background: linear-gradient(97.89deg, #0080ff 0%, #0278ff 95.36%);
+   transition: all ease-in-out 1s;
+} */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+    visibility: hidden;
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    visibility: visible;
+  }
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+    /* visibility: hidden; */
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(15px);
+    visibility: hidden;
+    display: none;
+  }
+}
+
+.hover-div-purchased-course {
+  width: 70%;
+  height: 150%;
+  position: absolute;
+  top: -180%;
+  left: -10%;
+  background: white;
+  border: 1px solid black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: black;
+  flex-direction: column;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+/* Use the 'show' class to trigger the fadeIn animation */
+.hover-div-purchased-course.show {
+  animation: fadeIn 0.5s forwards;
+}
+
+/* Use the 'hide' class to trigger the fadeOut animation */
+.hover-div-purchased-course.hide {
+  animation: fadeOut 0.5s backwards;
+  cursor: default;
+}
+
+.top-purchasedCourse span div {
+  background: linear-gradient(97.89deg, #0c243c 0%, #7e8c9c 95.36%);
+  height: 100%;
+  width: 50%;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  border-radius: 0.26vw;
+  color: white;
+  cursor: pointer;
+}
+
+.top-purchasedCourse span div div {
+  background: transparent;
+}
+.top-purchasedCourse h6 {
+  font-weight: 400;
+}
+
+.bottom-purchasedCourse {
+  height: max-content;
+  display: flex;
+  justify-content: space-between;
+  /* padding: 0 5vh 0 10vh; */
+}
+.left-bottom-purchasedCourse {
+  background-color: #ffffff;
+  height: max-content;
+  width: 67%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 1.2vw;
+  padding-bottom: 1.4vh;
+  border-radius: 0.3vw;
+  box-shadow: 0 0 9px rgba(0, 0, 0, 0.2);
+}
+.right-bottom-purchasedCourse {
+  border-radius: 0.3vw;
+  box-shadow: 0 0 9px rgba(0, 0, 0, 0.2);
+  height: max-content;
+  padding: 1vh;
+  background: white;
+  width: 30%;
+}
+
+.video-container-purchasedCourse {
+  background-color: white;
+  /* height: 55vh; */
+  width: 92%;
+  border-radius: 0.56vw;
+}
+
+.left-bottom-purchasedCourse span {
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  gap: 0.7vw;
+  width: 92%;
+  margin-top: 1vh;
+  /* background-color: blue; */
+}
+.content-container-purchasedCourse{
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+ }
+.bottom-purchasedCourse span h5 {
+  font-size: 1.5vw;
+  width: 30%;
+}
+.bottom-purchasedCourse span h6 {
+  font-size: 1.25vw;
+  font-weight: 400;
+}
+.videoCreator-purchasedCourse {
+  height: 7vh;
+  margin-top: 1vh;
+  display: flex;
+  width: 92%;
+  align-items: center;
+  gap: 1vw;
+}
+.videoCreator-purchasedCourse img {
+  height: 75%;
+  border-radius: 50%;
+}
+.videoCreator-purchasedCourse h6 {
+  font-weight: 500;
+}
+.videoCreator-purchasedCourse h6:last-child {
+  color: #7e8c9c;
+}
+.buttons-purchasedCourse {
+  width: 92%;
+  margin-top: 1vh;
+  height: 7vh;
+  display: flex;
+  justify-content: start;
+  gap: 2vw;
+  position: relative;
+}
+.line-purchasedCourse {
+  position: absolute;
+  height: 1.5px;
+  width: 100%;
+  background-color: #c9d1d5;
+  bottom: 10%;
+  z-index: 9;
+}
+
+.buttons-holder {
+  height: 100%;
+  width: 20%;
+  display: flex;
+  align-items: end;
+  position: relative;
+  z-index: 10;
+}
+.button-triangle {
+  position: absolute;
+  /* background-color: rgb(251, 11, 11); */
+  width: 2.5%;
+  border-top: 0.6vw solid transparent;
+  border-right: 0.78vw solid #364859; /* Change this color to your desired color */
+  transform: rotate(-90deg);
+  left: -7.4%;
+  bottom: 3%;
+}
+
+.button-purchasedCourse {
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(97.89deg, #0c243c 0%, #7e8c9c 95.36%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 0.6vh;
+  border-radius: 0.4vw 0.4vw 0.4vw 0vw;
+  box-shadow: 0 0 9px rgba(0, 0, 0, 0.2);
+  color: white;
+  cursor: pointer;
+}
+.not-button-purchasedCourse {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 0.6vh;
+  color: black;
+  cursor: pointer;
+}
+.buttons-purchasedCourse div div h5 {
+  font-weight: 400;
+}
+.no-button-triangle {
+  display: none;
+}
+.course-details-purchasedCourse {
+  /* Remove fixed height */
+  width: 92%;
+  margin-top: 1vh;
+  /* Ensure flexbox allows content to dictate height */
+  display: flex;
+  flex-direction: column;
+}
+.course-details-purchasedCourse span h5 {
+  font-size: 1.15vw;
+}
+
+.course-details-purchasedCourse h6 {
+  font-weight: 300;
+  font-size: 1vw;
+}
+
+.course-details-purchasedCourse details {
+  border-bottom: 1px solid #c9d1d5;
+  padding-bottom: 1.5vh;
+  margin-top: 1.5vh;
+  list-style-type: none;
+}
+
+.course-details-purchasedCourse details summary {
+  list-style: none;
+
+  position: relative;
+  cursor: pointer;
+}
+.course-details-purchasedCourse details summary p {
+  margin-top: 2vh;
+}
+
+.course-details-purchasedCourse details summary .up-icon {
+  position: absolute;
+  right: 10%;
+  transition: transform 0.3s ease;
+}
+
+.course-details-purchasedCourse details summary .up-icon {
+  right: 10%;
+  transform: rotate(180deg); /* Rotates the icon when details is open */
+}
+
+.course-details-purchasedCourse details summary .down-icon {
+  position: absolute;
+  right: 10%;
+  transition: transform 0.3s ease;
+}
+
+.course-details-purchasedCourse details summary::-webkit-details-marker {
+  display: none;
+}
+
+.ratings-purchasedCourse {
+  position: relative;
+  height: 23vh;
+  width: 100%;
+  display: flex;
+}
+
+.left-ratings-purchasedCourse {
+  background-color: rgb(251, 251, 251);
+  height: 100%;
+  width: 25%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 0 9px rgba(0, 0, 0, 0.2);
+}
+.left-ratings-purchasedCourse span {
+  display: flex;
+  justify-content: center;
+  gap: 0.2vw;
+  margin: 0;
+  margin-bottom: 0.5vh;
+  margin-top: 0.5vh;
+}
+.staricon {
+  color: #ffe500;
+  font-size: 1vw;
+  margin: 0;
+}
+.left-ratings-purchasedCourse h5 {
+  margin-top: 1.5vh;
+  font-weight: 700;
+  font-size: 2vw;
+}
+.left-ratings-purchasedCourse h6 {
+  font-weight: 500;
+}
+.left-ratings-purchasedCourse h6:first-child {
+  margin-top: 1vh;
+}
+.right-ratings-purchasedCourse {
+  width: 75%;
+  height: 100%;
+  padding-left: 1vw;
+}
+.right-ratings-purchasedCourse div {
+  height: max-content;
+  display: flex;
+  gap: 1vw;
+  align-items: center;
+  justify-content: start;
+}
+.right-ratings-purchasedCourse div h6 {
+  width: 1.5vw;
+  height: max-content;
+  margin: 0;
+}
+.right-ratings-purchasedCourse div span {
+  display: flex;
+  gap: 0.5vw;
+  justify-content: start;
+  margin: 0;
+  width: 25%;
+  align-items: center;
+  /* padding-top: 1vh; */
+}
+.right-ratings-purchasedCourse h6:first-child {
+  font-weight: 500;
+  margin-top: 1vh;
+}
+.right-ratings-purchasedCourse div div {
+  width: 50%;
+  height: 2vh;
+  background-color: #d9d9d9;
+
+  border-radius: 1vw;
+}
+.right-ratings-purchasedCourse div div .fifty-rating-purchasedCourse {
+  /* width: 50%; */
+  height: 100%;
+  border-radius: 1vw;
+  background-color: #0c243c;
+}
+.right-ratings-purchasedCourse div div .fourty-rating-purchasedCourse {
+  /* width: 40%; */
+  height: 100%;
+  border-radius: 1vw;
+  background-color: #0c243c;
+}
+.right-ratings-purchasedCourse div div .thirty-rating-purchasedCourse {
+  /* width: 30%; */
+  height: 100%;
+  border-radius: 1vw;
+  background-color: #0c243c;
+}
+.right-ratings-purchasedCourse div div .twenty-rating-purchasedCourse {
+  /* width: 20%; */
+  height: 100%;
+  border-radius: 1vw;
+  background-color: #0c243c;
+}
+.right-ratings-purchasedCourse div div .ten-rating-purchasedCourse {
+  /* width: 10%; */
+  height: 100%;
+  border-radius: 1vw;
+  background-color: #0c243c;
+}
+
+.heading-bottom-purchasedCourse {
+  border-bottom: 1.5px solid #c9d1d5;
+  height: 10vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  justify-content: center;
+  padding-left: 1.5vw;
+}
+.heading-bottom-purchasedCourse h5 {
+  font-weight: 500;
+}
+.heading-bottom-purchasedCourse h6 {
+  font-weight: 400;
+  font-size: 1vw;
+  color: #7e8c9c;
+}
+
+.right-bottom-options details {
+  border-bottom: 1.5px solid #c9d1d5;
+  margin-top: 2vh;
+  list-style-type: none;
+  padding-left: 1.5vw;
+  padding-bottom: 1vh;
+  /* transition: all ease-in-out 1s; */
+}
+.right-bottom-options details div {
+  display: flex;
+  justify-content: start;
+  gap: 1vw;
+  margin-top: 2vh;
+  /* transition: all ease-in-out 1s; */
+}
+
+.right-bottom-options details div span {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  /* transition: all ease-in-out 1s; */
+}
+.right-bottom-options details div span h6:first-child {
+  font-weight: 500;
+  color: #202020;
+}
+.right-bottom-options details summary {
+  list-style: none;
+  position: relative;
+  cursor: pointer;
+  height: 6vh;
+  /* transition: all ease-in-out 1s; */
+}
+
+.right-bottom-options details summary .up-icon {
+  position: absolute;
+  right: 5%;
+  /* top: 30%; */
+  transition: transform 0.3s ease;
+}
+
+.right-bottom-options details summary .up-icon {
+  right: 5%;
+  /* top: 30%; */
+  transform: rotate(180deg); /* Rotates the icon when details is open */
+}
+
+.right-bottom-options details summary .down-icon {
+  position: absolute;
+  right: 5%;
+  /* top: 30%; */
+  transition: transform 0.3s ease;
+}
+
+.right-bottom-options details summary::-webkit-details-marker {
+  display: none;
+}
+
+.right-bottom-options details h5 {
+  font-size: 1.2vw;
+  font-weight: 400;
+}
+.right-bottom-options details h6 {
+  font-size: 1vw;
+  color: #7e8c9c;
+}
+
+.certificate-purchasedCourse {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 2vw 0 0;
+  /* background-color: blue; */
+  border-top: 1px solid #7e8c9c;
+  border-bottom: 1px solid #7e8c9c;
+  align-items: center;
+  margin-top: 2vh;
+  height: 10vh;
+}
+
+.certificate-purchasedCourse div {
+  background: linear-gradient(97.89deg, #0c243c 0%, #7e8c9c 95.36%);
+  height: 60%;
+  width: 15%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 0.26vw;
+  color: white;
+  cursor: pointer;
+}
+.certificate-purchasedCourse h6 {
+  font-weight: 400;
+  font-size: 1.15vw;
+}
+.discription-purchasedCourse {
+  display: flex;
+  flex-direction: column;
+  padding-top: 2vh;
+  height: max-content;
+  /* background-color: blue; */
+  padding-bottom: 2vh;
+  border-bottom: 1px solid #7e8c9c;
+}
+.discription-purchasedCourse h5 {
+  font-weight: 500;
+  font-size: 1.25vw;
+}
+#reviews-loading {
+  position: absolute;
+  left: 45%;
+  top: 35%;
+}
+
+
+.mobile-PurchasedCourse{
+  display: none;
+}
+.mobile-player {
+  /* position: absolute; */
+  height: 22.5rem;
+  border-radius: 1vw;
+  top: -5rem;
+  left: 3%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: 94%;
+  background-size: auto;
+  object-fit: cover;
+}
+
+@media (max-width: 768px) {
+  .wrapper-userCourseview{
+    display: none;
+  }
+  
+  .top-userCourseview{
+    display: none;
+  }
+  .mid-userCourseview{
+    display: none;
+  }
+  .bottom-purchasedCourse{
+    display: none;
+  }
+  .bottom-purchasedCourse span h5{
+    font-size: 3vw;
+    width: 32%;
+    
+  }
+  .button-triangle{
+    display: none;
+  }
+  .button-purchasedCourse{
+    border-radius: 0.7vw;
+  }
+  .course-details-purchasedCourse h5{
+    font-size: 2.5vw;
+    font-weight: 500;
+  }
+  .course-details-purchasedCourse h6{
+    font-size: 2.1vw;
+    font-weight: 300;
+  }
+  .left-ratings-purchasedCourse h5{
+    margin-top: 1.5vh;
+    font-weight: 700;
+    font-size: 3.5vw;
+  }
+  .right-bottom-options details h6{
+    font-size: 1vw;
+  }
+  .right-bottom-options details summary h5{
+    font-size: 2.3vw;
+  }
+  .right-bottom-options details summary h6{
+    font-size: 2vw;
+  }
+  .right-bottom-options details div h6{
+    font-size: 1.7vw;
+  }
+  .heading-bottom-purchasedCourse h6{
+    font-size: 1.7vw;
+  }
+  
+  .bottom-purchasedCourse span h6{
+    font-size: 2.3vw;
+    font-weight: 300;
+  }
+  @keyframes openAnimation {
+    from {
+      right: -35%; /* Off-screen */
+    }
+    to {
+      right: 0; /* On-screen */
+    }
+  }
+  
+  /* Closing animation (slide out) */
+  @keyframes closeAnimation {
+    from {
+      right: 0; /* On-screen */
+    }
+    to {
+      right: -33%; /* Off-screen */
+    }
+  }
+  .right-bottom-purchasedCourse{
+    border: 1px solid #7e8c9c;
+    animation: openAnimation 0.5s ease forwards;
+    position: absolute;
+    right: 0;
+    top: 1.1%;
+    background-color: white;
+    width: 35%;
+    padding-left: 2vh;
+    /* overflow-y: auto; */
+    z-index: 10;
+    height: max-content;
+
+  }
+  
+  .left-ratings-purchasedCourse {
+    height: auto;
+  }
+  .right-ratings-purchasedCourse div span .staricon{
+    font-size: 2vw;
+  }
+  .right-ratings-purchasedCourse div h6:first-child{
+    width: 5vw;
+  }
+  .right-bottom-purchasedCourseClosed{
+    animation: closeAnimation 0.5s ease forwards;
+    /* border: 1px solid #7e8c9c; */
+    /* transition: all 0.3s ease-in-out; */
+    position: absolute;
+    right: -33%;
+    top: 1.1%;
+    background-color: white;
+    width: 35%;
+    height: max-content;
+    padding-left: 2vh;
+    padding: 1vw 1vw 3vh 2vh;
+    z-index: 10;
+  }
+
+
+  #videoResponsiveContainer{
+    position: absolute;
+    left: 0;
+    /* background-color: blue; */
+    height: 80%;
+    /* border-right: 1px dashed rgba(0, 0, 0, 0.568);
+    border-top: 1px dashed rgba(0, 0, 0, 0.568);
+    border-bottom: 1px dashed rgba(0, 0, 0, 0.568); */
+    border: 1px dashed rgba(0, 0, 0, 0.568);
+    width: 6%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    top: 5%;
+  }
+  .left-ratings-purchasedCourse span .staricon {
+    color: #ffe500;
+    font-size:2vw;
+    margin: 0;
+  }
+  .top-purchasedCourse div{
+    width: 15%;
+  }
+  .bottom-purchasedCourse{
+    position: relative;
+    display: block;
+  }
+  .left-bottom-purchasedCourse{
+    width: 95%;
+    margin-left: 2%;
+    padding-left:0% ;
+  }
+  #videosResponsiveIcon{
+    /* position: absolute; */
+    top: 45%;
+  }
+  #details-container{
+    margin-left: 5%;
+    height: 100%;
+    width: 100%;
+    
+  }
+  .top-purchasedCourse span div{
+    height: 2vh;
+    width: max-content;
+    
+    
+  }
+ 
+}
+@media (max-width: 530px) {
+  
+  .top-purchasedCourse div{
+    width: 20vw;
+  }
+  
+}
+@media (max-width: 430px) {
+  
+  .top-purchasedCourse div{
+    width: 23vw;
+  }
+  .right-bottom-purchasedCourse{
+    width: 45%;
+  }
+  .right-bottom-purchasedCourseClosed{
+    width: 45%;
+  }
+  @keyframes closeAnimation {
+    from {
+      right: 0; /* On-screen */
+    }
+    to {
+      right: -43%; /* Off-screen */
+    }
+  }
+  .right-bottom-options details h6{
+    font-size: 2vw;
+  }
+  .right-bottom-options details summary h5{
+    font-size: 3vw;
+  }
+  .right-bottom-options details summary h6{
+    font-size: 2.7vw;
+  }
+  .right-bottom-options details div h6{
+    font-size: 2.7vw;
+  }
+  .heading-bottom-purchasedCourse h6{
+    font-size: 1.7vw;
+  }
+  
+}
+
+@media (max-width: 370px) {
+  .bottom-purchasedCourse span h5{
+    font-size: 4vw;
+    width: 43%;
+  }
+  /* .button-purchasedCourse{
+    width: 30vw;
+  } */
+  .buttons-purchasedCourse div div h5{
+    font-size: 4vw;
+  }
+  .bottom-purchasedCourse span h6{
+    font-size: 3vw;
+    width: 50%;
+  }
+  .top-purchasedCourse div{
+    width: 27vw;
+  }
+  .right-bottom-purchasedCourse{
+    width: 55%;
+  }
+  .right-bottom-purchasedCourseClosed{
+    width: 55%;
+  }
+  @keyframes closeAnimation {
+    from {
+      right: 0; /* On-screen */
+    }
+    to {
+      right: -52.5%; /* Off-screen */
+    }
+  }
+  .right-bottom-options details h6{
+    font-size: 2vw;
+  }
+  .right-bottom-options details summary h5{
+    font-size: 3vw;
+  }
+  .right-bottom-options details summary h6{
+    font-size: 2.7vw;
+  }
+  .right-bottom-options details div h6{
+    font-size: 2.7vw;
+  }
+  .heading-bottom h6{
+    font-size: 2.1vw;
+  }
+  .right-bottom-options details div span h6:first-child{
+    font-size: 2.5vw;
+    width: 100%;
+  }
+  .right-bottom-options details div span{
+    padding-left: 1vw;
+  }
+  .course-details-purchasedCourse h5{
+    font-size: 3.1vw;
+  }
+  .course-details-purchasedCourse h6{
+    font-size: 2.7vw;
+  }
+  .left-ratings-purchasedCourse{
+    width: 35vw;
+    padding-top: 2vh;
+  }
+  .right-ratings-purchasedCourse div{
+    gap: 2vw;
+    margin-top: 0.5vh;
+    
+  }
+  .right-ratings-purchasedCourse div div{
+    height: 1.2vh;
+  }
+  .right-ratings-purchasedCourse div div div{
+    height: 1.2vh;
+  }
+  .right-ratings-purchasedCourse div div .fifty-rating-purchasedCourse{
+    margin: 0;
+  }
+  .left-bottom-purchasedCourse{
+    z-index: 9;
+  }
+  .video-stream{
+    z-index: 9;
+  }
+  .right-ratings-purchasedCourse div h6:first-child{
+    margin: 0;
+  }
+  .course-details-purchasedCourse h5{
+    font-size: 5vw;
+  }
+}
+
+/* ----------------------------CERTIFICATE CSS----------------- */
+body {
+ 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+ 
+
+  background-color: #ffffff;
+  overflow: hidden; /* Prevent scrollbars */
+}
+
+.certificate-container {
+  position: relative;
+  width: 100vw;
+ margin-top:-40vh;
+  background-color: #fff;
+  display: block;
+  padding: 20px;
+    overflow: hidden; 
+    margin-left:20px
+  
+}
+
+.header, .title, .instructors, .description, .signature, .date, .length {
+  text-align: left;
+  margin: 0;
+}
+
+.header {
+  font-size: 24px;
+ color: #728698;
+  margin-bottom: 40px;
+  margin-top: 120px; /* Add some space between the header and the rest of the content */
+}
+
+.title {
+  font-size: 56px;
+  font-weight: bold;
+  margin-bottom: 50px;
+  color: #000000;
+}
+
+.instructors {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #373738;
+}
+
+.description {
+  font-size: 23px;
+  color: #373720;
+  margin-bottom: 40px;
+  font-weight:100;
+}
+
+.signature {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.date, .length {
+  font-size: 19px;
+  color: #6c757d;
+  }
+  .date{
+  margin-top:10px
+  }
+.length{
+margin-top:15px;
+}
+.certificate-number {
+  position: absolute;
+  right: 20px;
+  top: 120px;
+  font-size: 19px;
+  color: #6c757d;
+}
+
+.watermark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-30deg);
+  font-size: 200px; /* Increase if needed */
+  color: rgba(13, 23, 29, 0.2); /* Darker and more opaque */
+  z-index: 0;
+  pointer-events: none;
+  white-space: nowrap;
+  font-weight: bolder; /* Makes the text bolder */
+}
+
+.firstHeader {
+  color:#0c243c;
+  font-weight: bold;
+  font-size: 32px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  display: inline;
+  margin-bottom: 100px; /* Adjust the margin to achieve the desired gap */
+  position: relative;
+  top: 90;
+  left: 0;
+}
+  .certificate{
+  top:70;
+  left:30;
+  }

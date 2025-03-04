@@ -1,0 +1,189 @@
+.sent .message-content {
+  align-self: flex-end;
+  background-color: #c9d1d530;
+}
+
+@keyframes heart-bounce {
+  0% {
+    transform: scale(1);
+  }
+  30% {
+    transform: scale(1.25);
+  }
+  60% {
+    transform: scale(0.95);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+
+#heart-messages{
+  /* position: absolute;
+  right: 5%;
+  top: 10%; */
+
+  cursor: pointer;
+  color: red;
+  font-size: 1.2rem;
+  animation: heart-bounce 0.4s ease-in-out;
+}
+
+#unHeart-messages{
+  animation: heart-bounce 0.4s ease-in-out;
+  /* position: absolute; */
+  cursor: pointer;
+  /* right: 5%;
+  top: 10%; */
+  width: 100%;
+  color: white;
+  font-size: 1.3rem;
+}
+
+.received .message-content {
+  align-self: flex-start;
+  background-color: #c9d1d530;
+}
+
+.message {
+  display: flex;
+  flex-direction: column;
+  padding: 5px 10px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+.chat-list {
+  max-height: 400px;
+  overflow-y: auto;
+
+}
+.message-container {
+  background: white; /* Background color */
+  border-radius: 10px; /* Rounded corners */
+  padding: 10px; /* Padding inside the message */
+  margin: 5px; /* Margin around the message */
+  max-width: 70%; /* Limit the width of the message */
+  word-wrap: break-word; /* Break long words */
+  overflow-wrap: break-word; /* Fallback for older browsers */
+}
+.chatlist-messages{
+  width: 40%;
+  border-right: 0.2px solid rgb(200, 200, 200);
+}
+.responsive-messages-full{
+  display: none;
+  height: 80%;
+}
+.responsive-support-full{
+  display: none;
+  height: 80%;
+}
+.messages-long-messages{
+  height: 55vh;
+}
+.compose-popup{
+   
+  bottom: -550%;
+  color: black;
+  z-index: 100;
+  height: 40vh;
+  width: 25vw;
+  box-shadow: 0px 0px 4px 0.2px #00000040;
+}
+@media (max-width: 700px) {
+  .responsive-messages-short{
+    display: none;
+    
+  }
+  .compose-popup{
+   right: 5%;
+    bottom: -550%;
+    color: black;
+    z-index: 100;
+    height: 40vh;
+    width: 80vw;
+    box-shadow: 0px 0px 4px 0.2px #00000040;
+  }
+  .chatlist-messages{
+    width: 100%;
+    border-right: none;
+  }
+  .responsive-messages-full{
+    display: block;
+     height: 80%;
+     z-index: 10;
+  }
+  .responsive-support-full{
+    display: block;
+     height: 90%;
+     z-index: 10;
+  }
+  .message-view {
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    transform: translateX(100%); /* Initially hidden */
+    opacity: 0; /* Initially hidden */
+  }
+  
+  .slide-in {
+    transform: translateX(0); /* Slide in */
+    opacity: 1; /* Fade in */
+  }
+  
+  .slide-out {
+    transform: translateX(100%); /* Slide out */
+    opacity: 0; /* Fade out */
+  }
+  .sendmessagesinput{
+    bottom: 6%;
+    left: 18%;
+  }
+  .heart-messages{
+    z-index: 9;
+  }
+  .unHeart-messages{
+    z-index: 9;
+  }
+
+
+
+
+}
+@media (min-width: 358px) and (max-height: 668px) {
+
+  .responsive-messages-full{
+    height: 65vh;
+    /* background-color: blue; */
+  }
+  .messages-long-messages{
+    height: 45vh;
+  }
+  .sendmessagesinput{
+    bottom: 5%;
+    left: 10%;
+  }
+}
+@media (max-width: 610px) {
+  .c-rep {
+    flex-direction: column; 
+    align-items: flex-start;
+    width: max-content;
+  }
+
+
+  .c-rep p {
+    font-style: italic; 
+  }
+
+  .c-rep p {
+    margin-top: 4px; 
+  }
+ 
+.msg-resp{
+  width:max-content;
+
+}
+}
+@media (max-width:459px){
+  
+}

@@ -1,0 +1,147 @@
+input[type="password"][autocomplete="current-password"] {
+    -webkit-text-security: disc; /* for webkit browsers */
+    text-security: disc; /* for other browsers */
+  }
+
+
+
+
+.input-category label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.input-category input[type="text"] {
+  width: 50%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.button-category {
+  margin-top: 20px;
+ 
+}
+
+.button-category button {
+  padding: 10px 20px;
+  margin-left: 10px;
+  border: none;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.cancel-cat {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.save-cat {
+  background: linear-gradient(92.36deg, #0c243c 0%, #7e8c9c 98.67%);
+  color: #fff;
+}
+
+.added-categories {
+  margin-top: 30px;
+}
+
+.category-item {
+  background: linear-gradient(92.36deg, #0c243c 0%, #7e8c9c 98.67%);
+  color: white;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  width: 10vw;
+  text-align: center;
+  /* display: inline-block; */
+}
+.category-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px; /* Add a gap between items */
+}
+
+
+
+
+.popup-content-cat {
+  background: white;
+  padding: 30px;
+  border-radius: 8px;
+  text-align: center;
+  width: 33vw;
+  /* max-width: 30vw; */
+  height: 47vh;
+  /* max-height: 55vh; */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  overflow-y: auto;
+}
+.popup-content-cat button {
+  margin-top: 30px;
+  padding: 12px 24px;
+  background: #0c243c;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+
+.cancel-buttonn {
+  position: absolute;
+  top: 35vh;  /* Adjust the value to control vertical positioning */
+  right: 35vw;  /* Adjust the value to control horizontal positioning */
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  background: none;
+  background-color:white !important;
+  color: black !important;
+}
+.mobile-settings{
+  display: none;
+}
+/* responsie of admin add categories  */
+
+@media (max-width:1226px){
+  .category-item {
+ 
+    width: 13vw; 
+}
+}
+@media (max-width:979px){
+  .category-item {
+ 
+    width: 15vw; 
+}
+}
+
+@media (max-width:768px){
+  .wrapper-settings {
+ 
+    display: none;
+}
+ .mobile-settings{
+  display: block;
+}
+}
+@media (max-width:564px){
+  .category-item {
+ 
+    width: 20vw; 
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+}
+@media (max-width:376px){
+  .category-item {
+ 
+    width: 25vw; 
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+}

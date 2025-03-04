@@ -1,0 +1,24 @@
+.sent .message-content {
+    align-self: flex-end;
+    background-color: #c9d1d530;
+  }
+  
+  .received .message-content {
+    align-self: flex-start;
+    background-color: #c9d1d530;
+  }
+  
+  .message {
+    display: flex;
+    flex-direction: column;
+    padding: 5px 10px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+  }
+  .chat-list {
+    max-height: 400px;
+    overflow-y: auto;
+  }
+  .p-btm{
+    margin-bottom: -1.5%;
+  }

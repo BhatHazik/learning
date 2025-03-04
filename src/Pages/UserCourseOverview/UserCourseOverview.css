@@ -1,0 +1,1171 @@
+.wrapper-userCourseview {
+  width: 100%;
+  height: max-content;
+  margin-bottom: 5vh;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 1vw;
+  position: relative;
+}
+#spinner-usercourseview {
+  position: absolute;
+  top: 600%;
+  margin-top: 20%;
+}
+.payment-verify-popup{
+  width: 50%;
+}
+.top-userCourseview {
+  width: 100%;
+  /* height: 25vh; */
+  background: linear-gradient(92.01deg, #0c243c 0%, #7e8c9c 100%);
+  border-top-right-radius: 1vw;
+  border-top-left-radius: 1vw;
+  color: white;
+  display: flex;
+  
+  justify-content: space-between;
+  /* padding-top: 3vh; */
+  padding-top: 2vw;
+  padding-left: 2vw;
+  padding-right: 2rem;
+  overflow-y: auto;
+  padding-bottom: 8vw;
+}
+.top-userCourseview h3 {
+  font-size: 1.7vw;
+}
+.top-userCourseview h5 {
+  font-size: 1vw;
+  font-weight: 400;
+}
+.top-userCourseview h6 {
+  font-weight: 200;
+  font-size: 1.1vw;
+  color: #ffffff;
+  opacity: 0.8;
+}
+.top-userCourseview h6 .staricon {
+  font-size: 0.9vw;
+  color: #ffe500;
+  text-align: center;
+}
+.mid-userCourseview {
+  width: 100%;
+  height: max-content;
+  /* background-color: greenyellow; */
+  display: flex;
+}
+.left-mid-userCourseview {
+  width: 40%;
+  height: 100%;
+  /* background-color: aqua; */
+  /* border-right: #7e8c9c86 1.5px solid;
+  border-bottom: #7e8c9c86 1.5px solid; */
+  padding-left: 1vw;
+  padding-top: 1vh;
+}
+.left-top-mid-userCourseview {
+  width: 100%;
+  /* margin-left: 3vw; */
+  /* background-color: yellow; */
+  display: flex;
+  /* height: 25vw; */
+  /* overflow-y: auto; */
+  flex-direction: column;
+  margin-top: 2vh;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  padding: 4vh 1vw;
+  border-radius: 0.5vw;
+  /* border-bottom: 1px solid #7e8c9c; */
+  gap: 0.6vh;
+}
+
+/* Custom scrollbar for .left-top-mid-userCourseview */
+.left-top-mid-userCourseview::-webkit-scrollbar {
+  width: 5px; /* Adjusts the scrollbar width */
+}
+
+.left-top-mid-userCourseview::-webkit-scrollbar-track {
+  background: transparent; /* Transparent background for the track */
+
+  border-radius: 10px; /* Rounded corners for the track */
+}
+
+.left-top-mid-userCourseview::-webkit-scrollbar-thumb {
+  background-color: rgb(155, 155, 155); /* White scrollbar thumb */
+  border-radius: 50px; /* Rounded corners for the thumb */
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.5); /* Soft shadow around the thumb */
+}
+
+.left-top-mid-userCourseview::-webkit-scrollbar-thumb:hover {
+  background-color: #e0e0e0; /* Lighter color on hover */
+}
+
+.left-top-mid-userCourseview h3 {
+  font-size: 1.8vw;
+}
+.left-top-mid-userCourseview h5 {
+  font-size: 1vw;
+  font-weight: 400;
+  line-height: 3.5vh;
+}
+.left-top-mid-userCourseview h4 {
+  font-size: 1vw;
+}
+.left-top-mid-userCourseview h6 {
+  font-size: 1vw;
+  font-weight: 400;
+}
+.left-top-mid-userCourseview ul li {
+  font-size: 1vw;
+}
+.left-bottom-mid-userCourseview {
+  /* background-color: blue; */
+  padding-top: 1vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1.2vh;
+}
+
+
+.left-bottom-mid-userCourseview div details {
+  border: 1px solid #7e8c9c;
+  /* padding: 1vh 0vh 1vh 0vh; */
+  margin-top: 1.5vh;
+  list-style-type: none;
+  width: 95%;
+  border-radius: 0.5vw;
+  transition: all ease 0.3s;
+}
+.left-bottom-mid-userCourseview div details summary h6 {
+  display: flex;
+  gap: 1vw;
+  padding-left: 0.5vw;
+}
+.left-bottom-mid-userCourseview div details div {
+  display: flex;
+  align-items: center;
+  /* background-color: #7E8C9C; */
+  width: 100%;
+  height: 6vh;
+  border-top: 1px solid #7e8c9c;
+  justify-content: space-between;
+  padding: 0 2vw 0 1vw;
+  transition: all 0.5s ease-in-out;
+}
+.left-bottom-mid-userCourseview div details div h6 {
+  font-weight: 400;
+  font-size: 1.1vw;
+  display: flex;
+  align-items: center;
+  gap: 2vw;
+}
+.left-bottom-mid-userCourseview div details summary {
+  list-style: none;
+  position: relative;
+  cursor: pointer;
+  padding: 1.5vh;
+}
+.left-bottom-mid-userCourseview div details summary div {
+  margin-top: 2vh;
+}
+.left-bottom-mid-userCourseview div details summary .up-icon {
+  position: absolute;
+  right: 10%;
+  transition: transform 0.3s ease;
+}
+.left-bottom-mid-userCourseview div details summary .up-icon {
+  right: 10%;
+  transform: rotate(180deg); /* Rotates the icon when details is open */
+}
+.left-bottom-mid-userCourseview div details summary .down-icon {
+  position: absolute;
+  right: 10%;
+  transition: transform 0.3s ease;
+}
+.left-bottom-mid-userCourseview div details summary::-webkit-details-marker {
+  display: none;
+}
+.right-mid-userCourseview {
+  width: 70%;
+  height: max-content;
+  /* background-color: aquamarine; */
+  position: relative;
+}
+.tumbnail-userCourseview {
+  position: absolute;
+  height: 22.5rem;
+  border-radius: 1vw;
+  top: -5rem;
+  left: 3%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: 94%;
+  background-size: auto;
+  object-fit: cover;
+  /* background-color: blue; */
+}
+.pricing-right-mid-userCourseview {
+  /* background-color: #FFE500; */
+  
+  height: 10vh;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 4.6vw 0 3vw;
+}
+.pricing-right-mid-userCourseview span {
+  display: flex;
+  gap: 0.5vw;
+}
+.pricing-right-mid-userCourseview span h5 {
+  font-size: 1.3vw;
+  font-weight: 400;
+}
+.pricing-right-mid-userCourseview span h5:first-child {
+  color: #7e8c9cb9;
+  text-decoration: line-through;
+}
+.pricing-right-mid-userCourseview div {
+  background: linear-gradient(97.89deg, #0c243c 0%, #7e8c9c 95.36%);
+  height: 60%;
+  width: 8vw;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 0.3vw;
+  cursor: pointer;
+}
+.details-right-mid-userCourseview {
+  /* height: 27%; */
+  margin-top: 17.5rem;
+  width: 100%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 0.5vw;
+  /* margin-left: 3vw; */
+  display: flex;
+  flex-direction: column;
+  gap: 2vw;
+  justify-content: center;
+  padding: 4vh 1vw;
+  /* padding-left: 1.5vw; */
+  /* margin-top: 1vh; */
+}
+.details-right-mid-userCourseview span {
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  gap: 0.7vw;
+  width: 90%;
+}
+.details-right-mid-userCourseview span h5 {
+  font-size: 1.3vw;
+  font-weight: 500;
+}
+.details-right-mid-userCourseview span h6 {
+  font-size: 1vw;
+  font-weight: 400;
+}
+.courseby-right-mid-userCourseview {
+  height: 10vh;
+  width: 100%;
+  /* background-color: aquamarine; */
+  padding-left: 3vw;
+  margin-top: 4vh;
+}
+.courseby-right-mid-userCourseview span {
+  /* background-color: blue; */
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 1vw;
+  /* padding-left: 1vw; */
+}
+.courseby-right-mid-userCourseview span img {
+  height: 55%;
+  width: 10%;
+  border-radius: 2vw;
+}
+.ratings-right-mid-userCourseview {
+  /* background-color: #ff0000; */
+  /* height: 48.5vh; */
+  padding-top: 4vh;
+  padding-left: 1vw;
+  padding-right: 1vw;
+  margin-top: 1.85vh;
+}
+.ratings-right-mid-userCourseview .map-ratings-right-mid-userCourseview {
+  
+  margin-top: 3%;
+  
+  /* background-color: blue; */
+}
+.ratings-right-mid-userCourseview div div {
+  display: flex;
+  border-bottom: 1px solid #7e8c9c;
+  padding-left: 1vw;
+  height: 47%;
+
+  margin-top: 1vh;
+  /* width: max-content; */
+
+}
+.ratings-right-mid-userCourseview h5:first-child {
+  margin-left: 0;
+}
+.ratings-right-mid-userCourseview div div div:first-child img {
+  height: 2.5vw;
+  width: 2.5vw;
+  border-radius: 3vw;
+}
+.ratings-right-mid-userCourseview div div div:first-child {
+  display: block;
+  border: none;
+  width: 15vw;
+  /* height: 14vh; */
+  height: 8vw;
+  /* background-color: yellow; */
+}
+.ratings-right-mid-userCourseview div div div:first-child h5 {
+  font-size: 1.2vw;
+  font-weight: 400;
+}
+.ratings-right-mid-userCourseview div div div:first-child p {
+  font-size: 1vw;
+  font-weight: 1vw;
+}
+.ratings-right-mid-userCourseview div div div:last-child {
+  border: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8vh;
+  padding-top: 2vh;
+  width: 20vw;
+}
+.ratings-right-mid-userCourseview div div div:last-child span {
+  display: flex;
+  gap: 0.2vw;
+}
+.ratings-right-mid-userCourseview div div div:last-child p {
+  font-size: 1vw;
+}
+.bottom-userCourseview {
+  width: 100%;
+  /* height: 70vh; */
+  /* background-color: blue; */
+  padding: 4vh 1vw 1vh 1vw;
+  border-bottom-right-radius: 1vw;
+  border-bottom-left-radius: 1vw;
+}
+.bottom-userCourseview span {
+  display: flex;
+  align-items: center;
+  gap: 1.5vw;
+}
+.bottom-userCourseview h3 {
+  font-size: 1.6vw;
+  font-weight: 400;
+}
+.bottom-userCourseview span div {
+  height: 1.8vh;
+  border: 1px solid rgba(255, 0, 0, 0);
+  width: max-content;
+  background-color: transparent;
+  border-radius: 0.2vw;
+  position: relative;
+  text-align: center; /* Center text inside the div */
+  z-index: 900;
+  padding-right: 1.2vw;
+  padding-left: 0.2vw;
+  transform: rotate(-1deg);
+  margin-bottom: 3vh;
+}
+
+.bottom-userCourseview div span h6 {
+  font-weight: 700;
+  color: white;
+  /* position: absolute; */
+  /* width: max; */
+  z-index: 1000;
+
+  transform: rotate(0deg);
+}
+.bottom-userCourseview span div::before,
+.bottom-userCourseview span div::after,
+.bottom-userCourseview span span::after {
+  content: "";
+  position: absolute;
+  height: 1.5vh;
+  width: 100%;
+  /* width: 8.2vw; */
+  /* background-color: blue; */
+  border-radius: 0.2vw;
+  top: 0;
+  left: 0;
+  z-index: 900;
+}
+
+.bottom-userCourseview span div::before {
+  left: -3%;
+  background: #0c243c;
+
+  top: 65%;
+  z-index: 900;
+}
+.bottom-userCourseview span span::after {
+  content: "";
+  background: #0c243c;
+
+  height: 1.5vh;
+  /* width: 8vw;  */
+  position: absolute;
+  transform: rotate(0deg);
+  top: -19%;
+  left: -8%;
+  border-radius: 0.2vw;
+  z-index: 900;
+}
+
+.bottom-userCourseview span div::after {
+  top: 120%;
+  left: -5%;
+  background: #0c243c;
+  z-index: 900;
+}
+.cards-userCourseview {
+  padding: 1vw 1vw 1vw 1vw;
+  margin-top: 2vh;
+  display: flex;
+  height: 100%;
+  gap: 1vw; /* Adjust the gap between items */
+  margin-bottom: 4vh;
+  overflow-x: auto;
+  width: 100%;
+  /* background-color: blue; */
+}
+.cards-userCourseview::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
+}
+.card-bottom-userCourseview {
+  /* height: 50vh; */
+  height: 27vw !important;
+  min-width: 21vw;
+  background-color: white;
+  border-radius: 0.5vw;
+  padding: 1vw;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  /* gap: 1vh; */
+}
+.card-bottom-userCourseview:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.card-bottom-userCourseview span {
+  height: 35%;
+  width: 100%;
+  border-radius: 0.5
+}
+.card-bottom-userCourseview span img {
+  height: 100%;
+  width: 100%;
+  border-radius: 0.5vw;
+  object-fit: cover;
+}
+.middle-sec-card-userCourseview {
+  height: 7%;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1%;
+}
+.middle-sec-card-userCourseview div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5vw;
+}
+.addCourse-card-userCourseview {
+  height: 100%;
+  width: max-content;
+  padding: 0 0.5rem;
+  background: linear-gradient(97.89deg, #0c243c 0%, #7e8c9c 95.36%);
+  border-radius: 0.26vw;
+  color: white;
+}
+.card-bottom-userCourseview h6 {
+  font-weight: 300;
+  font-size: 1vw;
+  width: max-content;
+}
+
+.pricing-card-userCourseview h5:first-child {
+  text-decoration: none;
+  font-size: 0.8vw;
+  color: #7e8c9c;
+}
+.card-bottom-userCourseview p {
+  font-size: 0.9vw;
+  font-weight: 300;
+}
+.card-bottom-userCourseview h5 {
+  font-size: 1.2vw;
+}
+.card-bottom-userCourseview h4 {
+  font-size: 0.9vw;
+  font-weight: 400;
+  width: 80%;
+  height: 6.5vh;
+  /* background-color: yellow; */
+}
+
+.no-userCourseview-userCourseview {
+  height: 40vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 2vh;
+}
+.no-userCourseview-userCourseview div {
+  background: linear-gradient(95.64deg, #0c243c 0.92%, #7e8c9c 70.85%);
+  height: 100%;
+  width: 90%;
+  border-radius: 1.67vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1vw;
+  color: white;
+}
+.add-icon-userCourseview {
+  height: 25%;
+  cursor: pointer;
+}
+.no-userCourseview-userCourseview div h5 {
+  font-weight: 100;
+}
+.no-userCourseview-userCourseview div h1 {
+  font-weight: 400;
+}
+.bottom-card-useruserCourseview {
+  height: 14%;
+  /* background-color: blue; */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 1vh;
+}
+.bottom-card-useruserCourseview span {
+  display: flex;
+  gap: 0.2vw;
+}
+.bottom-card-useruserCourseview span h5 {
+  /* text-decoration: line-through; */
+  font-size: 1.2vw;
+  /* color: #7E8C9C; */
+}
+.bottom-card-useruserCourseview span h5:first-child {
+  text-decoration: line-through;
+  font-size: 1vw;
+  color: #7e8c9c;
+  font-weight: 500;
+}
+
+.bottom-card-useruserCourseview div {
+  background: linear-gradient(97.89deg, #0c243c 0%, #7e8c9c 95.36%);
+  height: 80%;
+  width: 60%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 0.26vw;
+  color: white;
+  cursor: pointer;
+}
+
+
+.second-leftuserCourse{
+  display: none;
+}
+/* .right-mid-userCourseview-responsive{
+  
+ 
+} */
+.overView-profile{
+  display:flex;
+}
+.overView-profile h6{
+  margin-top: 0.8vw;
+  margin-left: 1vw;
+}
+
+@keyframes heart-bounce {
+  0% {
+    transform: scale(1);
+  }
+  30% {
+    transform: scale(1.25);
+  }
+  60% {
+    transform: scale(0.95);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+
+#heart-PurchasedCourses{
+  /* position: absolute;
+  right: 5%;
+  top: 10%; */
+  cursor: pointer;
+  color: red;
+  font-size: 1.2rem;
+  animation: heart-bounce 0.4s ease-in-out;
+}
+
+#unHeart-PurchasedCourses{
+  animation: heart-bounce 0.4s ease-in-out;
+  /* position: absolute; */
+  cursor: pointer;
+  right: 5%;
+  top: 10%;
+  color: white;
+  font-size: 1.3rem;
+}
+
+
+
+
+
+@media (max-width:1213px){
+  .mid-userCourseview {
+    display: block !important; 
+    flex-direction: initial !important; 
+    justify-content: initial !important;
+    align-items: initial !important;
+  }
+
+  .second-leftuserCourse{
+    margin-top: 27vw;
+    display: block !important;
+  }
+ 
+.details-right-mid-userCourseview {
+  margin-top: 1.5rem;
+}
+.new-left{
+  display: none !important;
+}
+
+.right-mid-userCourseview {
+  width: 100%;
+}
+.ratings-right-mid-userCourseview div div div:first-child {
+  height: 12vw;
+}
+
+.ratings-right-mid-userCourseview div div div:first-child p {
+  font-size: 1.5vw;
+
+}
+.ratings-right-mid-userCourseview div div div:first-child img {
+  height: 4.5vw;
+  width: 4.5vw;
+
+}
+.ratings-right-mid-userCourseview div div div:first-child h5 {
+  font-size: 1.7vw;
+  font-weight: 400;
+}
+.staricon {
+  font-size: 1.5vw;
+}
+.ratings-right-mid-userCourseview div div div:last-child p {
+  font-size: 1.6vw;
+}
+.left-bottom-mid-userCourseview div details div h6 {
+  font-size: 1.6vw;
+}
+.left-bottom-mid-userCourseview div details{
+  width: 100%;
+}
+}
+@media (min-width:1401px) and (max-width:1600px){
+
+.card-bottom-userCourseview {
+  height: 32vw;
+}
+}
+@media (max-width:1200px){
+  .details-right-mid-userCourseview span h6 {
+    font-size: 1.5vw;
+}
+}
+@media (min-width:781px) and (max-width:1200px){
+.card-bottom-userCourseview {
+  height: 34vw;
+}
+.tumbnail-userCourseview {
+  top: -2rem;
+}
+
+}
+@media (max-width:1119px){
+  .second-leftuserCourse {
+    margin-top: 31vw;
+  }
+}
+@media (max-width:1084px){
+  .left-top-mid-userCourseview ul li {
+    font-size: 1.5vw;
+}
+.left-top-mid-userCourseview h4 {
+  font-size: 1.5vw;
+}
+}
+@media (max-width:1037px){
+  .second-leftuserCourse {
+    margin-top: 38vw;
+  }
+}
+@media (max-width:866px){
+  .second-leftuserCourse {
+    margin-top: 42vw;
+  }
+}
+
+
+@media (max-width: 768px) {
+  .wrapper-userCourseview{
+    display: none;
+  }
+  .top-userCourseview{
+    display: none;
+  }
+  .mid-userCourseview{
+    display: none;
+  }
+  .pricing-right-mid-userCourseview{
+    flex-direction: row;
+    height: max-content;
+    align-items: center;
+  }
+  
+  .content-wrapper-mid-userCourseview{
+    flex-direction: column;
+  }
+  .details-right-mid-userCourseview{
+    padding-right:3.5vh;
+  }
+  .pricing-right-mid-userCourseview div{
+    margin: 0;
+  }
+  .pricing-right-mid-userCourseview div p{
+    font-size: 2.5vw;
+  }
+
+  .right-mid-userCourseview-responsive {
+    display: block;
+    padding: 1.5vw;
+   
+}
+.right-mid-userCourseview-responsive .tumbnail-userCourseview{
+  width:94% !important;
+
+
+}
+.content-wrapper-mid-userCourseview {
+  flex-direction: column;
+  margin-top: -40px !important;
+}
+.d-new{
+  display: block !important;
+}
+.top-userCourseview h3 {
+  font-size: 5vw;
+}
+.top-userCourseview {
+    padding-bottom: 20vw;
+}
+.second-leftuserCourse {
+  margin-top: 44vw;
+}
+.details-right-mid-userCourseview {
+gap:4vw;
+}
+.details-right-mid-userCourseview span h5 {
+  font-size: 1.9vw;
+ 
+
+}
+.details-right-mid-userCourseview span h6 {
+  font-size: 1.9vw;
+  font-weight: 400;}
+
+
+
+.ratings-right-mid-userCourseview {
+  margin-top: -2.8vh;
+ 
+} 
+.left-bottom-mid-userCourseview div details div {
+ height: 3.5vh;
+
+}
+.left-bottom-mid-userCourseview div details div h6 {
+  font-weight: 500;
+  font-size: 1.8vw;
+}
+.card-bottom-userCourseview {
+  height: 40vh !important;
+    min-width: 31vw;
+}
+.card-bottom-userCourseview h6 {
+ font-size: 1.5vw;
+}
+.pricing-card-userCourseview h5:first-child {
+
+  font-size: 1.6vw;
+}
+.card-bottom-userCourseview p {
+  font-size: 1.9vw;
+}
+.card-bottom-userCourseview h5 {
+    font-size: 1.6vw;
+}
+.ratings-right-mid-userCourseview h5:first-child {
+  font-size: 2.3vw;
+}
+.ratings-right-mid-userCourseview .map-ratings-right-mid-userCourseview p {
+
+  font-size: 2vw;
+}
+.left-bottom-mid-userCourseview div details summary h6 {
+  font-size: 2.7vw;
+}
+.description-data p {
+  font-size: 2vw;
+}
+.left-top-mid-userCourseview h3 {
+  font-size: 3vw;
+}
+.bottom-userCourseview h3 {
+  font-size: 2.4vw;
+}
+/*  */
+.tumbnail-userCourseview {
+  top: -2rem;
+
+ 
+}
+/* .card-bottom-userCourseview {
+  height: 18vh;
+} */
+.left-top-mid-userCourseview h3 {
+  font-size: 2.3vw;
+}
+.edit-course-expert{
+  width: max-content;
+  margin-top: 7px;
+  padding-top: 0.2rem;
+  padding-bottom: 0.2rem;
+}
+}
+
+@media (max-width: 721px) {
+  .left-top-mid-userCourseview ul li {
+      font-size: 1.8vw;
+  }
+  .left-top-mid-userCourseview h4 {
+    font-size: 1.7vw;
+}
+.edit-course-expert h6{
+  font-size: 0.7rem;
+}
+.payment-verify-popup{
+  width: 90%;
+}
+}
+@media (max-width: 717px) {
+  .top-userCourseview {
+    flex-direction: column;  
+  }
+  .text-uppercase {
+    margin-bottom: 3vw;
+}
+}
+
+@media (max-width:716px){
+  .second-leftuserCourse {
+    margin-top: 49vw;
+}
+}
+@media (max-width: 700px) {
+  .left-bottom-mid-userCourseview div details div h6 {
+      font-size: 2.2vw;
+  }
+  .ratings-right-mid-userCourseview div div div:first-child h5 {
+    font-size: 1.9vw;
+  
+}
+.ratings-right-mid-userCourseview div div div:last-child p {
+  font-size: 1.7vw;
+}
+.ratings-right-mid-userCourseview div div {
+
+  width: max-content;
+}
+}
+@media (max-width: 646px) {
+  .second-leftuserCourse {
+    margin-top: 53vw;
+}
+  .details-right-mid-userCourseview {
+    padding: 2vh 1vw;
+
+}
+}
+@media (max-width: 602px) {
+  .second-leftuserCourse {
+    margin-top: 58vw;
+}
+  .left-top-mid-userCourseview ul li {
+    font-size: 2vw;
+}
+.left-top-mid-userCourseview h4 {
+  font-size: 2vw;
+}
+.card-bottom-userCourseview {
+  height: 35vh !important;
+    min-width: 32vw;
+}
+}
+@media (max-width: 570px) {
+  .details-right-mid-userCourseview span h5 {
+      font-size: 2.5vw;
+      
+  }
+  .details-right-mid-userCourseview span h6 {
+    font-size: 2.3vw;
+
+}
+.left-bottom-mid-userCourseview div details{
+  border-radius: 0.5rem;
+}
+.left-bottom-mid-userCourseview div details div {
+  padding: 2vh;
+}
+.card-bottom-userCourseview {
+  height: 30vh !important;
+    min-width: 31vw;
+}
+.ratings-right-mid-userCourseview div div div:first-child p {
+  font-size: 1.7vw;
+}
+.tumbnail-userCourseview {
+  height: 40vh;
+}
+.second-leftuserCourse{
+  margin-top: 45vw;
+}
+}
+@media (max-width:541px){
+
+.left-top-mid-userCourseview ul li {
+  font-size: 2.6vw;
+}
+.left-top-mid-userCourseview h4 {
+  font-size: 2.3vw;
+}
+}
+@media (max-width: 539px) {
+  
+}
+@media (max-width:550px){
+  .card-bottom-userCourseview {
+    height: 33vw;
+   
+  }
+  .description-data p {
+    font-size: 2.7vw;
+}
+.left-top-mid-userCourseview h3 {
+  font-size: 2.9vw;
+}
+}
+@media (max-width:510px){
+  .ratings-right-mid-userCourseview div div div:last-child p {
+    font-size: 2vw;
+}
+.ratings-right-mid-userCourseview div div div:first-child h5 {
+  font-size: 2.2vw;
+}
+.ratings-right-mid-userCourseview div div div:first-child p {
+  font-size: 2.2vw;
+}
+.tumbnail-userCourseview {
+  height: 35vh;
+}
+.second-leftuserCourse{
+  margin-top: 45vw;
+}
+}
+@media (max-width: 473px) {
+  .details-right-mid-userCourseview span h6 {
+      font-size: 2.5vw;
+  }
+  .details-right-mid-userCourseview span h5 {
+    font-size: 2.8vw;
+}
+.tumbnail-userCourseview {
+  height: 35vh;
+}
+.second-leftuserCourse{
+  margin-top: 45vw;
+}
+.description-data p {
+  font-size: 2.5vw;
+}
+.ratings-right-mid-userCourseview div div div:last-child p {
+  font-size: 2.2vw;
+}
+.staricon {
+  font-size: 1.8vw;
+}
+.ratings-right-mid-userCourseview div div div:first-child h5 {
+  font-size: 2.4vw;
+}
+.ratings-right-mid-userCourseview div div div:first-child p {
+  font-size: 2vw;
+}
+.ratings-right-mid-userCourseview div div div:first-child img {
+  height: 5vw;
+  width: 5vw;
+}
+}
+@media (max-width: 468px) {
+  .tumbnail-userCourseview {
+    height: 34vh;
+  }
+  .second-leftuserCourse{
+    margin-top: 45vw;
+  }
+}
+@media (max-width: 459px) {
+  .left-bottom-mid-userCourseview div details div h6 {
+      font-size: 3vw;
+  }
+  .ratings-right-mid-userCourseview div div div:first-child {
+    height: 15vw;
+  }
+
+}
+@media (max-width: 458px) {
+  .tumbnail-userCourseview {
+    height: 30vh;
+  }
+  .second-leftuserCourse{
+    margin-top: 45vw;
+  }
+
+}
+@media (max-width:433px){
+  .description-data p {
+    font-size: 3.5vw;
+  }
+  .left-top-mid-userCourseview h3 {
+    font-size: 4vw;
+}
+.card-bottom-userCourseview {
+  height: 30vh !important;
+  min-width: 40vw;
+}
+.card-bottom-userCourseview h6 {
+  font-size: 2vw;
+  font-weight: 500;
+ }
+ .pricing-card-userCourseview h5{
+  font-size: 2vw;
+  font-weight: 500;
+ }
+ .card-bottom-userCourseview p{
+  font-size: 3vw;
+ }
+ .card-bottom-userCourseview h5{
+  font-size: 2.2vw;
+ }
+ .bottom-card-useruserCourseview span h5{
+  font-size: 2.5vw;
+ }
+ .bottom-card-useruserCourseview span h5:first-child{
+  font-size: 2vw;
+ }
+ .tumbnail-userCourseview {
+  height: 22vh;
+}
+.second-leftuserCourse{
+  margin-top: 40vw;
+}
+}
+@media (max-width:394px){
+  .tumbnail-userCourseview {
+    height: 27vh;
+  }
+  .second-leftuserCourse{
+    margin-top: 45vw;
+  }
+  .ratings-right-mid-userCourseview div div div:first-child p {
+    font-size: 2.5vw;
+}
+.ratings-right-mid-userCourseview div div div:first-child h5 {
+  font-size: 2.6vw;
+}
+.ratings-right-mid-userCourseview div div div:last-child p {
+  font-size: 2.8vw;
+  
+}
+.ratings-right-mid-userCourseview div div div:first-child {
+
+  width: 18vw;
+ 
+
+}
+}
+@media (max-width:376px){
+  .m-bt{
+    margin-bottom: 5vw;
+  }
+
+.left-bottom-mid-userCourseview div details summary h6 {
+  font-size: 3.6vw;
+}
+}
+@media (max-width:351px){
+  .m-bt{
+    display: block !important;
+  }
+}
+@media (max-width:300px){
+ 
+  .description-data p {
+    font-size: 4vw;
+}
+.left-top-mid-userCourseview ul li {
+  font-size: 3vw;
+}
+.left-top-mid-userCourseview h4 {
+  font-size: 3vw;
+}
+.left-bottom-mid-userCourseview div details div h6 {
+  font-size: 3.5vw;
+}
+}

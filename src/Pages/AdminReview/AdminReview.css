@@ -1,0 +1,182 @@
+
+.container-courseRequest {
+    font-family: sans-serif;
+    width: 100% !important;
+    /* padding: 20px; */
+    border-radius: 5px;
+ 
+  
+  }
+  
+  .header-courseRequest {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 15px;
+    padding-top: 10px;
+    border-bottom: 1px solid #202020;
+   
+  }
+  .courseRequest{
+    margin-left: 4vw;
+  }
+  
+  .course-req {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background-color: #fff;
+   
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1vh;
+  }
+  
+  .course-req img {
+    width: 7vw;
+    height: 16vh;
+    object-fit: cover;
+    margin-right: 15px;
+    border-radius: 10%;
+  }
+  
+  .course-details {
+    flex: 1;
+  }
+  
+  .course-details h3 {
+    margin: 0 0 5px 0;
+    font-size: 1.2rem;
+  }
+  
+  .course-details p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #666;
+  }
+  
+  .course-details span {
+    font-weight: bold;
+  }
+  
+  .course-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  .overview,
+  .approve,
+  .decline {
+    padding: 8px 10px;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  .overview {
+    background-color: #f0f0f0;
+    color: #333;
+  }
+  
+  .approve {
+    background-color: #4caf50;
+    color: #fff;
+  }
+  
+  .decline {
+    background-color: #f44336;
+    color: #fff;
+  }
+
+
+  .popup-content-review {
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    text-align: center;
+    width: 35vw;
+    /* max-width: 40vw; */
+    /* height: 34%; */
+    /* max-height: 45%; */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    overflow-y: auto;
+}
+.popup-content-review textarea{
+  border: 1.2px solid rgb(205, 202, 202);
+  width: 100%;
+  margin-top: 1rem;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  height: 6rem;
+}
+
+.cancel-button-review {
+  margin-top: 30px;
+  padding: 12px 24px;
+  background: #ffffff;
+  color: rgb(9, 9, 9);
+  border: 1px solid rgb(175, 174, 174);
+  border-radius: 4px;
+  cursor: pointer;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Added shadow */
+  transition: box-shadow 0.3s ease; /* Smooth transition */
+ margin-right: 2vw;
+}
+.continue-button-review{
+  margin-top: 30px;
+  padding: 12px 24px;
+  background: #0c243c;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+@media (max-width:778px){
+
+    
+  .overview,
+  .approve,
+  .decline {
+    padding: 2px 4px;
+  }
+  .course-req img {
+    width: 19vw;
+    height: 17vw;
+  }
+
+
+}
+@media (max-width:778px){
+  .popup-content-review{
+    width: 90vw;
+  }
+}
+@media (min-width:778px) and (max-width:1200px){
+  .course-req img {
+    width: 9vw;
+    height: 9vw;
+}
+
+}
+@media (min-width:1201px) and (max-width:1300px){
+  .course-req img {
+    width: 9vw;
+    height: 8vw;
+}
+}
+@media (min-width:1301px) and (max-width:1450px){
+  .course-req img {
+    width: 5vw;
+    height: 7vw;
+}
+}
+
+@media(min-width:1450px){
+  .course-req img {
+   
+    height: 6vw;
+}
+}

@@ -1,0 +1,14 @@
+.wrapper-userWallet{
+    display: block;
+}
+.mobile-userWallet{
+    display: none;
+}
+@media (max-width: 768px) {
+    .wrapper-userWallet{
+        display: none;
+    }
+    .mobile-userWallet{
+        display: block;
+    }
+}

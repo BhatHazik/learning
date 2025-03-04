@@ -1,0 +1,22 @@
+@media (max-width:500px){
+    .exp{
+        padding-left: 0% !important;
+        padding-right: 0% !important;
+    }
+    .w-new{
+        min-width: 35rem !important;
+    }
+}
+.add-expert{
+    border: none;
+    display: flex;
+    border-radius: 5px;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 30px;
+    color: white;
+    font-size: 15px;
+    font-weight: 500;
+    height: 44px;
+    background: linear-gradient(92.36deg, #0c243c 0%, #7e8c9c 98.67%);
+}

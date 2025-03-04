@@ -1,0 +1,37 @@
+.rating-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+  }
+  
+  .rating-popup-content {
+    text-align: center;
+  }
+  
+  .stars {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  
+  .filled-star {
+    color: gold;
+    font-size: 2em;
+    cursor: pointer;
+  }
+  
+  .empty-star {
+    color: lightgray;
+    font-size: 2em;
+    cursor: pointer;
+  }
+  
+  .rating-popup-actions button {
+    margin: 0 10px;
+  }
+  

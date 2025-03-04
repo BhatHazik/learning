@@ -1,0 +1,27 @@
+.skeleton-category-container {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-start;
+    margin-top: 8px;
+  }
+  
+  .skeleton-category {
+    width: 80px;
+    height: 30px;
+    background-color: #e5e7eb;
+    border-radius: 6px;
+    animation: pulse 1.5s infinite;
+  }
+  
+  @keyframes pulse {
+    0% {
+      background-color: #f3f4f6;
+    }
+    50% {
+      background-color: #e5e7eb;
+    }
+    100% {
+      background-color: #f3f4f6;
+    }
+  }
+  

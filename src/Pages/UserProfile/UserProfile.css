@@ -1,0 +1,156 @@
+/* .container {
+  display: flex;
+  flex-direction: column; 
+  margin-top: 2vh;
+  } */
+   .c-profile{
+ display: flex;
+    flex-direction: column; 
+    margin-top: 2vh;
+    margin-left: -1vw;
+  }
+  
+  .profile-container { /* Flexbox for two-column layout */
+    display: flex;
+    align-items: flex-start; /* Align items to the top */
+    gap: 50px; /* Space between image and info */
+  }
+  
+  .profile-image {
+    width: 10%; /* Adjust image size as needed */
+    height: 10%;
+    margin-top: 2.3vh;
+  }
+  
+  .profile-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; 
+    border-radius: 50%;
+  }
+  
+  /* .profile-info { 
+    flex: 1; 
+  }
+   */
+  .name-info {
+    /* margin-bottom: 6vh; */
+    margin-right: 5vw;
+    margin-top: 3vh;
+    height: fit-content;
+
+  }
+  
+  .socials {
+    display: flex;
+    gap: 10px; 
+    margin-bottom: 5vh;
+    flex-wrap: wrap; /* Add space between socials and "About me" */
+  
+    height: fit-content;
+  }
+  
+ 
+
+  .socials a {
+    margin: 5px;
+    padding: 10px 20px;
+    background: linear-gradient(92.36deg, #0c243c 0%, #7e8c9c 98.67%);
+    color: #fff;
+    border-radius: 5px;
+    text-decoration: none;
+    text-align: center;
+    display: inline-block;
+   
+}
+
+
+
+  
+  
+  .para-profile{
+    font-weight: lighter;
+  }
+  /* .profile-one{
+    margin-bottom: -16vh;
+  } */
+  .expert-name {
+    display: block;
+    width: 10vw;
+    margin-top: 2vh;
+}
+
+.name-info h6 {
+    margin-bottom: 1.2vh; /* Add space below the name */
+}
+
+.name-info p {
+    margin-bottom: 1.2vh; /* Add space below the title */
+}
+
+.name-info .stats p {
+    margin-bottom: 1.2vh; /* Space between stats items */
+}
+.social-heading{
+    display: flex;
+    justify-content:start;
+    align-items: center;
+    font-weight: 600;
+    text-decoration: underline;
+    margin-bottom: 2vh;
+    margin-top: 1vh;
+}
+
+.cards-expertsCourseview {
+  display: flex !important;
+  flex-wrap: wrap !important; /* Allows items to wrap to the next line if there's not enough space */
+  justify-content: space-between; /* Distributes space between items */
+  gap: 16px; /* Optional: Add space between items */
+}
+ 
+.about{
+  margin-top: 5vh;
+}
+/* .social{
+  height: 25vh;
+} */
+.cards-userProfileCourseview {
+  padding: 0 1vw 0 1vw;
+  margin-top: 2vh;
+  display: flex;
+  height: 100%;
+  gap: 1vw; /* Adjust the gap between items */
+  margin-bottom: 4vh;
+  overflow-x: auto;
+  width: 100%;
+  /* background-color: blue; */
+}
+.cards-userProfileCourseview::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
+}
+
+
+.c-btm{
+  margin-bottom: 1vh;
+}
+
+
+@media(max-width:820px){
+  .profile-one{
+    display: block !important;
+  }
+}
+
+@media(max-width:598px){
+  .profile-container{
+    display: block;
+  }
+  .profile-image {
+    width: 15%;
+    height: 15%;
+   
+}
+.expert-name {
+  width: 40vw;
+}
+}

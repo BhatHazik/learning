@@ -1,0 +1,153 @@
+.signin-container {
+  margin-top: 10px;
+
+  width: 95%;
+
+  margin-bottom: 10px;
+  border-radius: 10px;
+
+  box-shadow: 2px 0px 10px 2px rgba(0, 0, 0, 0.25);
+}
+
+.signin-container::-webkit-scrollbar {
+  display: none;
+}
+
+.signUp-form {
+  display: flex;
+  flex-direction: column;
+  padding-left: 30px;
+}
+
+.signup-auth {
+  justify-content: center;
+  display: flex;
+  width: 100%;
+  gap: 25px;
+  align-items: center;
+}
+
+.signup-auth .bttns {
+  /* width: 196px; */
+  width: 50%;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  border: none;
+  font-size: 16px;
+  border-radius: 5px;
+  color: white;
+  background: linear-gradient(92.36deg, #0c243c 0%, #7e8c9c 98.67%);
+}
+
+.signup-now {
+  border: none;
+  display: flex;
+  border-radius: 5px;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 30px;
+  color: white;
+  font-size: 20px;
+  font-weight: 500;
+  height: 44px;
+  background: linear-gradient(92.36deg, #0c243c 0%, #7e8c9c 98.67%);
+}
+
+.signup-text {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.signup-image {
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(
+    149.12deg,
+    #0c243c 1.05%,
+    rgba(126, 140, 156, 0.71) 124.73%
+  );
+}
+
+/* .google-img{
+    width: 30px;
+    height: 30px;
+    background: linear-gradient(149.12deg, #0C243C 1.05%, rgba(126, 140, 156, 0.71) 124.73%);
+
+  } */
+
+.googleIcon,
+.appleIcon {
+  width: 10%;
+  height: 1.3rem;
+}
+
+.img-fluid {
+  width: 250px;
+  height: 250px;
+  object-fit: cover;
+  margin-bottom: 40px;
+}
+
+.signUp-text {
+  /* width: 402px; */
+  /* height: 190px; */
+  text-align: center;
+}
+
+.signup-start {
+  width: 100%;
+  display: flex;
+  margin-top: 20px;
+  flex-direction: column;
+  align-items: center;
+}
+.signup-start p {
+  /* font-family: Lato; */
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 16.8px;
+  letter-spacing: 0.05em;
+  color: rgba(0, 0, 0, 1);
+}
+
+.signUp-text .expertise {
+  /* font-family: Inter; */
+  /* font-size: 24px; */
+  font-weight: 700;
+  line-height: 29.05px;
+  color: white;
+}
+
+.join-team {
+  color: white;
+  width: 100%;
+  /* font-family: Lato; */
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 16.8px;
+  /* text-align: left; */
+  /* padding-left: 17px; */
+}
+
+@media (max-width: 768px) {
+  .signup-image {
+    display: none;
+  }
+  .signup-auth{
+    width: 100%;
+  }
+  .signup-auth .bttns{
+    width: 70%;
+  }
+  .signUp-form {
+    width: 100% !important;
+  }
+}

@@ -1,0 +1,29 @@
+.no-students  {
+    /* height: 40vh; */
+    height: 20vw;
+    width: 50vw;
+    display: flex;
+    justify-content: center;
+    margin-top: 2vh;
+  }
+  .no-students div {
+    background: linear-gradient(95.64deg, #0c243c 0.92%, #7e8c9c 70.85%);
+    height: 100%;
+    width: 90%;
+    border-radius: 1.67rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    color: white;
+    /* padding: 0rem 12rem 0rem 12rem; */
+  }
+  
+  .no-students div h1 {
+    font-weight: 400;
+    /* font-size: 2rem; */
+    font-size: 1.8rem;
+    width: 130%;
+    text-align: center;
+  }
