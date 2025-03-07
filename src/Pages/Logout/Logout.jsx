@@ -23,6 +23,7 @@ const Logout = () => {
       )
       .then(() => {
         setIsLoading(false);
+        localStorage.removeItem("hybridUser")
         localStorage.removeItem("token");
         localStorage.removeItem("user");
         localStorage.removeItem("userType");

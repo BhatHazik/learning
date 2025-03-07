@@ -98,6 +98,7 @@ export default function CourseCreation({ editCourse, courseeId }) {
     () => categoriesData?.data || [],
     [categoriesData]
   );
+  console.log(categories);
 
   useEffect(() => {
     if (editCourse) {
@@ -424,7 +425,7 @@ export default function CourseCreation({ editCourse, courseeId }) {
             <select
               className="px-5 py-2-half-5 border-secondary-subtle border rounded-2 w-100"
               name="category_id"
-              value={courseData.category_id}
+              value={courseData?.category_id}
               onChange={handleChange}
               required
             >
@@ -432,8 +433,8 @@ export default function CourseCreation({ editCourse, courseeId }) {
                 Select
               </option>
               {categories.map((category) => (
-                <option value={category.id} key={category.id}>
-                  {category.name}
+                <option className="app-text-black" value={category.id} key={category.id}>
+                  {category.category_name}
                 </option>
               ))}
             </select>

@@ -1,24 +1,34 @@
-import {io} from 'socket.io-client';
+import { io } from 'socket.io-client';
 import { BASE_URI } from './Config/url';
 export let socket;
 
-export const socketConnect = (token = null) => {
-    // const socketUrl = `${BASE_URI}/?token=${token}`
-    
-    
-    try {
-        // socket = io(socketUrl, {
-        //     transports: ['websocket'], // Force WebSocket transport
-        //     autoConnect: false, // Don't connect automatically
-        // });
+export const socketConnect = async (token = null) => {
+//   console.log(token);
+  const socketUrl = `${BASE_URI}/?token=${token}`;
+//   console.log(`Connecting to socket at ${socketUrl}`);
 
-        // socket.connect();
+  try {
+    socket = io(socketUrl, {
+      transports: ["websocket"],
+      autoConnect: false, // Don't auto-connect
+    //   timeout:20000
+    });
 
-        
+    socket.connect();
 
-    
+    // socket.on("connect", () => {
+    //   console.log("✅ Socket connected successfully!", socket.id);
+    // });
 
-    } catch (e) {
-      
-    }
-}
+    // socket.on("connect_error", (err) => {
+    //   console.error("❌ Connection error:", err);
+    // });
+
+    // socket.on("disconnect", (reason) => {
+    //   console.log("❌ Socket disconnected:", reason);
+    // });
+
+  } catch (e) {
+    console.log("❌ Error in socket connection:", e);
+  }
+};

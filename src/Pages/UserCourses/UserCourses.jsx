@@ -571,7 +571,7 @@ const UserCourses = ({ search }) => {
                 />
 
 
-                <LikeButton size="22px" className="position-absolute" top = "2%" right = "2%" token={token}/>
+                <LikeButton size="22px" className="position-absolute" top = "2%" right = "2%" token={token} heart={course.is_favourite} id={course.id}/>
 
               </div>
             

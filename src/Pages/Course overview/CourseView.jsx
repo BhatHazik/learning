@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import "../UserCourseOverview/UserCourseOverview.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
@@ -23,6 +23,18 @@ import ReactPlayer from "react-player";
 import { AiFillStar, AiOutlineStar } from "react-icons/ai";
 import { loadStripe } from "@stripe/stripe-js";
 import { HashLoader } from "react-spinners";
+import MobileVideoPlayer from "../../Components/VideoPlayer/MobilePlayer";
+import CourseDropdown from "../../Components/DropDown/ResponsiveDropdown";
+import Rating from "../../Components/Rating/Rating";
+import Error from "../../Components/Error/Error";
+import review from "../../assets/reviews.svg";
+import defaultUser from "../../assets/defaultUser.svg";
+import Popup from "../../Components/PopUp/PopUp";
+import { BiEdit, BiLink, BiPencil, BiSolidLock, BiSolidMessageEdit, BiSolidMessageSquareEdit } from "react-icons/bi";
+import { BsTwitterX } from "react-icons/bs";
+import { TbCoinFilled } from "react-icons/tb";
+import { RiEditCircleFill } from "react-icons/ri";
+
 
 const stripePromise = loadStripe(
   import.meta.env.VITE_STRIPE_KEY
@@ -37,6 +49,12 @@ const CourseView = ({ setEditCourse, setCourseId }) => {
   const [video_thumb, setVideo_thumb] = useState("");
   const [viseo_type, setVideo_type] = useState("");
   const [responsiveOpenChapters, setResponsiveOpenChapters] = useState({ 0: true });
+  const [isExpanded, setIsExpanded] = useState(false);
+    const [showButton, setShowButton] = useState(false);
+    const [isPopupOpen, setIsPopupOpen] = useState(false);
+    const descriptionRef = useRef(null);
+  
+
   const { id } = useParams();
   const navigate = useNavigate();
   const { contextSafe } = useGSAP();
@@ -78,7 +96,7 @@ const userType = localStorage.getItem("userType");
   });
 
   const ratings = useMemo(() => ratingsdata?.data || [], [ratingsdata]);
-  
+  console.log(ratings);
 
   const url = `${BASE_URI}/api/v1/courses/courseOverview/${id}`;
 
@@ -90,7 +108,7 @@ const userType = localStorage.getItem("userType");
   //  setData(data.data[0]);
  
   const Chapters = useMemo(() => data?.data?.chapters || [], [data]);
- 
+ console.log(Chapters)
   const url2 = `${BASE_URI}/api/v1/courses/${id}`;
   // const token2 = localStorage.getItem("token");
   const {
@@ -106,7 +124,7 @@ const userType = localStorage.getItem("userType");
  
 
   const courseData = useMemo(() => data2?.data || [], [data2]);
-
+console.log(courseData)
   useEffect(() => {
     setVideo_url(Chapters[0]?.lessons[0]?.video_url);
     setVideo_type(Chapters[0]?.lessons[0]?.video_type);
@@ -221,10 +239,12 @@ const userType = localStorage.getItem("userType");
 
   return (
     <>
-      {isLoading ? (
+      
+        <div className="wrapper-userCourseview position-relative">
+        {isLoading ? (
         <HashLoader size="60" color="#0c243c" id="spinner-usercourseview"/>
       ) : (
-        <div className="wrapper-userCourseview position-relative">
+        <>
           {verificationPopUp && (
             <div className="popup ">
               <div className="popup-content-review">
@@ -721,8 +741,234 @@ const userType = localStorage.getItem("userType");
               </div>
             </div>
           </div>
-        </div>
+          </>
       )}
+        </div>
+      
+
+        <div className="mobile-PurchasedCourse px-1 w-100 position-relative ">
+      {/* <Popup
+        isOpen={isPopupOpen}
+        onClose={() => setIsPopupOpen(false)}
+        title="Unlock this Course"
+      >
+        <p>Choose how you want to unlock:</p>
+        <div className="flex flex-col gap-3 mt-3">
+          <button
+            // onClick={handleUnlockWithCoins}
+            className="px-4 py-2 app-black text-white rounded w-full"
+          >
+            Unlock with Coins (500 Coins)
+          </button>
+          <button
+            // onClick={handleBuyDirectly}
+            className="px-4 py-2 bg-blue-500 text-white rounded w-full"
+          >
+            Buy Directly
+          </button>
+        </div>
+      </PopUp> */}
+
+        <MobileVideoPlayer
+          videoUrl={video_url}
+          videoType={viseo_type}
+          className="w-100 rounded-3"
+        />
+
+        <div
+          style={{ marginBottom: "65px" }}
+          className="app-white position-relative mx-2 p-2 px-2 rounded-3 d-flex flex-column gap-2"
+        >
+          <div className="d-flex justify-content-between">
+            <h3 className="fs-3 fw-medium ">{courseData[0]?.title}</h3>
+            <div className="d-flex">
+
+            <div style={{cursor:"pointer"}} className="p-1 px-2 app-black rounded-1 d-flex justify-content-between align-items-center">
+              <h6 className="fs-6 fw-medium app-text-white d-flex gap-2">
+                {courseData[0]?.coins} <TbCoinFilled className="fs-5 fw-medium app-text-white" />
+              </h6>
+            </div>
+            {/* <div className="d-flex app-black"> */}
+
+            {
+              userType === "expert" && 
+
+            <RiEditCircleFill onClick={()=> navigate(`/courses/addLesson/${id}`)} className="fs-1 cursor-pointer border rounded-1 align-self-center ms-1 "/>
+            }
+            {/* </div> */}
+            </div>
+          </div>
+          
+          {Chapters?.map((course, index) => (
+            <CourseDropdown
+              key={index}
+              course={course}
+              placeholder="Select a course option"
+              isFirst={index === 0}
+              setVideoUrl={setVideo_url}
+              // onSelect={handleSelection}
+            />
+          ))}
+
+          <div className="mt-1 p-2 rounded-1 border border-1">
+          <h5
+              style={{ width: "max-content" }}
+              className="fs-6 fw-normal app-text-white rounded-1 app-black p-1 px-2"
+            >
+              Description
+            </h5>
+            <p
+              ref={descriptionRef}
+              style={{
+                lineHeight: "1.3rem",
+                maxHeight: isExpanded ? "none" : "5.2rem", // 4 lines * 1.3rem
+                overflow: "hidden",
+                transition: "max-height 0.3s ease-in-out",
+              }}
+              className="text-start fs-6 fw-light app-text-black mt-1"
+              dangerouslySetInnerHTML={{
+                __html:
+                  courseData[0]?.description || "No description available",
+              }}
+            />
+
+            {showButton && (
+              <button
+                className="btn btn-link p-0 app-text-black"
+                style={{ fontSize: "0.9rem" }}
+                onClick={() => setIsExpanded(!isExpanded)}
+              >
+                {isExpanded ? "View Less" : "View More"}
+              </button>
+            )}
+             <span className="d-flex fw-medium gap-1 pt-1">
+                          <p>Ratings:</p>{" "}
+                          <p className="fw-normal">{ratings?.averageRating || 0 }</p>
+                        </span>
+                        <span className="d-flex fw-medium gap-1 pt-1">
+                          <p>Students:</p>{" "}
+                          <p className="fw-normal">{courseData[0]?.enrolled || 0}</p>
+                        </span>
+                        <span className="d-flex fw-medium gap-1 pt-1">
+                          <p>Duration:</p>{" "}
+                          <p className="fw-normal">
+                            {formatTime(courseData[0]?.total_duration) || "0 secs"}
+                          </p>
+                        </span>
+
+            <div>
+              <h5
+                style={{ width: "max-content" }}
+                className="fs-6 fw-normal app-text-white rounded-1 app-black p-1 px-2 mt-2"
+              >
+                Expert
+              </h5>
+              <div className="d-flex mt-2 align-items-center gap-2">
+                <img
+                  style={{
+                    borderRadius: "50%",
+                    width: "3.5rem",
+                    height: "3.5rem",
+                    objectFit: "cover",
+                  }}
+                  className=""
+                  src={courseData?.course?.profile_picture || defaultUser}
+                  alt=""
+                  onError={(e) => {
+                    // console.log(e)
+                    e.target.onerror = null;
+                    e.target.src = defaultUser; // Fallback image
+                  }}
+                />
+                <div>
+                  <h6 className="fs-5 fw-normal app-text-black d-flex gap-2">
+                    {JSON.parse(localStorage.getItem("user"))?.name}
+                  </h6>
+                  <p className="fs-6 fw-light app-text-black">Expert JiuJitsu</p>
+                </div>
+              </div>
+              <div
+                style={{ width: "max-content" }}
+                className="d-flex gap-2 p-1 px-2 align-items-center mt-1"
+              >
+                <BsTwitterX className="fs-3 app-text-white app-black p-1 rounded-1" />
+                <FaYoutube className="fs-3 app-text-white app-black p-1 rounded-1" />
+                <BiLink className="fs-3 app-text-white app-black p-1 rounded-1" />
+              </div>
+              <p className="fs-6 fw-light app-text-black">
+                I am a Jiu-Jitsu expert Jhon with years of experience mastering
+                the art of grappling, control, and submissions. My game is built
+                on precision, strategy, and adaptability, allowing me to
+                dominate opponents using technique rather than brute strength.
+                Whether it’s teaching, competing, or refining my craft, I
+                constantly push my limits to evolve as a martial artist.
+              </p>
+            </div>
+            <h5
+              style={{ width: "max-content" }}
+              className="fs-6 fw-normal app-text-white rounded-1 app-black p-1 px-2 mt-2"
+            >
+              Reviews & Ratings
+            </h5>
+
+            {ratings?.result?.length > 0 ? (
+              ratings?.result?.map((review, index) => (
+                <div
+                  key={index}
+                  className="p-1 mt-2 border border-1 rounded-2 d-flex gap-2"
+                >
+                  <img
+                    style={{
+                      width: "2.7rem",
+                      height: "2.7rem",
+                      objectFit: "cover",
+                    }}
+                    className="rounded-2"
+                    src={review.profile_picture || defaultUser}
+                    alt={review.reviewer}
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = defaultUser; // Fallback image
+                    }}
+                  />
+                  <div className="w-100">
+                    <div className="d-flex justify-content-between w-100">
+                      <h6
+                        style={{ fontSize: "1rem" }}
+                        className="fw-normal app-text-black d-flex gap-2"
+                      >
+                        {review.comment}
+                      </h6>
+                      <p
+                        style={{ fontSize: "0.8rem", color: "grey" }}
+                        className="fw-normal app-text-black align-self-start pe-1"
+                      >
+                        {review.review_date.toString().split("T")[0]}
+                      </p>
+                    </div>
+                    <div className="d-flex justify-content-between w-100">
+                      <Rating
+                        initialRating={review.rating}
+                        size="1em"
+                        disabled={true}
+                        name={`rating-${review.id}`}
+                      />
+                      <p
+                        style={{ fontSize: "0.8rem", color: "grey" }}
+                        className="fw-normal app-text-black align-self-end pe-2"
+                      >
+                        ~ {review.name}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <Error imageSrc={review} message={"No reviews yet!"}/>
+            )}
+          </div>
+        </div>
+      </div>
     </>
   );
 };

@@ -45,13 +45,13 @@ import { CiSearch } from "react-icons/ci";
 import { CiFilter } from "react-icons/ci";
 import { BiSolidChevronRightSquare } from "react-icons/bi";
 import { IoIosAddCircleOutline, IoMdBookmarks, IoMdNotifications } from "react-icons/io";
-import { MdMessage, MdWallet } from "react-icons/md";
+import { MdFilterCenterFocus, MdMessage, MdWallet } from "react-icons/md";
 import { PiFolderUserFill } from "react-icons/pi";
 import { BsBellFill, BsFillCartFill } from "react-icons/bs";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { BASE_URI } from "../../Config/url";
 import toast from "react-hot-toast";
-import { FaUserCircle } from "react-icons/fa";
+import { FaUserCircle, FaUsers } from "react-icons/fa";
 import axios from "axios";
 import useFetch from "../../hooks/useFetch";
 import Cart from "../Cart/Cart";
@@ -60,11 +60,14 @@ import { buildStyles, CircularProgressbar } from "react-circular-progressbar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRightFromBracket, faGear } from "@fortawesome/free-solid-svg-icons";
 import profile from "../../assets/profile.png"
-import { FaGear } from "react-icons/fa6";
-import { LuLogOut } from "react-icons/lu";
+import { FaChalkboardUser, FaGear } from "react-icons/fa6";
+import { LuBellDot, LuLogOut } from "react-icons/lu";
 import { IoLogIn } from "react-icons/io5";
-import { TbCoinFilled } from "react-icons/tb";
+import { TbCoinFilled, TbLayoutDashboardFilled, TbMessages } from "react-icons/tb";
 import defaultUser from "../../assets/defaultUser.svg";
+import ToggleSwitch from "../ToggleSwitch/ToggleSwitch";
+import { GoBellFill } from "react-icons/go";
+import { HiFolderOpen } from "react-icons/hi";
 
 
 
@@ -76,10 +79,44 @@ const links = [
   <path d="M7.82369 19.4232V13.419H12.1715V19.4232C12.1715 20.0836 12.6606 20.624 13.2584 20.624H16.5193C17.1171 20.624 17.6062 20.0836 17.6062 19.4232V11.0173H19.454C19.954 11.0173 20.1932 10.3328 19.8127 9.97257L10.7258 0.930238C10.3128 0.521952 9.68237 0.521952 9.26933 0.930238L0.182446 9.97257C-0.187116 10.3328 0.0411431 11.0173 0.541139 11.0173H2.38895V19.4232C2.38895 20.0836 2.87808 20.624 3.4759 20.624H6.73674C7.33456 20.624 7.82369 20.0836 7.82369 19.4232Z" fill={"black"}/>
   </svg> },
   { href: "/myLearning", label: "Learning", Icon: <IoMdBookmarks className={`text-black fs-2`} style={{color:"#959595"}}/>},
+  { 
+    href: "/support", 
+    label: "Support", 
+    Icon: <h3 className="fs-2 newLogo app-text-red" style={{ fontFamily:"newFont"}}>J</h3> 
+  },
+    { href: "/messages", label: "Messages", Icon: <TbMessages className={`text-black fs-2`} style={{color:"#959595"}}/>},
+
   { href: "/userWallet", label: "Wallet", Icon: <MdWallet className={`text-black fs-2`} style={{color:"#959595"}}/>},
   { href: "/settings", label: "Settings", Icon: <FaGear className={`text-black fs-2`} style={{color:"#959595"}}/>},
   { href: "/logout", label: "Logout", Icon: <LuLogOut className={`text-black fs-2`} style={{color:"#959595"}}/>},
 ];
+
+const expertLinks = [
+  { href: "/dashboard", label: "Dashboard", Icon: <TbLayoutDashboardFilled className={`text-black fs-2`} style={{color:"#959595"}}/> },
+  { href: "/courses", label: "Courses", Icon: <svg width="25" height="21" viewBox="0 0 25 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M8.46669 14.374C8.37706 14.374 8.28744 14.3877 8.20194 14.4166C7.71594 14.5811 7.20481 14.6865 6.66669 14.6865C6.12856 14.6865 5.61744 14.5811 5.13106 14.4166C5.04556 14.3877 4.95631 14.374 4.86669 14.374C2.53944 14.374 0.654312 16.3459 0.666687 18.7732C0.671937 19.799 1.48156 20.624 2.46669 20.624H10.8667C11.8518 20.624 12.6614 19.799 12.6667 18.7732C12.6791 16.3459 10.7939 14.374 8.46669 14.374ZM6.66669 13.124C8.65494 13.124 10.2667 11.4451 10.2667 9.37402C10.2667 7.30293 8.65494 5.62402 6.66669 5.62402C4.67844 5.62402 3.06669 7.30293 3.06669 9.37402C3.06669 11.4451 4.67844 13.124 6.66669 13.124ZM22.8667 0.624023H8.46669C7.47406 0.624023 6.66669 1.49316 6.66669 2.56113V4.37402C7.54494 4.37402 8.35794 4.63887 9.06669 5.06934V3.12402H22.2667V14.374H19.8667V11.874H15.0667V14.374H12.2077C12.9239 15.026 13.4497 15.8869 13.6961 16.874H22.8667C23.8593 16.874 24.6667 16.0049 24.6667 14.9369V2.56113C24.6667 1.49316 23.8593 0.624023 22.8667 0.624023Z" fill={"black"}/>
+    </svg>},
+    { 
+      href: "/support", 
+      label: "Support", 
+      Icon: <h3 className="fs-2 newLogo app-text-red" style={{ fontFamily:"newFont"}}>J</h3> 
+    },
+    { href: "/messages", label: "Messages", Icon: <TbMessages className={`text-black fs-2`} style={{color:"#959595"}}/>},
+  { href: "/expertWallet", label: "Wallet", Icon: <MdWallet className={`text-black fs-2`} style={{color:"#959595"}}/>},
+  { href: "/settings", label: "Settings", Icon: <FaGear className={`text-black fs-2`} style={{color:"#959595"}}/>},
+  { href: "/logout", label: "Logout", Icon: <LuLogOut className={`text-black fs-2`} style={{color:"#959595"}}/>},
+];
+
+const adminLinks = [
+  { href: "/adminDashboard", label: "Dashboard", Icon: <TbLayoutDashboardFilled className={`text-black fs-2`} style={{color:"#959595"}}/> },
+  { href: "/experts", label: "Experts", Icon: <FaChalkboardUser className={`text-black fs-2`} style={{color:"#959595"}}/>},
+  { href: "/students", label: "Students", Icon: <FaUsers className={`text-black fs-2`} style={{color:"#959595"}}/>},
+  { href: "/support", label: "Messages", Icon: <TbMessages className={`text-black fs-2`} style={{color:"#959595"}}/>},
+  { href: "/adminReview", label: "Review", Icon: <MdFilterCenterFocus className={`text-black fs-2`} style={{color:"#959595"}}/>},
+  { href: "/transactions", label: "Transactions", Icon: <HiFolderOpen className={`text-black fs-2`} style={{color:"#959595"}}/>},
+  { href: "/settings", label: "Settings", Icon: <FaGear className={`text-black fs-2`} style={{color:"#959595"}}/>},
+  { href: "/logout", label: "Logout", Icon: <LuLogOut className={`text-black fs-2`} style={{color:"#959595"}}/>},
+]
 
 const notLoglinks = [
   { href: "/categories", label: "Home", Icon: <svg className={`text-black`} width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -130,9 +167,10 @@ export default function SmallerScreenNavbar({ collapsed, search, setSearch, cart
   const [profileCompletion, setProfileCompletion] = useState(null);
   const [UserType, setUserType] = useState("Expert")
   const profileUrl = `${BASE_URI}/api/v1/users/profile`;
-  
+  const [ballance , setBallance] = useState(0);
   // console.log(token)
 
+  
   const fetchOptions = {
     headers: {
       Authorization: "Bearer " + token,
@@ -143,6 +181,31 @@ export default function SmallerScreenNavbar({ collapsed, search, setSearch, cart
 
   const { data, refetch } = useFetch(profileUrl, fetchOptions);
   const { name, profile_picture } = data?.data[0] || [];
+  
+
+  const fetchWalletBallance = async () => {
+    try {
+      const response = await axios.get(`${BASE_URI}/api/v1/users/userWallet`, {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      });
+      
+        console.log(response.data.data[0].total_points)
+        setBallance(response.data.data[0].total_points);
+      
+      
+    } catch (error) {
+      console.error("Error fetching wallet ballance:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (token) {
+      fetchWalletBallance();
+    }
+  }, [token]);
+
 
   // useEffect(() => {
   //   const handleStorageChange = () => {
@@ -304,8 +367,15 @@ export default function SmallerScreenNavbar({ collapsed, search, setSearch, cart
       {/* Coin Container */}
       <div className="border border-1 d-flex gap-1 align-items-center rounded-2 overflow-hidden px-2 ps-1 py-1" style={{ width: "max-content", color:"gray" }}>
         <div className="d-flex gap-1 align-items-center">
-          <TbCoinFilled className="fs-3" />
-          <span className="fs-6 fw-semibold">398</span>
+          {
+            role === "admin" ? 
+            <GoBellFill onClick={()=> navigate('/transactions')} className="fs-2 ps-1 cursor-pointer"/>:
+            <>
+            
+            <TbCoinFilled className="fs-3" />
+            <span className="fs-6 fw-semibold">{ballance}</span>
+            </>
+          }
         </div>
       </div>
 
@@ -402,7 +472,7 @@ export default function SmallerScreenNavbar({ collapsed, search, setSearch, cart
    </div>
      }
       {(userType === "user") && (
-        <div  className="d-flex justify-content-center w-100  align-items-center">
+        <div  className="d-flex justify-content-center w-100 align-items-center">
         {searchBox && 
           <div style={{width:"95%"}} className="search-input input-group">
             
@@ -491,7 +561,7 @@ export default function SmallerScreenNavbar({ collapsed, search, setSearch, cart
 <></>
       {/* )} */}
 
-      {userType === "admin" && (
+      {/* {role === "admin" && (
         <div className="cart-container admin-cart-container flex gap-4 align-items-center" >
           <Link to="/transactions">
             <BsBellFill className="primary-color fs-4 ms-5 cursor-pointer" />
@@ -500,7 +570,7 @@ export default function SmallerScreenNavbar({ collapsed, search, setSearch, cart
           <FontAwesomeIcon className="cursor-pointer" icon={faGear} color="black" onClick={()=> navigate("/settings")}/>
           <FontAwesomeIcon className="cursor-pointer" icon={faArrowRightFromBracket} color="black" onClick={()=> navigate("/logout")}/>
         </div>
-      )}
+      )} */}
 
 
       {/* {userType === "expert" && (
@@ -767,7 +837,15 @@ export default function SmallerScreenNavbar({ collapsed, search, setSearch, cart
                   className="d-flex flex-column gap-3"
                 >
                   
-                  {(token && role === "user") && links.map(({ href, label, Icon}) => {
+                  {(token && role === "user") &&
+                  <>
+                  {localStorage.getItem("hybridUser") === "hybrid" &&
+                  <motion.div variants={navItem}>
+                  <ToggleSwitch />
+                </motion.div>
+                  }
+                  
+                  {links.map(({ href, label, Icon}) => {
                     console.log(Icon);
                     return(
                     <motion.div key={href} variants={navItem}>
@@ -786,6 +864,62 @@ export default function SmallerScreenNavbar({ collapsed, search, setSearch, cart
                       </div>
                     </motion.div>
                   )})}
+                  </>
+                  }
+                  {token && role === "expert" && (
+  <>
+    <motion.div variants={navItem}>
+      <ToggleSwitch />
+    </motion.div>
+    {expertLinks.map(({ href, label, Icon }) => (
+      <motion.div key={href} variants={navItem}>
+        <div style={{ cursor: "pointer" }} onClick={() => navigate(href)}>
+          <a
+            onClick={toggleMenu}
+            className="d-flex align-items-center gap-3 text-decoration-none p-3 rounded text-dark"
+            style={{ transition: "all 0.2s" }}
+            onMouseOver={(e) =>
+              (e.currentTarget.style.backgroundColor = "rgba(0,0,0,0.05)")
+            }
+            onMouseOut={(e) =>
+              (e.currentTarget.style.backgroundColor = "transparent")
+            }
+          >
+            {Icon && <>{Icon}</>}
+            <span className="fs-5">{label}</span>
+          </a>
+        </div>
+      </motion.div>
+    ))}
+    
+  </>
+)}
+{(token && role === "admin") &&
+                  <>
+                  
+                  
+                  {adminLinks.map(({ href, label, Icon}) => {
+                    
+                    return(
+                    <motion.div key={href} variants={navItem}>
+                      <div style={{cursor:"pointer"}} onClick={()=> navigate(href)}>
+                   
+                        <a
+                          onClick={toggleMenu}
+                          className="d-flex align-items-center gap-3 text-decoration-none p-3 rounded text-dark"
+                          style={{ transition: "all 0.2s" }}
+                          onMouseOver={(e) => e.currentTarget.style.backgroundColor = 'rgba(0,0,0,0.05)'}
+                          onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                        >
+                           {Icon && <>{Icon}</> }
+                          <span className="fs-5">{label}</span>
+                        </a>
+                      </div>
+                    </motion.div>
+                  )})}
+                  </>
+                  }
+
                   {!token && notLoglinks.map(({ href, label, Icon}) => {
                     console.log(Icon);
                     return(

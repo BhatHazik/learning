@@ -11,6 +11,9 @@ import { faCoins } from "@fortawesome/free-solid-svg-icons";
 import { loadStripe } from "@stripe/stripe-js";
 import jiujitsuCoin from "../../assets/jiujitsuCoin.png";
 import Popup from "../../Components/PopUp/PopUp";
+import { CustomLoader } from "../../Components/CustomLoader/CustomLoader";
+import Error from "../../Components/Error/Error";
+import SearchNotFound from "../../assets/searchNotFound.svg";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_KEY);
 
@@ -1235,7 +1238,7 @@ console.log(orders)
         <div className="app-white px-2 p-2 rounded-2">
           <h5
             style={{ width: "max-content" }}
-            className="fs-6 fw-regular app-text-white rounded-1 app-black p-1 px-2"
+            className="fs-5 fw-medium"
           >
             Purchase History
           </h5>
@@ -1252,7 +1255,7 @@ console.log(orders)
                   Recent Purchase
                 </h6>
                 <h4 className="fw-regular app-text-black opacity-75 pt-1">
-                  {walletData[0]?.last_purchase} Coins
+                  {walletData[0]?.last_purchase || 0} Coins
                 </h4>
               </div>
               <div className="w-50 d-flex flex-column align-items-center gap-1 justify-content-center">
@@ -1261,7 +1264,7 @@ console.log(orders)
                 </h5>
                 <span className="d-flex gap-2">
                   <h5 className="fs-5 fw-medium app-text-black opacity-75">
-                    {walletData[0]?.total_points}
+                    {walletData[0]?.total_points || 0}
                   </h5>
                   <img
                     style={{ width: "1.5rem" }}
@@ -1346,7 +1349,26 @@ console.log(orders)
         </div>
 
         <div style={{ marginBottom: "4rem" }} className="w-100 app-white p-2 mt-2 d-flex flex-column rounded-2">
-        {mobileActiveTab === "transactions" && withdrawalHistory?.data?.coins?.map((transaction, index) => (
+         
+        {
+  loading ? 
+  <div className="d-flex w-100 p-1 app-white flex-column mt-1">
+
+<CustomLoader width="100%" height="10rem" className="rounded-3 mt-2"/>
+<CustomLoader width="100%" height="10rem" className="rounded-3 mt-2"/>
+
+<CustomLoader width="100%" height="10rem" className="rounded-3 mt-2"/>
+
+<CustomLoader width="100%" height="10rem" className="rounded-3 mt-2"/>
+
+  </div>
+  :
+  <>
+  {
+  !withdrawalHistory?.data?.data?.coins?.length && mobileActiveTab === "transactions" ?
+  <Error imageSrc={SearchNotFound} message="No Transactions Found" /> 
+  :
+  mobileActiveTab === "transactions" && withdrawalHistory?.data?.coins?.map((transaction, index) => (
           <div key={index} className="w-100 border border-1 p-2 rounded-1 mb-2">
             <span className="w-100 d-flex justify-content-evenly">
               <h6 style={{ fontSize: "0.9rem", width: "40%" }} className="fw-regular app-text-black opacity-75">Date:</h6>
@@ -1367,7 +1389,12 @@ console.log(orders)
           </div>
         ))}
 
-        {mobileActiveTab === "purchases" && orders?.map((order, index) => (
+        {
+        
+          !orders?.length && mobileActiveTab === "purchases" ?
+          <Error imageSrc={SearchNotFound} message="No Orders Found" /> 
+          :
+        mobileActiveTab === "purchases" && orders?.map((order, index) => (
           <div key={index} className="w-100 border border-1 p-2 rounded-1 mb-2">
             <span className="w-100 d-flex justify-content-evenly">
               <h6 style={{ fontSize: "0.9rem", width: "40%" }} className="fw-regular app-text-black opacity-75">Course Name:</h6>
@@ -1391,6 +1418,7 @@ console.log(orders)
             </span>
           </div>
         ))}
+  </>}
       </div>
       </div>
       

@@ -4,6 +4,9 @@ import axios from "axios";
 import "./Students.css"
 import formatDate from "../../utils/formatDate";
 import { HashLoader } from "react-spinners";
+import SearchNotFound from "../../assets/searchNotFound.svg";
+import Error from "../../Components/Error/Error";
+import { CustomLoader } from "../../Components/CustomLoader/CustomLoader";
 
 const UserManagement = () => {
   const [activeTab, setActiveTab] = useState("users");
@@ -47,6 +50,7 @@ const UserManagement = () => {
           },
         });
         setStudents(response.data?.data?.users || []);
+
       } catch (err) {
         setError(err?.response?.data?.message);
       } finally {
@@ -117,8 +121,9 @@ const UserManagement = () => {
     return colors[Math.floor(Math.random() * colors.length)];
   };
 
-  return (
-    <div className="w-100">
+  return(
+     <>
+    <div className="w-100 wrapper-experts">
       
       {
         loading ? 
@@ -269,6 +274,94 @@ const UserManagement = () => {
       </>
       }
     </div>
+
+    <div style={{marginBottom:"4.5rem"}} className="mobile-experts w-100">
+      {
+        loading ? 
+        <div className="d-flex w-100 p-1 app-white flex-column mt-1 px-4">
+ <CustomLoader width="98%" height="10rem" className="rounded-3 mt-2"/>
+ <CustomLoader width="100%" height="10rem" className="rounded-3 mt-2"/>
+
+ <CustomLoader width="100%" height="10rem" className="rounded-3 mt-2"/>
+
+ <CustomLoader width="100%" height="10rem" className="rounded-3 mt-2"/>
+
+        </div>
+        :
+        <>
+        <div
+          style={{
+            zIndex: "100",
+            width: "max-content",
+            justifySelf: "start",
+            position: "sticky",
+            top: "-0.3%",
+          }}
+          className="mobile-top-myLearning w-100 gap-3 ps-3 p-2 px-2 justify-content-start mt-2 rounded-1 app-white d-flex gap-2"
+        >
+          <h4 
+                    style={{cursor:"pointer"}}
+
+          className={`fs-5 fw-regular `}
+          >
+            Students
+          </h4>
+          
+        </div>
+
+<div className="px-2 w-100 mt-2">
+<div className="w-100 d-flex flex-column justify-content-center align-items-center app-white p-2 rounded-1">
+{
+!experts.length ?
+<Error imageSrc={SearchNotFound} message="No Students Found" />
+:
+experts?.map((order, index) => {
+  const { text: statusText, color: statusColor } = getStatusDetails(order.status);
+  return (
+    <div key={index} className="w-100 border border-1 p-2 rounded-1 mb-2">
+      <span className="w-100 d-flex justify-content-evenly">
+        <h6 style={{ fontSize: "0.9rem", width: "40%" }} className="fw-regular app-text-black opacity-75">Name:</h6>
+        <h6 style={{ fontSize: "0.9rem", width: "25%" }} className="fw-regular app-text-black opacity-75">{order.name}</h6>
+      </span>
+
+
+      <span className="w-100 d-flex justify-content-evenly pt-2">
+        <h6 style={{ fontSize: "0.9rem", width: "40%" }} className="fw-regular app-text-black opacity-75">Joined On:</h6>
+        <h6 style={{ fontSize: "0.9rem", width: "25%" }} className="fw-regular app-text-black opacity-75">{formatDate(order.created_at)}</h6>
+      </span>
+
+      <span className="w-100 d-flex justify-content-evenly pt-2">
+        <h6 style={{ fontSize: "0.9rem", width: "40%" }} className="fw-regular app-text-black opacity-75">Status:</h6>
+        <h6 style={{ fontSize: "0.9rem", width: "25%", color: statusColor }} className="fw-regular app-text-black opacity-75">{statusText}</h6>
+      </span>
+
+      <span className="w-100 d-flex justify-content-evenly pt-2">
+        <h6 style={{ fontSize: "0.9rem", width: "40%" }} className="fw-regular app-text-black opacity-75">Enrolled Courses:</h6>
+        <h6 style={{ fontSize: "0.9rem", width: "25%" }} className="fw-regular app-text-black opacity-75">{order.total_courses}</h6>
+      </span>
+
+      <span className="w-100 d-flex justify-content-evenly pt-2">
+        <h6 style={{ fontSize: "0.9rem", width: "40%" }} className="fw-regular app-text-black opacity-75">Action:</h6>
+        <button
+          onClick={() => handleAction(order.id, statusText === "Active" ? 0 : 1)}
+          style={{ fontSize: "0.9rem", width: "25%" }}
+          className="fw-regular border-0 app-text-white app-black d-flex align-items-center justify-content-center p-1 px-2 rounded-1"
+        >
+          Suspend
+        </button>
+      </span>
+    </div>
+  );
+})}
+
+</div>
+</div>
+        </>
+      }
+    
+        
+    </div>
+    </>
   );
 };
 

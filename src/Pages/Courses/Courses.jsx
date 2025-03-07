@@ -9,6 +9,12 @@ import { BASE_URI } from "../../Config/url";
 import { SyncLoader } from "react-spinners";
 import CategorySkeletonLoader from "../../Components/CategoriesLoader/CategoriesLoader";
 import SkeletonLoader from "../../Components/CardLoader/CardLoader";
+import Error from "../../Components/Error/Error";
+import SearchNotFound from "../../assets/searchNotFound.svg";
+import defaultCourse from "../../assets/defaultCourse.svg";
+import defaultUser from "../../assets/defaultUser.svg";
+import Popup from "../../Components/PopUp/PopUp";
+
 
 const ShimmerCard = () => (
   <div className="card-bottom-courses shimmer-card-courses shimmer-card-usercourses shimmer-learning">
@@ -76,7 +82,6 @@ const Courses = ({ search, setEditCourse, setCourseId }) => {
   const [reasonPopUp, setReasonPopUp] = useState(false);
   const [activeId, setActiveId] = useState(null);
   const [activeTab, setActiveTab] = useState("live");
-  const [loading, setLoading] = useState(false);
   const [mobileActiveTab, setMobileActiveTab] = useState("live");
 
   const url = `${BASE_URI}/api/v1/courses/expertCourses?tab=${activeTab}`;
@@ -99,141 +104,10 @@ const Courses = ({ search, setEditCourse, setCourseId }) => {
   //   "Closed Guard",
   // ];
 
-  const courses = [
-    {
-      id: 1,
-      title: "Half Guard",
-      tags: "Guard,Lock,Raid",
-      category: "Guard",
-      price: 199,
-      originalPrice: 299,
-      instructor: "John",
-      status: "Live",
-      image:
-        "https://muaythaiwhitby.ca/wp-content/uploads/2018/10/JiuJitsu-scaled.jpeg",
-      instructorImage: "https://randomuser.me/api/portraits/men/1.jpg",
-    },
-    {
-      id: 2,
-      title: "Full Guard",
-      tags: "Guard,Defence,Raid",
-      category: "Defense",
-      price: 149,
-      originalPrice: 249,
-      instructor: "Jane",
-      status: "Declined",
-      image:
-      "https://images.pexels.com/photos/19406288/pexels-photo-19406288/free-photo-of-fighter-in-gym.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-      instructorImage: "https://randomuser.me/api/portraits/women/2.jpg",
-    },
-    {
-      id: 3,
-      title: "Triangle Choke",
-      tags: "Submission,Choke,Lock",
-      category: "Submission",
-      price: 179,
-      originalPrice: 279,
-      instructor: "Mike",
-      status: "Live",
-      image:
-        "https://i0.wp.com/impulsemartialarts.com/wp-content/uploads/2021/06/off-balance-aikido-judo.jpg?resize=840%2C473&ssl=1",
-      instructorImage: "https://randomuser.me/api/portraits/men/3.jpg",
-    },
-    {
-      id: 4,
-      title: "Armbar",
-      tags: "Submission,Lock,Arm",
-      category: "Submission",
-      price: 189,
-      originalPrice: 289,
-      instructor: "Emma",
-      status: "Incomplete",
-      image:
-        "https://images.pexels.com/photos/19406288/pexels-photo-19406288/free-photo-of-fighter-in-gym.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-      instructorImage: "https://randomuser.me/api/portraits/women/4.jpg",
-    },
-    {
-      id: 5,
-      title: "Rear Naked Choke",
-      tags: "Choke,Submission,Back",
-      category: "Submission",
-      price: 159,
-      originalPrice: 259,
-      instructor: "David",
-      status: "Approval",
-      image:
-        "https://muaythaiwhitby.ca/wp-content/uploads/2018/10/JiuJitsu-scaled.jpeg",
-      instructorImage: "https://randomuser.me/api/portraits/men/5.jpg",
-    },
-    {
-      id: 6,
-      title: "Leg Lock",
-      tags: "Lock,Leg,Submission",
-      category: "Submission",
-      price: 199,
-      originalPrice: 299,
-      instructor: "Sophia",
-      status: "Live",
-      image:
-        "https://muaythaiwhitby.ca/wp-content/uploads/2018/10/JiuJitsu-scaled.jpeg",
-      instructorImage: "https://randomuser.me/api/portraits/women/6.jpg",
-    },
-    {
-      id: 7,
-      title: "Kimura Lock",
-      tags: "Lock,Submission,Arm",
-      category: "Submission",
-      price: 169,
-      originalPrice: 269,
-      instructor: "Chris",
-      status: "Live",
-      image:
-        "https://muaythaiwhitby.ca/wp-content/uploads/2018/10/JiuJitsu-scaled.jpeg",
-      instructorImage: "https://randomuser.me/api/portraits/men/7.jpg",
-    },
-    {
-      id: 8,
-      title: "Guillotine Choke",
-      tags: "Choke,Submission,Neck",
-      category: "Submission",
-      price: 179,
-      originalPrice: 279,
-      instructor: "Anna",
-      status: "Live",
-      image:
-        "https://muaythaiwhitby.ca/wp-content/uploads/2018/10/JiuJitsu-scaled.jpeg",
-      instructorImage: "https://randomuser.me/api/portraits/women/8.jpg",
-    },
-    {
-      id: 9,
-      title: "Omoplata",
-      tags: "Lock,Submission,Shoulder",
-      category: "Submission",
-      price: 189,
-      originalPrice: 289,
-      instructor: "Tom",
-      status: "Live",
-      image:
-        "https://muaythaiwhitby.ca/wp-content/uploads/2018/10/JiuJitsu-scaled.jpeg",
-      instructorImage: "https://randomuser.me/api/portraits/men/9.jpg",
-    },
-    {
-      id: 10,
-      title: "Ezekiel Choke",
-      tags: "Choke,Submission,Neck",
-      category: "Submission",
-      price: 199,
-      originalPrice: 299,
-      instructor: "Olivia",
-      status: "Live",
-      image:
-        "https://muaythaiwhitby.ca/wp-content/uploads/2018/10/JiuJitsu-scaled.jpeg",
-      instructorImage: "https://randomuser.me/api/portraits/women/10.jpg",
-    },
-  ];
+
 
   const coursesData = useMemo(() => data?.data || [], [data]);
-
+console.log(coursesData)
   const handleCardClick = (id) => {
     navigate(`/courses/courseView/${id}`);
   };
@@ -283,7 +157,7 @@ const Courses = ({ search, setEditCourse, setCourseId }) => {
     <>
       <div className="wrapper-courses">
         {reasonPopUp && (
-          <div className="popup ">
+          <div className="popup wrapper-expert">
             <div className="popup-content-review">
               <div className="popup-buttons-review">
                 <h5
@@ -405,9 +279,7 @@ const Courses = ({ search, setEditCourse, setCourseId }) => {
           </div>
         )}
 
-        {loading ? (
-          <CategorySkeletonLoader />
-        ) : (
+        
           <div
             style={{
               zIndex: "100",
@@ -417,27 +289,27 @@ const Courses = ({ search, setEditCourse, setCourseId }) => {
               top: "-0.3%",
               overflowX:"auto"
             }}
-            className="mobile-top-myLearning w-100 gap-2 ps-3 p-2 px-2 justify-content-start mt-2 rounded-1 app-white d-flex gap-2"
+            className="mobile-top-myLearning w-100 gap-2 ps-3 p-2 px-2 justify-content-start mt-2 rounded-1 app-white gap-2"
           >
             <h4
               style={{ cursor: "pointer" }}
               className={`p-1 px-2 rounded-2 fs-6 fw-regular border-2 ${
-                mobileActiveTab === "live"
+                activeTab === "live"
                   ? "app-black app-text-white border-black"
                   : "border border-1 text-secondary"
               }`}
-              onClick={() => setMobileActiveTab("live")}
+              onClick={() => setActiveTab("live")}
             >
               Live
             </h4>
             <h4
               style={{ cursor: "pointer" }}
               className={`p-1 px-2 rounded-2 fs-6 border-2 ${
-                mobileActiveTab === "approval"
+                activeTab === "requested"
                   ? "app-black border-black app-text-white"
                   : "border border-1 text-secondary"
               }`}
-              onClick={() => setMobileActiveTab("approval")}
+              onClick={() => setActiveTab("requested")}
             >
               {/* {category.category_name} */}
               Approval
@@ -445,11 +317,11 @@ const Courses = ({ search, setEditCourse, setCourseId }) => {
             <h4
               style={{ cursor: "pointer" }}
               className={`p-1 px-2 rounded-2 fs-6 border-2 ${
-                mobileActiveTab === "declined"
+                activeTab === "declined"
                   ? "app-black border-black app-text-white"
                   : "border border-1 text-secondary"
               }`}
-              onClick={() => setMobileActiveTab("declined")}
+              onClick={() => setActiveTab("declined")}
             >
               {/* {category.category_name} */}
               Declined
@@ -457,26 +329,29 @@ const Courses = ({ search, setEditCourse, setCourseId }) => {
             <h4
               style={{ cursor: "pointer" }}
               className={`p-1 px-2 rounded-2 fs-6 border-2 ${
-                mobileActiveTab === "incomplete"
+                activeTab === "incomplete"
                   ? "app-black border-black app-text-white"
                   : "border border-1 text-secondary"
               }`}
-              onClick={() => setMobileActiveTab("incomplete")}
+              onClick={() => setActiveTab("incomplete")}
             >
               {/* {category.category_name} */}
               Incomplete
             </h4>
           </div>
-        )}
+        
 
         <div className="mobileUserCourses pb-5 mb-4 px-3 pt-3 gap-3">
-          {loading ? (
+          {isLoading ? (
             <>
               {[...Array(3)].map((_, index) => (
                 <SkeletonLoader key={index} />
               ))}
             </>
-          ) : (
+          ) :
+          coursesData?.length === 0 ?
+          <Error imageSrc={SearchNotFound} message="No courses found"/> :
+          (
             <>
               {/* {coursesData.length === 0 && 
               <div style={{height:"60vh"}} className="w-100 align-self-center d-flex flex-column justify-content-center align-items-center">
@@ -485,7 +360,7 @@ const Courses = ({ search, setEditCourse, setCourseId }) => {
             </div>
              } */}
               {/* {coursesData.map((course, index) => { */}
-              {courses.map((course, index) => {
+              {coursesData?.map((course, index) => {
                 {
                   /* const bgColor = colors[Math.floor(Math.random() * colors.length)];
               const image = category[index].imageUrl; */
@@ -495,9 +370,8 @@ const Courses = ({ search, setEditCourse, setCourseId }) => {
                     <div
                       onClick={() =>
                         navigate(
-                          course.is_purchased
-                            ? `/userPurchasedCourses/${course.id}`
-                            : `/userCourses/userCourseView/${course.id}`
+                          `/courses/courseView/${course.id}`
+                           
                         )
                       }
                       key={index}
@@ -513,11 +387,15 @@ const Courses = ({ search, setEditCourse, setCourseId }) => {
                         style={{ maxWidth: "100%", zIndex: "99" }}
                       >
                         <img
-                          className=" w-100 object-fit-cover rounded-bottom-0 rounded-2"
-                          src={course.image}
-                          // src="https://muaythaiwhitby.ca/wp-content/uploads/2018/10/JiuJitsu-scaled.jpeg"
-                          alt="Figma"
-                        />
+                                          className=" w-100 object-fit-cover rounded-bottom-0 rounded-2"
+                                          src={course.thumbnail || defaultCourse}
+                                          alt=""
+                                          onError={(e) => {
+                                            // console.log(e)
+                                            e.target.onerror = null;
+                                            e.target.src = defaultCourse; // Fallback image
+                                          }}
+                                        />
 
                         {/* <LikeButton size="22px" className="position-absolute" top = "2%" right = "2%"/> */}
                       </div>
@@ -546,12 +424,12 @@ const Courses = ({ search, setEditCourse, setCourseId }) => {
                     >
                       {course.expert}, Desginer
                     </h5> */}
-                            <h5
+                            {/* <h5
                               style={{ fontSize: "0.8rem", color: "#8B8B8B" }}
                               className="fw-normal mt-1"
                             >
-                              {course.tags}
-                            </h5>
+                              {course.tags} head,thai
+                            </h5> */}
                           </div>
 
                           <div>
@@ -579,25 +457,30 @@ const Courses = ({ search, setEditCourse, setCourseId }) => {
                           className="d-flex justify-content-between mt-3 h-50"
                         >
                           <div className="d-flex gap-2 align-items-center">
-                            <img
-                              style={{ width: "2rem", height: "2rem" }}
-                              className=" object-fit-cover rounded-pill"
-                              src={course.instructorImage}
-                              alt=""
+                             <img 
+                              style={{ width: "2rem", height: "2rem" }} 
+                              className="object-fit-cover rounded-pill" 
+                              src={localStorage.getItem("profile_picture") || defaultUser} 
+                              alt="" 
+                              onError={(e) => {
+                                // console.log(e)
+                                e.target.onerror = null;
+                                e.target.src = defaultUser; // Fallback image
+                              }}
                             />
                             <div>
                               <h5
                                 style={{ fontSize: "0.8rem" }}
                                 className="fw-normal app-text-black"
                               >
-                                By {course.instructor}
+                                By Me
                               </h5>
                               <div className="d-flex mt-1 gap-1 align-items-center">
                                 <h4
                                   style={{ fontSize: "1.1rem", color: "#000" }}
                                   className="fw-medium"
                                 >
-                                  ${course.price}
+                                  ${course.discounted_price}
                                 </h4>
                                 <h4
                                   style={{
@@ -606,7 +489,7 @@ const Courses = ({ search, setEditCourse, setCourseId }) => {
                                   }}
                                   className="fw-light text-decoration-line-through"
                                 >
-                                  ${course.originalPrice}
+                                  ${course.price}
                                 </h4>
                               </div>
                             </div>
@@ -615,14 +498,24 @@ const Courses = ({ search, setEditCourse, setCourseId }) => {
                           <div className="d-flex align-items-end">
                             <div
                               style={{ minWidth:"6rem"}}
-                              className="d-flex app-red justify-content-center align-items-center p-2 px-3 rounded-1"
+                              className="d-flex cursor-pointer app-red justify-content-center align-items-center p-2 px-3 rounded-1"
                             >
-                              <h5
+                              
+                                {activeTab === "declined" ? 
+                                <div
+                                
+                                onClick={(e) => handleReasonPopUp(e, course.remarks, course.id)}>
+                                  <p className="fs-6 app-text-white">Show Reason</p>
+                                </div>
+                                :
+                                <h5
                                 style={{ fontSize: "0.8rem", color: "#fff" }}
                                 className="fw-normal"
                               >
-                                {course.status}
-                              </h5>
+                                {activeTab}
+                                </h5>
+                                }
+                              
                             </div>
                           </div>
                         </div>
@@ -635,6 +528,45 @@ const Courses = ({ search, setEditCourse, setCourseId }) => {
           )}
         </div>
       </div>
+
+      <Popup 
+      isOpen={reasonPopUp}
+      onClose={()=> setReasonPopUp(false)}
+      title={"Declined"}
+      >
+        <div className="d-flex flex-column align-items-end">
+      <div
+        className="mb-3 w-100"
+        style={{
+          maxHeight: "12rem",
+          border: "1px solid grey",
+          padding: "0.5rem",
+          borderRadius: "0.5rem",
+          whiteSpace: "normal",
+          wordWrap: "break-word",
+          overflowWrap: "break-word",
+          overflowY: "auto",
+          scrollbarWidth: "none",
+        }}
+      >
+        {reason}
+      </div>
+      <div className="d-flex w-100 justify-content-end gap-2">
+        <button
+          onClick={handleCancelReason}
+          className="app-black py-1 px-2 border-0 app-text-white rounded-1 "
+        >
+          Cancel
+        </button>
+        <button
+          onClick={(e) => handleEditCourse(e, activeId)}
+          className="app-red py-1 px-2 border-0 app-text-white rounded-1"
+        >
+          Edit Course
+        </button>
+      </div>
+    </div>
+      </Popup>
     </>
   );
 };

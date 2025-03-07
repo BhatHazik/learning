@@ -58,7 +58,7 @@ export const Sidebar = ({ collapsed, handleToggle }) => {
 
   // Check if the current route is any of the course-related routes
   const isCourseRoute = location.pathname.startsWith("/courses");
-  const isUserCourseRoute = location.pathname.startsWith("/userCourses");
+  const isUserCourseRoute = location.pathname.startsWith("/categories");
 
   return (
     <div
@@ -88,7 +88,7 @@ export const Sidebar = ({ collapsed, handleToggle }) => {
           <>
             <motion.div variants={sidebarAnimation}>
               <Link
-                to="/userCourses"
+                to="/categories"
                 className={`menu-item d-flex align-items-center p-3 ${
                   isUserCourseRoute
                     ? "bg-gradient-custom rounded-start-3 shadow-bottom-lg"
@@ -104,7 +104,7 @@ export const Sidebar = ({ collapsed, handleToggle }) => {
                 >
                   <RiHome4Fill className="fs-5" />
                 </motion.div>
-                {!collapsed && <span className="text">Home</span>}
+                {!collapsed && <span className="text">Categories</span>}
               </Link>
             </motion.div>
             <motion.div variants={sidebarAnimation}>
@@ -422,7 +422,7 @@ export const Sidebar = ({ collapsed, handleToggle }) => {
         <>
           <motion.div variants={sidebarAnimation}>
             <Link
-              to="/userCourses"
+              to="/categories"
               className={`menu-item d-flex align-items-center p-3 ${
                 isUserCourseRoute
                   ? "bg-gradient-custom rounded-start-3 shadow-bottom-lg"
@@ -438,7 +438,7 @@ export const Sidebar = ({ collapsed, handleToggle }) => {
               >
                 <RiHome4Fill className="fs-5" />
               </motion.div>
-              {!collapsed && <span className="text">Home</span>}
+              {!collapsed && <span className="text">Categories</span>}
             </Link>
           </motion.div>
           <motion.div variants={sidebarAnimation}>

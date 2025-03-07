@@ -40,7 +40,7 @@ function PasswordRecovery() {
 
   return (
     <div className="p-md-5 min-vh-100">
-      <div className="container-fluid signin-container h-100">
+      <div className="container-fluid signin-container d-flex justify-content-center align-self-center h-100">
         <div className="row w-100 h-100">
           <div className="signup-image w-50">
             <img src={learnImg} alt="Image" className="img-fluid" />
@@ -89,7 +89,7 @@ function PasswordRecovery() {
                 </div>
                 <div className="text-center d-md-flex align-items-center justify-content-center w-100">
                   <button
-                    className="signup-now w-md-50 w-100 text-center mt-4"
+                    className="app-black rounded-1 border-0 app-text-white py-2 w-md-50 w-100 text-center mt-4"
                     type="submit"
                   >
                     Send Password Reset Link

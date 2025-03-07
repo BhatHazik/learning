@@ -25,6 +25,7 @@ const Categories = ({search}) => {
     try{
     setLoading(true);
     const categories = await axios.get(`${BASE_URI}/api/v1/category/?search=${search}`);
+    console.log(`${BASE_URI}/api/v1/category/?search=${search}`)
     console.log(categories.data.data);
     setCategories(categories.data.data);
     }catch(error){
@@ -57,7 +58,7 @@ const Categories = ({search}) => {
           <h4 
                     style={{cursor:"pointer"}}
 
-          className={`p-1 px-2 rounded-2 fs-6 fw-regular border-2 app-black app-text-white border-black `}
+          className={`fs-5 fw-regular`}
           >
            Categories
           </h4>

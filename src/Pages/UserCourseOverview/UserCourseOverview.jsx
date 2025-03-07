@@ -992,7 +992,7 @@ const UserCourseOverview = () => {
               >
                 Expert
               </h5>
-              <div className="d-flex mt-2 align-items-center gap-2">
+              <div className="d-flex mt-2 align-items-center gap-2 cursor-pointer" onClick={()=> navigate(`/userProfile/${courseData?.course?.expert_id}`)}>
                 <img
                   style={{
                     borderRadius: "50%",

@@ -44,6 +44,7 @@ export default function Login() {
         if (parsedResponse.token && parsedResponse.user) {
           localStorage.setItem("token", parsedResponse.token);
           localStorage.setItem("userType", parsedResponse.user.user_type);
+          
           localStorage.setItem("user", JSON.stringify(parsedResponse.user));
 
          
@@ -142,6 +143,11 @@ export default function Login() {
       .then((resp) => {
         localStorage.setItem("user", JSON.stringify(resp.data.Data));
         localStorage.setItem("userType", resp.data.Data.user_type);
+        if (resp.data.Data.user_type === "expert") {
+          console.log("mere saat gadrari huvi he!")
+          localStorage.setItem("hybridUser", "hybrid");
+         
+        }
         localStorage.setItem("token", resp.data.token);
         socketConnect(resp?.data?.token)
         setData({

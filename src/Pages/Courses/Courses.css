@@ -249,6 +249,9 @@
     margin: 0;
     display: none;
   }
+  .no-courses-courses{
+    display: none;
+  }
   .top-bottom-courses{
     display: none;
   }

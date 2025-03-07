@@ -238,8 +238,14 @@
   .bottom-myLearning{
     display: none;
   }
+  .no-courses-courses{
+    display: none;
+  }
   .top-myLearning{
     display: none;
+  }
+  .mobile-top-myLearning{
+    display: flex;
   }
 
   .slider-myLearning{

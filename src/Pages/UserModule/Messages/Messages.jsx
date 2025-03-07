@@ -12,6 +12,9 @@ import { faArrowLeft, faHeart, faUserCircle, faXmark } from "@fortawesome/free-s
 import { PulseLoader } from "react-spinners";
 import { socket } from "../../../socket";
 import toast from "react-hot-toast";
+import Popup from "../../../Components/PopUp/PopUp";
+import defaultUser from "../../../assets/defaultUser.svg";
+import { IoIosSend } from "react-icons/io";
 
 
 
@@ -179,7 +182,7 @@ const Messages = () => {
     }));
 
 
-
+// console.log(inputValue,selectedEmail);
 
     socket?.emit("private_message", {
       msg: inputValue,
@@ -244,14 +247,10 @@ const Messages = () => {
   }, [allExpertsInput]);
 
 
-
   useEffect(() => {
     if (!socket || !selectedChat) return;
-
-    // Listen to socket event
+  
     const messageListener = (message) => {
-     
-
       const newMessage = {
         id: Date.now(), // Unique ID for the message
         text: message.message,
@@ -259,23 +258,20 @@ const Messages = () => {
         time: new Date(message.date).toLocaleTimeString([], {
           hour: "2-digit",
           minute: "2-digit",
-        })
+        }),
       };
-
-      // Update the messages state without fetching data
-      setMessages((prevMessages) => ({
-        ...prevMessages,
-        [selectedChat]: [...(prevMessages[selectedChat] || []), newMessage],
+      setMessages((prev) => ({
+        ...prev,
+        [selectedChat]: [...(prev[selectedChat] || []), newMessage],
       }));
     };
-
-    socket.on("privateMessage", messageListener);
-
-    // Cleanup function to remove the listener
+  
+    socket.on('privateMessage', messageListener);
+  
     return () => {
-      socket.off("privateMessage", messageListener);
+      socket.off('privateMessage', messageListener);
     };
-  }, [socket, selectedChat]); // Add selectedChat as a dependency
+  }, [socket, selectedChat]);
 
 
 
@@ -388,7 +384,8 @@ const Messages = () => {
   };
 
   return (
-    <div className="w-100 position-relative">
+    <>
+    <div className="w-100 position-relative wrapper-experts">
       <header className="bg-gradient-custom-div p-3 rounded-3">
         <h3 className="pb-4">Messages</h3>
         <p className="mb-3 fs-4 fw-light">Messages from {userType === "expert" ? "users" : "experts"}</p>
@@ -492,6 +489,11 @@ const Messages = () => {
                               className="rounded-circle"
                               width="30"
                               height="30"
+                              onError={(e) => {
+                                // console.log(e)
+                                e.target.onerror = null;
+                                e.target.src = defaultUser; // Fallback image
+                              }}
                             />
                           ) : (
                             <div
@@ -561,6 +563,11 @@ const Messages = () => {
                               className="rounded-circle"
                               width="30"
                               height="30"
+                              onError={(e) => {
+                                // console.log(e)
+                                e.target.onerror = null;
+                                e.target.src = defaultUser; // Fallback image
+                              }}
                             />
                           ) : (
                             <div
@@ -618,6 +625,11 @@ const Messages = () => {
                   alt={selectedName}
                   className="rounded-circle"
                   style={{ width: "40px", height: "40px", objectFit: "cover" }}
+                  onError={(e) => {
+                    // console.log(e)
+                    e.target.onerror = null;
+                    e.target.src = defaultUser; // Fallback image
+                  }}
                 />
               ) : (
                 (selectedImage !== "" && selectedName !== "") ?
@@ -694,6 +706,11 @@ const Messages = () => {
                   alt={selectedName}
                   className="rounded-circle"
                   style={{ width: "40px", height: "40px", objectFit: "cover" }}
+                  onError={(e) => {
+                    // console.log(e)
+                    e.target.onerror = null;
+                    e.target.src = defaultUser; // Fallback image
+                  }}
                 />
               ) : (
                 (selectedImage !== "" && selectedName !== "") ?
@@ -756,6 +773,437 @@ const Messages = () => {
         </section>
       </main>
     </div>
+    
+    <div className="container-fluid p-0 mobile-experts w-100">
+ 
+  <main className="row m-0 w-100" style={{ minHeight: "calc(100vh - 14rem)" }}>
+    {/* Chat List Section */}
+    <section className="chatlist-messages p-0 col-12 col-md-4 d-flex flex-column align-items-center w-100 position-relative">
+      <div className="d-flex align-items-center gap-3 mb-2 app-white px-2 py-2 mt-2 w-100 ">
+        <div className="p-2 rounded-2 border-0 flex-grow-1">
+          <p className="mb-0 fw-semibold fs-5">Messages</p>
+        </div>
+        {userType === "user" && (
+          <div className="position-relative">
+            <button
+              onClick={() => handleComposeClick("click")}
+              className="app-black app-text-white rounded-1 border-0 py-2 px-3 fw-bold mb-0"
+            >
+              Compose
+            </button>
+            <Popup
+            isOpen={allExpertsPopUp}
+            onClose={()=> setAllExpertsPopUp(false)}
+            title={"All experts"}
+            >
+           
+                <input
+                  type="text"
+                  id="search"
+                  placeholder="Search here..."
+                  aria-label="search"
+                  className="form-control border-end-0 px-3 bg-custom-secondary"
+                  onChange={(e) => setAllExpertsInput(e.target.value)}
+                />
+                <div
+                  className="mt-2"
+                  style={{ height: "200px", overflowY: "auto" }}
+                >
+                  {allExpertsLoading ? (
+                    <div className="d-flex justify-content-center align-items-center h-100">
+                      <PulseLoader size={8} color="black" />
+                    </div>
+                  ) : allExpertsError === "No expert found" ? (
+                    <p className="text-center mt-2">{allExpertsError}</p>
+                  ) : (
+                    allExpertsData?.map((profile, index) => (
+                      <span
+                        key={index}
+                        onClick={() =>
+                          handleOpenChat(
+                            profile?.id,
+                            profile?.email,
+                            profile?.profile_picture,
+                            profile?.name
+                          )
+                        }
+                        className="d-flex gap-2 align-items-center m-2 cursor-pointer bg-blue p-1 rounded"
+                      >
+                        {profile.profile_picture ? (
+                          <img
+                            src={profile.profile_picture}
+                            alt={profile.name}
+                            className="rounded-circle"
+                            width="30"
+                            height="30"
+                            onError={(e) => {
+                              // console.log(e)
+                              e.target.onerror = null;
+                              e.target.src = defaultUser; // Fallback image
+                            }}
+                          />
+                        ) : (
+                          <div
+                            style={{
+                              width: "30px",
+                              height: "30px",
+                              borderRadius: "50%",
+                              backgroundColor: getRandomColor(),
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                            }}
+                          >
+                            <span style={{ color: "#fff", fontWeight: "bold" }}>
+                              {profile.name.charAt(0).toUpperCase()}
+                            </span>
+                          </div>
+                        )}
+                        <p className="fs-6 mb-0">{profile.name}</p>
+                      </span>
+                    ))
+                  )}
+                </div>
+              {/* </div> */}
+            </Popup>
+            
+          </div>
+        )}
+      </div>
+      
+      <div style={{width:"95%", height:"max-content"}} className="search-input input-group mt-2 mb-2">
+            
+          <div
+          className="w-100"
+      style={{
+        // background:"blue",
+        display: "flex",
+        alignItems: "center",
+        position: "relative",
+        lineHeight: "28px",
+        height:"max-content",
+      }}
+    >
+      <svg
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          left: "1rem",
+          fill: "#9e9ea7",
+          width: "1rem",
+          height: "1rem",
+        }}
+      >
+        <g>
+          <path d="M21.53 20.47l-3.66-3.66C19.195 15.24 20 13.214 20 11c0-4.97-4.03-9-9-9s-9 4.03-9 9 4.03 9 9 9c2.215 0 4.24-.804 5.808-2.13l3.66 3.66c.147.146.34.22.53.22s.385-.073.53-.22c.295-.293.295-.767.002-1.06zM3.5 11c0-4.135 3.365-7.5 7.5-7.5s7.5 3.365 7.5 7.5-3.365 7.5-7.5 7.5-7.5-3.365-7.5-7.5z" />
+        </g>
+      </svg>
+      
+      <input
+        type="search"
+        placeholder="Search Messages"
+          value={searchChat}
+          onChange={(e) => setSearchChat(e.target.value)}
+        style={{
+          width: "100%",
+          height: "45px",
+          lineHeight: "28px",
+          border: "1px solidrgb(255, 255, 255)",
+          padding: "0 1rem",
+          paddingLeft: "2.5rem",
+          border: "2px solid transparent",
+          borderRadius: "8px",
+          outline: "none",
+          backgroundColor: "#fff",
+          color: "#0d0c22",
+          transition: "0.3s ease",
+          boxShadow: "-1px 3px 8px rgba(0, 0, 0, 0.2)", // Right & bottom shadow
+    // border: "1px solid #ccc" // Optional: Ensures a clean border
+        }}
+        
+      />
+    </div>
+        
+          </div>
+      <div
+        className="chat-list-container px-2 w-100"
+        style={{ height: "calc(100vh - 20rem)", overflowY: "auto" }}
+      >
+        {chatList.length === 0 ? (
+          <div className="d-flex justify-content-center align-items-center h-100">
+            <p>No users found!</p>
+          </div>
+        ) : (
+          chatList.map((chat) => (
+            <div
+              key={chat.chat_id}
+              className={`cursor-pointer bg-white d-flex justify-content-between p-3 mb-2 border rounded-3 ${
+                selectedChat === chat.chat_id ? "selected" : ""
+              }`}
+              onClick={() =>
+                handleOpenChat(
+                  chat?.expert_id,
+                  chat?.email,
+                  chat?.profile_picture,
+                  chat?.name
+                )
+              }
+            >
+              <div className="d-flex gap-2 align-items-center">
+                {chat.profile_picture ? (
+                  <img
+                    src={chat.profile_picture}
+                    alt={chat.name}
+                    className="rounded-circle"
+                    width="30"
+                    height="30"
+                    onError={(e) => {
+                      // console.log(e)
+                      e.target.onerror = null;
+                      e.target.src = defaultUser; // Fallback image
+                    }}
+                  />
+                ) : (
+                  <div
+                    style={{
+                      width: "35px",
+                      height: "35px",
+                      borderRadius: "50%",
+                      backgroundColor: getRandomColor(),
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <span style={{ color: "#fff", fontWeight: "bold" }}>
+                      {chat.name.charAt(0).toUpperCase()}
+                    </span>
+                  </div>
+                )}
+                <div>
+                  <h6 className="mb-0">{chat.name}</h6>
+                  <p
+                    style={{ fontWeight: chat?.is_read ? "600" : "normal" }}
+                    className="text-muted mb-0"
+                  >
+                    {chat?.message ? chat?.message.slice(0, 15) + "..." : ""}
+                  </p>
+                </div>
+              </div>
+              <div className="d-flex flex-column justify-content-between">
+                <small>{getTimeDifference(chat.updated_at)}</small>
+                {hearted[chat.expert_id] ? (
+                  <FontAwesomeIcon
+                    onClick={(e) => handleFavoriteToggle(e, chat.expert_id)}
+                    icon={faHeart}
+                    id="heart-messages"
+                    style={{ zIndex: "10", color: "red" }}
+                  />
+                ) : (
+                  <CiHeart
+                    style={{ zIndex: "10", color: "black" }}
+                    id="unHeart-messages"
+                    onClick={(e) => handleFavoriteToggle(e, chat.expert_id)}
+                  />
+                )}
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+    </section>
+
+    {/* Desktop Chat Messages Section */}
+    <section
+      className="chat-messages-area d-none d-md-flex flex-column col-md-8 p-2 position-relative"
+      style={{ borderLeft: "1px solid #ddd" }}
+    >
+      <div className="d-flex align-items-center gap-2 mb-3">
+        {selectedImage ? (
+          <img
+            src={selectedImage}
+            alt={selectedName}
+            className="rounded-circle"
+            style={{ width: "40px", height: "40px", objectFit: "cover" }}
+            onError={(e) => {
+              // console.log(e)
+              e.target.onerror = null;
+              e.target.src = defaultUser; // Fallback image
+            }}
+          />
+        ) : (
+          selectedImage !== "" &&
+          selectedName !== "" && (
+            <div
+              style={{
+                width: "30px",
+                height: "30px",
+                borderRadius: "50%",
+                backgroundColor: getRandomColor(),
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <span style={{ color: "#fff", fontWeight: "bold" }}>
+                {selectedName.charAt(0).toUpperCase()}
+              </span>
+            </div>
+          )
+        )}
+        <p className="mb-0">{selectedName}</p>
+      </div>
+      {selectedChat === null ? (
+        <div className="d-flex justify-content-center align-items-center flex-grow-1">
+          <p>Select a conversation to start messaging</p>
+        </div>
+      ) : (
+        <div
+          className="d-flex flex-column justify-content-between"
+          style={{ height: "calc(100vh - 20rem)", overflowY: "auto" }}
+        >
+          <div className="message-list">
+            {messages[selectedChat]?.map((msg, index) => (
+              <div
+                key={index}
+                className={`d-flex ${
+                  msg?.sender === "You" ? "justify-content-end" : "justify-content-start"
+                }`}
+              >
+                <div className="message-container p-2 mb-2 bg-light rounded">
+                  <p className="mb-0">{msg.text}</p>
+                  <small className="text-muted">{msg.time}</small>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div ref={chatBottom1Ref} />
+          <form className="d-flex mt-3">
+            <input
+              type="text"
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              className="form-control me-2"
+              placeholder="Type your message"
+            />
+            <button
+              disabled={inputValue === ""}
+              onClick={handleSendMessage}
+              className="btn btn-primary"
+            >
+              Send
+            </button>
+          </form>
+        </div>
+      )}
+    </section>
+
+    {/* Mobile Chat Messages Section */}
+    <section
+      className={`mobile-chat d-md-none ${
+        isChatOpen ? "d-block" : "d-none"
+      } position-fixed top-0 start-0 w-100 h-100 bg-white p-3`}
+      style={{ zIndex: 1050 }}
+    >
+
+      <div className="d-flex gap-2 mb-3 w-100 align-items-center">
+      <FontAwesomeIcon
+          onClick={() => setIsChatOpen(false)}
+          icon={faArrowLeft}
+          className="cursor-pointer fs-3"
+        />
+      <div className="d-flex w-100 ps-3 pt-2 align-items-center gap-2  p-2 app-text-white rounded-2 app-black">
+        
+        {selectedImage ? (
+          <img
+            src={selectedImage}
+            alt={selectedName}
+            className="rounded-circle"
+            style={{ width: "40px", height: "40px", objectFit: "cover" }}
+            onError={(e) => {
+              // console.log(e)
+              e.target.onerror = null;
+              e.target.src = defaultUser; // Fallback image
+            }}
+          />
+        ) : (
+          selectedImage !== "" &&
+          selectedName !== "" && (
+            <div
+              style={{
+                width: "30px",
+                height: "30px",
+                borderRadius: "50%",
+                backgroundColor: getRandomColor(),
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <span style={{ color: "#fff", fontWeight: "bold" }}>
+                {selectedName.charAt(0).toUpperCase()}
+              </span>
+            </div>
+          )
+        )}
+        <p className="mb-0">{selectedName}</p>
+      </div>
+      </div>
+      
+      {selectedChat === null ? (
+        <div className="d-flex justify-content-center align-items-center h-100">
+          <p>Select a conversation to start messaging</p>
+        </div>
+      ) : (
+        <div
+          className="d-flex flex-column justify-content-between"
+          style={{ height: "calc(100vh - 10rem)", overflowY: "auto" }}
+        >
+          <div className="message-list">
+            {messages[selectedChat]?.map((msg, index) => (
+              <div
+                key={index}
+                className={`d-flex ${
+                  msg?.sender === "You" ? "justify-content-end" : "justify-content-start"
+                }`}
+              >
+                <div className="message-container p-2 mb-2 bg-light rounded">
+                  <p className="mb-0">{msg.text}</p>
+                  <small className="text-muted">{msg.time}</small>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div ref={chatBottomRef} />
+          <form
+            className="d-flex fixed-bottom p-3 py-3 app-black"
+            style={{ borderTop: "1px solid #ddd" }}
+          >
+            <input
+  type="text"
+  value={inputValue}
+  placeholder="Enter your message"
+  onChange={(e) => setInputValue(e.target.value)}
+  className="modern-input form-control me-2"
+/>
+
+            <button
+              disabled={inputValue === ""}
+              onClick={handleSendMessage}
+              className="app-red rounded-1 border-0 px-4 app-text-white"
+            >
+              
+              <IoIosSend className="fs-5"/>
+            </button>
+          </form>
+        </div>
+      )}
+    </section>
+  </main>
+</div>
+
+    </>
   );
 };
 

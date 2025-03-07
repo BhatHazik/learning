@@ -13,7 +13,7 @@ import { useNavigate } from "react-router-dom";
 import { RxCross2 } from "react-icons/rx";
 import { GoArrowDown } from "react-icons/go";
 import { MdDelete } from "react-icons/md";
-import { BiEdit } from "react-icons/bi";
+import { BiEdit, BiPlus } from "react-icons/bi";
 import { CgDanger } from "react-icons/cg";
 import defaultUser from "../../assets/defaultUser.svg";
 import Popup from "../../Components/PopUp/PopUp";
@@ -50,6 +50,36 @@ export default function Settings() {
     id: "",
     newName: "",
   });
+  const [isSubPopupVisible, setIsSubPopupVisible] = useState(false);
+  const [activeCategory, setActiveCategory] = useState(null);
+  const [subcategories, setSubcategories] = useState([]);
+  const [newSubName, setNewSubName] = useState("");
+  const [editingSub, setEditingSub] = useState(null);
+  const [pastMatchData, setPastMatchData] = useState({
+    competition_name: "",
+    competition_date: "",
+    acheavements: "",
+    location: ""
+  });
+  const [pastUpcomingMatchData, setPastUpcomingMatchData] = useState({
+    competition_name: "",
+    competition_date: "",
+    location: ""
+  });
+
+  const handlePastUpcomingMatchChange = (e) => {
+    setPastUpcomingMatchData({
+      ...pastUpcomingMatchData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handlePastMatchChange = (e) => {
+    setPastMatchData({
+      ...pastMatchData,
+      [e.target.name]: e.target.value
+    });
+  };
 
   const [userData, setUserData] = useState({
     users: {
@@ -108,6 +138,52 @@ export default function Settings() {
       });
     }
   }, [data]);
+
+  const handleUpcomingMatchPost = async()=>{
+    try {
+      // console.log(pastMatchData)
+      const response = await axios.post(
+        `${BASE_URI}/api/v1/expert/addUpcomingMatch`,
+        pastUpcomingMatchData,
+        fetchOptions
+      );
+      
+      toast.success(response.data.message);
+      setPastUpcomingMatchData({
+        competition_name: "",
+        competition_date: "",
+        acheavements: "",
+        location: ""
+      });
+
+    } catch (error) {
+      toast.error(error?.response?.data?.message);
+      console.error("Error matching posts:", error);
+    }
+  }
+
+  const handleMatchPost = async()=>{
+    try {
+      console.log(pastMatchData)
+      const response = await axios.post(
+        `${BASE_URI}/api/v1/expert/addPastMatch`,
+        pastMatchData,
+        fetchOptions
+      );
+      
+      toast.success(response.data.message);
+      setPastMatchData({
+        competition_name: "",
+        competition_date: "",
+        acheavements: "",
+        location: ""
+      });
+
+    } catch (error) {
+      toast.error(error?.response?.data?.message);
+      console.error("Error matching posts:", error);
+    }
+  }
 
   const handlePasswordUpdateAction = () => {
     axios
@@ -276,6 +352,89 @@ export default function Settings() {
     websiteRef.current.focus();
   };
 
+  const handleSubDelete = async (sub) => {
+    
+    try {
+      await axios.delete(`${BASE_URI}/api/v1/category/${sub.subcategory_id}/subcategories`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setSubcategories((prev) =>
+        prev.filter((s) => s.subcategory_id !== sub.subcategory_id)
+      );
+      // Reset input if the currently editing subcategory is deleted
+      if (editingSub && editingSub.subcategory_id === sub.subcategory_id) {
+        setEditingSub(null);
+        setNewSubName("");
+      }
+    } catch (error) {
+      console.error("Error deleting subcategory", error);
+    }
+  };
+
+  const handleCreateOrUpdateSub = async () => {
+    if (!activeCategory || !newSubName) return;
+
+    if (editingSub) {
+      // Update existing subcategory
+      try {
+        console.log(`${BASE_URI}/api/v1/category/${editingSub.subcategory_id}/subcategories`);
+        await axios.patch(`${BASE_URI}/api/v1/category/${editingSub.subcategory_id}/subcategories`, {
+          name: newSubName,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+        setSubcategories((prev) =>
+          prev.map((s) =>
+            s.subcategory_id === editingSub.subcategory_id
+              ? { ...s, subcategory_name: newSubName }
+              : s
+          )
+        );
+        setEditingSub(null);
+        setNewSubName("");
+        toast.success("Successfully updated");
+      } catch (error) {
+        console.error("Error updating subcategory", error);
+      }
+    } else {
+      // Create new subcategory
+      try {
+        await axios.post(`${BASE_URI}/api/v1/category/${activeCategory.category_id}/subcategories`, {
+          name: newSubName,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+        // Refresh the subcategory list
+        const response = await axios.get(
+          `${BASE_URI}/api/v1/category/${activeCategory.category_id}/subcategories`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setSubcategories(response.data.data);
+
+        setNewSubName("");
+        toast.success("Successfully created");
+      } catch (error) {
+        console.error("Error creating subcategory", error);
+      }
+    }
+  };
+
   const handleEditBioClick = () => {
     setIsReadOnly(false);
     bioRef.current.focus();
@@ -292,6 +451,55 @@ export default function Settings() {
       ...updateCategoryData,
       newName: event.target.value,
     });
+  };
+   // Open the subcategory popup and fetch subcategories via API
+   const openSubPopup = async (category) => {
+    console.log(category);
+    setActiveCategory(category);
+    try {
+      const response = await axios.get(
+        `${BASE_URI}/api/v1/category/${category.category_id}/subcategories`
+      );
+      setSubcategories(response.data.data);
+      console.log(response.data.data)
+      setIsSubPopupVisible(true);
+    } catch (error) {
+      setIsSubPopupVisible(true);
+      console.error("Error fetching subcategories", error);
+    }
+  };
+
+  const closeSubPopup = () => {
+    setSubcategories([])
+    setIsSubPopupVisible(false);
+    setActiveCategory(null);
+    setNewSubName("");
+    setEditingSub(null);
+  };
+
+  const handleStartEditingSub = (sub) => {
+    setEditingSub(sub);
+    setNewSubName(sub.subcategory_name);
+  };
+
+  
+
+  const handleCreateSub = async () => {
+    if (!activeCategory || !newSubName) return;
+    try {
+      await axios.post(`/api/v1/subcategories`, {
+        categoryId: activeCategory.id,
+        name: newSubName,
+      });
+      // Refresh the subcategory list
+      const response = await axios.get(
+        `/api/v1/subcategories?categoryId=${activeCategory.id}`
+      );
+      setSubcategories(response.data.subcategories);
+      setNewSubName("");
+    } catch (error) {
+      console.error("Error creating subcategory", error);
+    }
   };
 
   const handleVerifyClick = async () => {
@@ -331,6 +539,7 @@ export default function Settings() {
       });
 
       setCategories(response.data.data);
+      console.log(response.data.data);
     } catch (err) {
       console.error("Error fetching categories:", err);
       // setError("Failed to load categories"); // Set error state
@@ -341,11 +550,11 @@ export default function Settings() {
 
   useEffect(() => {
     addedcategories(); // Fetch categories when the component mounts
-  }, []);
+  }, [categoryName]);
 
   const categoryEdit = (category) => {
     setPopupVisible(true);
-    setPreviousCategoryName(category.name);
+    setPreviousCategoryName(category.category_name);
     setUpdateCategoryData({ id: category.id, newName: category.name });
   };
 
@@ -1022,102 +1231,218 @@ export default function Settings() {
               </div>
             )}
 
-            {activeTab === "addCategories" && (
-              <div className="tab-pane active" style={{ minHeight: "25rem" }}>
-                <div className="addCategory">
-                  <div className="input-category">
-                    <label htmlFor="category-name">Category Name</label>
-                    <input
-                      type="text"
-                      id="category-name"
-                      placeholder="Enter Category Name"
-                      value={categoryName}
-                      onChange={(e) => setCategoryName(e.target.value)}
-                    />
-                  </div>
-                  <div className="button-category">
-                    <button
-                      className="cancel-cat"
-                      onClick={() => setCategoryName("")}
-                    >
-                      Cancel
-                    </button>
-                    <button className="save-cat" onClick={handleSaveCat}>
-                      Save
-                    </button>
-                  </div>
-                </div>
-                <div className="categories">
-                  <label
+{activeTab === "addCategories" && (
+        <div className="tab-pane active" style={{ minHeight: "25rem" }}>
+          {/* Category Form */}
+          <div className="addCategory">
+            <div className="input-category">
+              <label htmlFor="category-name">Category Name</label>
+              <input
+                type="text"
+                id="category-name"
+                placeholder="Enter Category Name"
+                value={categoryName}
+                onChange={(e) => setCategoryName(e.target.value)}
+                style={{ width: "100%", padding: "0.5rem" }}
+              />
+            </div>
+            <div className="button-category" style={{ marginTop: "1rem" }}>
+              <button
+                className="btn btn-secondary me-2"
+                onClick={() => setCategoryName("")}
+              >
+                Cancel
+              </button>
+              <button className="btn btn-primary" onClick={() => handleSaveCat()}>
+                Save
+              </button>
+            </div>
+          </div>
+
+          {/* Categories List */}
+          <div className="categories" style={{ marginTop: "3rem" }}>
+            <label style={{ fontWeight: "600", marginBottom: "2rem" }}>
+              Added Categories
+            </label>
+            <div className="category-list">
+              {categories.length > 0 ? (
+                categories.map((category) => (
+                  <div
+                    key={category.id}
+                    className="category-item d-flex flex-column gap-2 mb-3"
                     style={{
-                      fontWeight: "600",
-                      marginTop: "5vh",
-                      marginBottom: "5vh",
+                      border: "1px solid #dee2e6",
+                      padding: "1rem",
+                      borderRadius: "5px",
                     }}
                   >
-                    Added Categories
-                  </label>
-                  <div className="category-list">
-                    {categories.length > 0 ? (
-                      categories.map((category) => (
-                        <button
-                          key={category.id}
-                          className="category-item"
-                          onClick={() => categoryEdit(category)}
-                        >
-                          {category.name}
-                        </button>
-                      ))
-                    ) : (
-                      <div>No categories found</div>
-                    )}
-                  </div>
-                </div>
-                {isPopupVisible && (
-                  <div className="popup">
-                    <div className="popup-content-cat">
-                      <label
-                        style={{
-                          fontWeight: "600",
-                          marginTop: "-15vh",
-                          marginBottom: "5vh",
-                        }}
+                    <span>{category.category_name}</span>
+                    <div className="d-flex flex-column gap-2">
+                      <button
+                        className="app-white border-0 rounded-1 py-1 px-2"
+                        onClick={() => categoryEdit(category)}
                       >
-                        Update Categories
-                      </label>
-                      <div
-                        className="input-categoryy"
-                        style={{
-                          display: "flex",
-                          flexDirection: "column",
-                          gap: "2vh",
-                        }}
+                        Edit
+                      </button>
+                      <button
+                        className="app-white border-0 rounded-1 py-1 px-2"
+                        onClick={() => openSubPopup(category)}
                       >
-                        <input
-                          type="text"
-                          id="category-name"
-                          placeholder="Previous Category Name"
-                          value={previousCategoryName}
-                          disabled
-                          style={{ marginBottom: "2vh" }}
-                        />
-                        <input
-                          type="text"
-                          id="new-category-name"
-                          placeholder="Enter New Category Name"
-                          // value={updateCategoryData.newName}
-                          onChange={handleInputChange}
-                        />
-                      </div>
-                      <button onClick={handleUpdateCategory}>Update</button>
-                      <div onClick={closePopup} className="cancel-buttonn">
-                        <RxCross2 />
-                      </div>
+                        Add Sub
+                      </button>
                     </div>
                   </div>
-                )}
+                ))
+              ) : (
+                <div>No categories found</div>
+              )}
+            </div>
+          </div>
+
+          {/* Subcategory Popup */}
+          {isSubPopupVisible && (
+            <div
+              style={{
+                position: "fixed",
+                top: 0,
+                left: 0,
+                width: "100%",
+                height: "100%",
+                backgroundColor: "rgba(0,0,0,0.5)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                zIndex: 1050,
+              }}
+            >
+              <div
+                style={{
+                  backgroundColor: "#fff",
+                  borderRadius: "8px",
+                  width: "500px",
+                  maxHeight: "80vh",
+                  display: "flex",
+                  flexDirection: "column",
+                }}
+              >
+                {/* Popup Header */}
+                <div
+                  style={{
+                    padding: "1rem",
+                    borderBottom: "1px solid #dee2e6",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <h5 className="mb-0">
+                    Subcategories for {activeCategory?.category_name}
+                  </h5>
+                  <button
+                    type="button"
+                    className="btn btn-outline-secondary"
+                    onClick={closeSubPopup}
+                  >
+                    &times;
+                  </button>
+                </div>
+
+                {/* Scrollable Subcategories List */}
+                <div style={{ padding: "1rem", overflowY: "auto", flex: 1 }}>
+                  {subcategories && subcategories.length > 0 ? (
+                    subcategories.map((sub) => (
+                      <div
+                        key={sub.subcategory_id}
+                        className="d-flex justify-content-between align-items-center mb-2"
+                      >
+                        <span>{sub.subcategory_name}</span>
+                        <div>
+                          <button
+                            className="btn btn-sm btn-outline-primary me-2"
+                            onClick={() => handleStartEditingSub(sub)}
+                          >
+                            Edit
+                          </button>
+                          <button
+                            className="btn btn-sm btn-outline-danger"
+                            onClick={() => handleSubDelete(sub)}
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <p>No subcategories available.</p>
+                  )}
+                </div>
+
+                {/* Create or Update Subcategory Input */}
+                <div style={{ padding: "1rem", borderTop: "1px solid #dee2e6" }}>
+                  <div className="input-group">
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Enter subcategory name"
+                      value={newSubName}
+                      onChange={(e) => setNewSubName(e.target.value)}
+                    />
+                    <button className="btn btn-primary" onClick={handleCreateOrUpdateSub}>
+                      {editingSub ? "Update" : "Create"}
+                    </button>
+                  </div>
+                </div>
               </div>
-            )}
+            </div>
+          )}
+
+          {/* Update Category Popup (Existing UI) */}
+          {isPopupVisible && (
+            <div className="popup">
+              <div className="popup-content-cat">
+                <label
+                  style={{
+                    fontWeight: "600",
+                    marginTop: "-15vh",
+                    marginBottom: "5vh",
+                  }}
+                >
+                  Update Categories
+                </label>
+                <div
+                  className="input-categoryy"
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "2vh",
+                  }}
+                >
+                  <input
+                    type="text"
+                    id="category-name"
+                    placeholder="Previous Category Name"
+                    value={previousCategoryName}
+                    disabled
+                    style={{ marginBottom: "2vh" }}
+                  />
+                  <input
+                    type="text"
+                    id="new-category-name"
+                    placeholder="Enter New Category Name"
+                    onChange={(e) => {
+                      /* handle update input change */
+                    }}
+                  />
+                </div>
+                <button onClick={handleUpdateCategory}>Update</button>
+                <div onClick={closePopup} className="cancel-buttonn">
+                  <RxCross2 />
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
 
             {role !== "admin" && activeTab === "closeAccount" && (
               <div className="tab-pane active" style={{ minHeight: "25rem" }}>
@@ -1223,7 +1548,9 @@ export default function Settings() {
             Security
           </h4>
 
-          <h4
+          {
+            role !== "admin" &&
+            <h4
             style={{ cursor: "pointer" }}
             className={`p-1 px-2 rounded-2 text-nowrap justify-content-center align-items-center fs-6 border-2 ${
               mobileActiveTab === "closeAccount"
@@ -1234,7 +1561,22 @@ export default function Settings() {
           >
             {/* {category.category_name} */}
             Close Account
+          </h4>}
+          {
+            role === "admin" &&
+            <h4
+            style={{ cursor: "pointer" }}
+            className={`p-1 px-2 rounded-2 text-nowrap justify-content-center align-items-center fs-6 border-2 ${
+              mobileActiveTab === "addCategories"
+                ? "app-black border-black app-text-white"
+                : "border border-1 text-secondary"
+            }`}
+            onClick={() => setMobileActiveTab("addCategories")}
+          >
+            {/* {category.category_name} */}
+            Add Category
           </h4>
+          }
         </div>
 
         <div className="w-100 p-1 mt-2 px-2">
@@ -1312,6 +1654,10 @@ export default function Settings() {
               </div>
             </div>
           )}
+          {/* {
+            mobileActiveTab === "addCategories" && 
+
+          } */}
           {mobileActiveTab === "editProfile" && (
             <div
               style={{ height: "70vh" }}
@@ -1411,6 +1757,144 @@ export default function Settings() {
             </div>
           )}
 
+{mobileActiveTab === "addCategories" && (
+        <div className="tab-pane active app-white" style={{ minHeight: "25rem", padding: "1rem" }}>
+          {/* Category Form */}
+          <div className="addCategory mb-3">
+            <div className="input-category mb-2">
+              <label htmlFor="category-name" className="form-label">
+                Category Name
+              </label>
+              <input
+                type="text"
+                id="category-name"
+                placeholder="Enter Category Name"
+                value={categoryName}
+                onChange={(e) => setCategoryName(e.target.value)}
+                className="w-100"
+              />
+            </div>
+            <div className="d-flex gap-2">
+              <button className="border-0 app-black app-text-white py-1 px-2 rounded-1" onClick={() => setCategoryName("")}>
+                Cancel
+              </button>
+              <button className="border-0 app-red app-text-white py-1 px-3 rounded-1" onClick={handleSaveCat}>
+                Save
+              </button>
+            </div>
+          </div>
+
+          {/* Categories List */}
+          <div className="categories mb-3">
+            <label className="fw-bold mb-2">Added Categories</label>
+            <div className="">
+              {categories.length > 0 ? (
+                categories.map((category) => (
+                  <div
+                    key={category.id}
+                    className=" mb-3 p-2 border rounded"
+                  >
+                    <div className="d-flex justify-content-between align-items-center">
+                      <span>{category.category_name}</span>
+                      <div className="d-flex gap-2">
+                        <button
+                          className="border-0 app-black app-text-white py-1 px-2 rounded-1"
+                          onClick={() => categoryEdit(category)}
+                        >
+                          Edit
+                        </button>
+                        <button
+                          className="border-0 app-red app-text-white py-1 px-2 rounded-1"
+                          onClick={() => openSubPopup(category)}
+                        >
+                          Add Sub
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div>No categories found</div>
+              )}
+            </div>
+          </div>
+
+          {/* Subcategory Popup */}
+          <Popup
+            isOpen={isSubPopupVisible}
+            onClose={closeSubPopup}
+            title={`Subcategories for ${activeCategory?.category_name}`}
+          >
+            <div style={{ maxHeight: "60vh", overflowY: "auto" }}>
+              {subcategories.length > 0 ? (
+                subcategories.map((sub) => (
+                  <div
+                    key={sub.subcategory_id}
+                    className="d-flex justify-content-between align-items-center mb-2"
+                  >
+                    <span>{sub.subcategory_name}</span>
+                    <div>
+                      <button
+                        className="btn btn-outline-primary btn-sm me-2"
+                        onClick={() => handleStartEditingSub(sub)}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        className="btn btn-outline-danger btn-sm"
+                        onClick={() => handleSubDelete(sub)}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p className="mb-0">No subcategories available.</p>
+              )}
+            </div>
+            <div className="mt-3 border-top pt-3">
+              <div className="input-group">
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Enter subcategory name"
+                  value={newSubName}
+                  onChange={(e) => setNewSubName(e.target.value)}
+                />
+                <button className="btn btn-primary" onClick={handleCreateOrUpdateSub}>
+                  {editingSub ? "Update" : "Create"}
+                </button>
+              </div>
+            </div>
+          </Popup>
+
+          {/* Update Category Popup */}
+          <Popup isOpen={isPopupVisible} onClose={closePopup} title="Update Categories">
+            <div className="mb-3">
+              <input
+                type="text"
+                className="form-control mb-2"
+                placeholder="Previous Category Name"
+                value={previousCategoryName}
+                disabled
+              />
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Enter New Category Name"
+                onChange={(e) => {
+                  // handle update input change
+                }}
+              />
+            </div>
+            <button className="btn btn-primary" onClick={handleUpdateCategory}>
+              Update
+            </button>
+          </Popup>
+        </div>
+      )}
+
           {mobileActiveTab === "matchHistory" && (
            
               <div className="mb-2 app-white justify-content-center border border-1 p-2 rounded-2">
@@ -1422,7 +1906,6 @@ export default function Settings() {
                   >
                     {" "}
                     Past Competitions wins
-
                   </h4>
                 </div>
                 <label htmlFor="dob" className="form-label fs-6 fw-medium">
@@ -1430,32 +1913,44 @@ export default function Settings() {
                 </label>
                 <input
                   type="text"
+                  name="competition_name"
+                  value={pastMatchData.competition_name}
                   className="form-control"
                   id="fullName"
                   placeholder="Black Belt Asia"
+                  onChange={handlePastMatchChange}
                 />
                 <label htmlFor="dob" className="form-label mt-2 fs-6 fw-medium">
                   Match Date
                 </label>
                 <input
+                name="competition_date"
                   type="date"
+                  value={pastMatchData.competition_date}
                   className="form-control"
                   id="fullName"
                   placeholder="Black Belt Asia"
+                  onChange={handlePastMatchChange}
                 />
                 <label htmlFor="dob" className="form-label mt-2 fs-6 fw-medium">
                 Achievements
                 </label>
                 <input
                   type="text"
+                  value={pastMatchData.acheavements}
+                  name="acheavements"
                   className="form-control d-flex align-items-center"
                   id="fullName"
                   placeholder="🏆 Champion"
+                  onChange={handlePastMatchChange}
                 />
                 <label htmlFor="dob" className="form-label mt-2 fs-6 fw-medium">
                 Location
                 </label>
                 <input
+                name="location"
+                onChange={handlePastMatchChange}
+                  value={pastMatchData.location}
                   type="text"
                   className="form-control d-flex align-items-center"
                   id="fullName"
@@ -1464,6 +1959,7 @@ export default function Settings() {
                 <div
                   style={{ width: "max-content", cursor: "pointer" }}
                   className="app-red app-text-white mt-2 rounded-2 px-3 py-1 fs-6 fw-bold"
+                  onClick={handleMatchPost}
                 >
                   Add
                 </div>
@@ -1474,7 +1970,7 @@ export default function Settings() {
                     className={`p-1 px-2 rounded-2 justify-content-center  mb-2 align-self-center align-items-center fs-6 border-2 ${"app-black border-black app-text-white"}`}
                   >
                     {" "}
-                    Past Competitions wins
+                    Upcoming Competition
                   </h4>
                 </div>
                 <label htmlFor="dob" className="form-label fs-6 fw-medium">
@@ -1482,20 +1978,26 @@ export default function Settings() {
                 </label>
                 <input
                   type="text"
+                  name="competition_name"
+                  value={pastUpcomingMatchData.competition_name}
                   className="form-control"
                   id="fullName"
                   placeholder="Black Belt Asia"
+                  onChange={handlePastUpcomingMatchChange}
                 />
                 <label htmlFor="dob" className="form-label mt-2 fs-6 fw-medium">
                   Match Date
                 </label>
                 <input
+                name="competition_date"
                   type="date"
+                  value={pastUpcomingMatchData.competition_date}
                   className="form-control"
                   id="fullName"
                   placeholder="Black Belt Asia"
+                  onChange={handlePastUpcomingMatchChange}
                 />
-                <label htmlFor="dob" className="form-label mt-2 fs-6 fw-medium">
+                {/* <label htmlFor="dob" className="form-label mt-2 fs-6 fw-medium">
                 Achievements
                 </label>
                 <input
@@ -1503,11 +2005,14 @@ export default function Settings() {
                   className="form-control d-flex align-items-center"
                   id="fullName"
                   placeholder="🏆 Champion"
-                />
+                /> */}
                 <label htmlFor="dob" className="form-label mt-2 fs-6 fw-medium">
                 Location
                 </label>
                 <input
+                name="location"
+                onChange={handlePastUpcomingMatchChange}
+                  value={pastUpcomingMatchData.location}
                   type="text"
                   className="form-control d-flex align-items-center"
                   id="fullName"
@@ -1517,6 +2022,7 @@ export default function Settings() {
                 <div
                   style={{ width: "max-content", cursor: "pointer" }}
                   className="app-red app-text-white mt-2 rounded-2 px-3 py-1 fs-6 fw-bold"
+                  onClick={handleUpcomingMatchPost}
                 >
                   Add
                 </div>

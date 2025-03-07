@@ -10,6 +10,12 @@ import "./Transactions.css";
 import { useDispatch } from "react-redux";
 import { payoutActions } from "../../Store/payoutSlice";
 import { HashLoader } from "react-spinners";
+import formatDate from "../../utils/formatDate";
+import toast from "react-hot-toast";
+import Error from "../../Components/Error/Error";
+import SearchNotFound from "../../assets/searchNotFound.svg";
+import { CustomLoader } from "../../Components/CustomLoader/CustomLoader";
+
 
 const UserManagement = () => {
   const dispatch = useDispatch();
@@ -60,6 +66,7 @@ const UserManagement = () => {
         },
       });
       setPayoutRequests(response?.data?.data || []);
+      console.log(response?.data?.data);
       // setTotalPages(Math.ceil(response?.data?.total / limit));
     } catch (err) {
       setError(err?.response?.data?.message);
@@ -97,6 +104,7 @@ const UserManagement = () => {
         },
       });
       setTransactions(response.data.data.history || []);
+      console.log(response.data.data.history);
       setTotalPages(2);
     } catch (err) {
       setError(err?.response?.data?.message);
@@ -228,7 +236,8 @@ const UserManagement = () => {
     return colors[Math.floor(Math.random() * colors.length)];
   };
   return (
-    <div className="w-100">
+    <>
+    <div className="w-100 wrapper-experts">
 
 {
         loading ? 
@@ -631,6 +640,273 @@ const UserManagement = () => {
       </>
       }
     </div>
+
+
+
+    <div style={{marginBottom:"4.5rem"}} className="mobile-experts w-100">
+    {
+       
+       <div
+          style={{
+            zIndex: "100",
+            width: "max-content",
+            justifySelf: "start",
+            position: "sticky",
+            top: "-0.3%",
+          }}
+          className="mobile-top-myLearning w-100 gap-3 ps-3 p-2 px-2 justify-content-start mt-2 rounded-1 app-white d-flex gap-2"
+        >
+          <h4 
+                    style={{cursor:"pointer"}}
+
+          className={`p-1 px-2 rounded-2 fs-6 fw-regular border-2 ${activeTab === "payoutRequests" ? "app-black app-text-white border-black" : "border border-1 text-secondary"}`}
+          onClick={() => setActiveTab("payoutRequests")}>
+            Requests
+          </h4>
+          <h4
+                    style={{cursor:"pointer"}}
+
+            className={`p-1 px-2 rounded-2 fs-6 border-2 ${
+              activeTab === "transactions"
+                ? "app-black border-black app-text-white"
+                : "border border-1 text-secondary"
+            }`}
+            onClick={() => setActiveTab("transactions")}
+          >
+            {/* {category.category_name} */}
+            PayLogs
+          </h4>
+          <h4
+                    style={{cursor:"pointer"}}
+
+            className={`p-1 px-2 rounded-2 fs-6 border-2 ${
+              activeTab === "editCommission"
+                ? "app-black border-black app-text-white"
+                : "border border-1 text-secondary"
+            }`}
+            onClick={() => setActiveTab("editCommission")}
+          >
+            {/* {category.category_name} */}
+            Commission
+          </h4>
+        </div>}
+
+{
+  loading ? 
+  <div className="d-flex w-100 p-1 app-white flex-column mt-1">
+
+<CustomLoader width="100%" height="10rem" className="rounded-3 mt-2"/>
+<CustomLoader width="100%" height="10rem" className="rounded-3 mt-2"/>
+
+<CustomLoader width="100%" height="10rem" className="rounded-3 mt-2"/>
+
+<CustomLoader width="100%" height="10rem" className="rounded-3 mt-2"/>
+
+  </div>
+  :
+  activeTab === "payoutRequests" && (
+    <div className="px-2 w-100 mt-2">
+    <div className="w-100 d-flex flex-column justify-content-center align-items-center app-white p-2 rounded-1">
+    {
+    !payoutRequests.length ?
+    <Error imageSrc={SearchNotFound} message="No Requests Found" />
+    :
+    payoutRequests?.map((order, index) => {
+      return (
+        <div key={index} className="w-100 border border-1 p-2 rounded-1 mb-2">
+          <span className="w-100 d-flex justify-content-evenly">
+            <h6 style={{ fontSize: "0.9rem", width: "40%" }} className="fw-regular app-text-black opacity-75">Name:</h6>
+            <h6 style={{ fontSize: "0.9rem", width: "25%" }} className="fw-regular app-text-black opacity-75">{order.name}</h6>
+          </span>
+    
+          <span className="w-100 d-flex justify-content-evenly pt-2">
+            <h6 style={{ fontSize: "0.9rem", width: "40%" }} className="fw-regular app-text-black opacity-75">Joined On:</h6>
+            <h6 style={{ fontSize: "0.9rem", width: "25%" }} className="fw-regular app-text-black opacity-75">{formatDate(order.created_at)}</h6>
+          </span>
+    
+          <span className="w-100 d-flex justify-content-evenly pt-2">
+            <h6 style={{ fontSize: "0.9rem", width: "40%" }} className="fw-regular app-text-black opacity-75">Amount:</h6>
+            <h6 style={{ fontSize: "0.9rem", width: "25%" }} className="fw-regular app-text-black opacity-75">{order.amount}</h6>
+          </span>
+    
+          <span className="w-100 d-flex justify-content-evenly pt-2">
+            <h6 style={{ fontSize: "0.9rem", width: "40%" }} className="fw-regular app-text-black opacity-75">Action:</h6>
+            {
+              order.is_paid === 0 ? 
+              <button
+              onClick={() => handleAction(order.id)}
+              style={{ fontSize: "0.9rem", width: "25%" }}
+              className="fw-regular border-0 app-text-white app-black d-flex align-items-center justify-content-center p-1 px-2 rounded-1"
+            >
+              Pay
+            </button> :
+             <button
+             onClick={() => toast("Already paid")}
+             style={{ fontSize: "0.9rem", width: "25%" }}
+             className="fw-regular border-0 app-text-white app-black d-flex align-items-center justify-content-center p-1 px-2 rounded-1"
+           >
+             Paid
+           </button>
+            }
+           
+          </span>
+        </div>
+      );
+    })}
+    
+    </div>
+    </div>
+  )
+}
+
+{
+  activeTab === "transactions" && (
+    <div className="px-2 w-100 mt-2">
+    <div className="w-100 d-flex flex-column justify-content-center align-items-center app-white p-2 rounded-1">
+    {
+    !transactions.length ?
+    <Error imageSrc={SearchNotFound} message="No Pay Logs Found" />
+    :
+    transactions?.map((order, index) => {
+      return (
+        <div key={index} className="w-100 border border-1 p-2 rounded-1 mb-2">
+          <span className="w-100 d-flex justify-content-evenly">
+            <h6 style={{ fontSize: "0.9rem", width: "40%" }} className="fw-regular app-text-black opacity-75">Name:</h6>
+            <h6 style={{ fontSize: "0.9rem", width: "25%" }} className="fw-regular app-text-black opacity-75">{order.name}</h6>
+          </span>
+    
+          <span className="w-100 d-flex justify-content-evenly pt-2">
+            <h6 style={{ fontSize: "0.9rem", width: "40%" }} className="fw-regular app-text-black opacity-75">Date:</h6>
+            <h6 style={{ fontSize: "0.9rem", width: "25%" }} className="fw-regular app-text-black opacity-75">{formatDate(order.withdrawal_date)}</h6>
+          </span>
+    
+          <span className="w-100 d-flex justify-content-evenly pt-2">
+            <h6 style={{ fontSize: "0.9rem", width: "40%" }} className="fw-regular app-text-black opacity-75">Transaction ID:</h6>
+            <h6 style={{ fontSize: "0.9rem", width: "25%" }} className="fw-regular app-text-black opacity-75 text-break">{order.transaction_id}</h6>
+          </span>
+
+          <span className="w-100 d-flex justify-content-evenly pt-2">
+            <h6 style={{ fontSize: "0.9rem", width: "40%" }} className="fw-regular app-text-black opacity-75">Withdrawal Amount:</h6>
+            <h6 style={{ fontSize: "0.9rem", width: "25%" }} className="fw-regular app-text-black opacity-75">{order.withdrawal_amount}</h6>
+          </span>
+
+          <span className="w-100 d-flex justify-content-evenly pt-2">
+            <h6 style={{ fontSize: "0.9rem", width: "40%" }} className="fw-regular app-text-black opacity-75">Status:</h6>
+            <h6 style={{ fontSize: "0.9rem", width: "25%" }} className="fw-regular app-text-black opacity-75">{order.withdrawal_status}</h6>
+          </span>
+    
+          
+        </div>
+      );
+    })}
+    
+    </div>
+    </div>
+  )
+}
+
+{
+
+activeTab === "editCommission" && (
+            <div className="tab-pane active px-2 app-white mx-2 mt-2 ">
+              <div className="row">
+                <div className="col-12 mb-3">
+                  <label htmlFor="commission" className="form-label app-black app-text-white p-1 rounded-1 mt-2"> 
+                    <strong >Commission Rate</strong>
+                  </label>
+                  <div className="input-part" style={{ display: "flex" }}>
+                    <input
+                      style={{
+                        width: "60vh",
+                        border: "1px solid #3a4e6f", // Blue border with a width of 2px
+                      }}
+                      type="text"
+                      placeholder="Enter Percentage"
+                      id="commission"
+                      className="form-control f-new"
+                      value={editCommission.commission || ""} // Access the commission property inside the commission object
+                      onChange={(e) =>
+                        setEditCommission((prev) => ({
+                          ...prev,
+                          commission: e.target.value,
+                        }))
+                      }
+                      disabled={!isEditable}
+                    />
+                    <div className="col-12 button-group">
+                      {isEditable ? (
+                        <div className="button-btn d-flex gap-2">
+                          <button
+                            className=" border-0 rounded-1 px-3  p-2 comission-button app-red app-text-white"
+                            style={{
+                              // background:
+                              //   "linear-gradient(92.36deg, #0c243c 0%, #7e8c9c 98.67%)",
+                              color: "white",
+                            }}
+                            onClick={handlesave}
+                          >
+                            Save
+                          </button>
+                          <button
+                            className="border-0 rounded-1 px-3 p-2 comission-button app-black app-text-white"
+                            // style={{
+                            //   background: "white",
+                            //   color: "black",
+                            //   border: "white",
+                            //   boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                            // }}
+                            onClick={handleDiscard}
+                          >
+                            Discard
+                          </button>
+                        </div>
+                      ) : (
+                        <button
+                          className="border-0 rounded-1 px-3  p-2 comission-button  app-text-white h-100  px-4 bg-light-custom cursor-pointer "
+                          // style={{
+                          //   background:
+                          //     "linear-gradient(92.36deg, #0c243c 0%, #7e8c9c 98.67%)",
+                          //   color: "white",
+                          //   border: "white",
+                          //   boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                          // }}
+                          onClick={handleEdit}
+                        >
+                          <FaPen />
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <p
+                  style={{
+                    color: "red",
+                    fontWeight: "lighter",
+                  }}
+                >
+                  {" "}
+                  *The commission will be applicable on all transactions
+                </p>
+                <p
+                  style={{
+                    color: "red",
+                    fontWeight: "lighter",
+                    marginBottom: "25vh",
+                  }}
+                >
+                  {" "}
+                  *The Updated commission rate will be applicable from date of
+                  transaction{" "}
+                </p>
+              </div>
+            </div>
+          )}
+
+        
+    </div>
+    </>
   );
 };
 

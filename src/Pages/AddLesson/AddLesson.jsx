@@ -430,22 +430,22 @@ export default function AddLesson({ setEditCourse, setCourseId }) {
 
   return (
     <div className="w-100">
-      <header className="d-flex align-items-center justify-content-between py-3 pb-4">
+      <header className="d-flex align-items-center justify-content-between py-2 px-3 w-100 app-white mt-2 mb-2">
         <h3 className="fw-bold text-capitalize">{title || "Course Name"}</h3>
         <button
-          className="signup-now py-2 px-3 fw-lightBold mb-0 h-auto"
+          className="app-black border-0 rounded-1 app-text-white px-2 py-2 fw-lightBold mb-0 h-auto"
           onClick={handleEditCourse}
         >
           Edit Course
         </button>
       </header>
       <main
-        className="custom-box px-5 py-4 h-100"
+        className="custom-box px-1 py-4 h-100 app-white "
         style={{
           minHeight: "30rem",
         }}
       >
-        <div className="d-flex flex-column align-items-center text-center gap-5 py-4">
+        <div className="d-flex flex-column align-items-center text-center gap-5 py-1">
           <p className="fs-4 fw-lightBold">
             Start adding Chapters to your course
           </p>
@@ -473,7 +473,7 @@ export default function AddLesson({ setEditCourse, setCourseId }) {
                   >
                     {(provided) => (
                       <div
-                        className="rounded-2 border border-secondary-subtle text-start px-5 py-3 mb-3 "
+                        className="rounded-2 border border-secondary-subtle text-start px-2 py-3 mb-3 "
                         {...provided.droppableProps}
                         ref={provided.innerRef}
                       >
@@ -510,7 +510,7 @@ export default function AddLesson({ setEditCourse, setCourseId }) {
                           </div>
                         ) : (
                           <div className="align-items-center justify-content-between addlesson-content">
-                            <div className=" addlesson-content align-items-center gap-4 ">
+                            <div className=" addlesson-content d-flex flex-row align-items-center gap-4 ">
                               <p className="mb-0 fs-4 fw-lightBold">
                                 {index + 1}. {chapter.title}
                               </p>
@@ -526,7 +526,7 @@ export default function AddLesson({ setEditCourse, setCourseId }) {
                               />
                             </div>
                             <button
-                              className="signup-now py-2 px-3 fw-lightBold mb-0 h-auto addlesson-button"
+                              className="app-black rounded-1 border-0 app-text-white py-2 px-3 fw-lightBold mb-0 h-auto addlesson-button"
                               onClick={() => handleAddLessonClick(chapter.id)}
                             >
                               Add Lesson
@@ -825,14 +825,14 @@ export default function AddLesson({ setEditCourse, setCourseId }) {
                                 <div className="d-flex align-items-center gap-5">
                                   <button
                                     type="button"
-                                    className="signup-now py-2 px-3 fw-light mb-0 h-auto"
+                                    className="app-black rounded-1 border-0 app-text-white py-2 px-3 fw-light mb-0 h-auto"
                                     onClick={() => handleAddLessonClick(null)}
                                   >
                                     Cancel
                                   </button>
                                   <button
                                     type="submit"
-                                    className="signup-now py-2 px-3 fw-light mb-0 h-auto"
+                                    className="app-red rounded-1 border-0 app-text-white py-2 px-3 fw-light mb-0 h-auto"
                                   >
                                     {isLoadingAddLesson ? (
                                       <PulseLoader size={8} color="white" />
@@ -877,13 +877,13 @@ export default function AddLesson({ setEditCourse, setCourseId }) {
               </div>
               <div className="d-flex justify-content-end align-items-center gap-5 w-100">
                 <button
-                  className=" signup-now py-2 px-3 fw-lightBold mb-0 h-auto"
+                  className="app-black rounded-1 border-0 app-text-white py-2 px-3 fw-lightBold mb-0 h-auto"
                   onClick={() => setIsAddChapter(false)}
                 >
                   Cancel
                 </button>
                 <button
-                  className=" signup-now py-2 px-3 fw-lightBold mb-0 h-auto"
+                  className="app-red rounded-1 border-0 app-text-white py-2 px-3 fw-lightBold mb-0 h-auto"
                   onClick={handleAddChapter}
                 >
                   {isLoadingAddChapter ? (
@@ -899,7 +899,7 @@ export default function AddLesson({ setEditCourse, setCourseId }) {
           {chapters?.length > 0 && (
             <div className="w-100 text-start flex justify-content-between addlesson-content">
               <button
-                className="signup-now py-2 px-3 fw-lightBold mb-0 h-auto"
+                className="app-red rounded-1 border-0 app-text-white py-2 px-3 fw-lightBold mb-0 h-auto"
                 onClick={() => setIsAddChapter(true)}
               >
                 Add Chapter
@@ -917,13 +917,13 @@ export default function AddLesson({ setEditCourse, setCourseId }) {
           <h5 className="mb-4">Are you sure to delete the lesson?</h5>
           <div className="d-flex align-items-center justify-content-center gap-5">
             <button
-              className="signup-now py-2 px-3 fw-light mb-0 h-auto"
+              className="app-black rounded-1 border-0 app-text-white py-2 px-3 fw-light mb-0 h-auto"
               onClick={closeModal}
             >
               Cancel
             </button>
             <button
-              className="signup-now py-2 px-3 fw-light mb-0 h-auto"
+              className="app-red rounded-1 border-0 app-text-white py-2 px-3 fw-light mb-0 h-auto"
               onClick={handleDeleteLesson}
             >
               Continue
@@ -950,13 +950,13 @@ export default function AddLesson({ setEditCourse, setCourseId }) {
           <h5 className="mb-4">Are you sure to delete the chapter?</h5>
           <div className="d-flex align-items-center justify-content-center gap-5">
             <button
-              className="signup-now py-2 px-3 fw-light mb-0 h-auto"
+              className="app-black rounded-1 border-0 app-text-white py-2 px-3 fw-light mb-0 h-auto"
               onClick={closeModalChapter}
             >
               Cancel
             </button>
             <button
-              className="signup-now py-2 px-3 fw-light mb-0 h-auto"
+              className="app-red rounded-1 border-0 app-text-white py-2 px-3 fw-light mb-0 h-auto"
               onClick={handleDeleteChapter}
             >
               Continue

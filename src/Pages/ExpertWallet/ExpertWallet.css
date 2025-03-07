@@ -25,3 +25,12 @@
     justify-content: center;
   }
   
+
+  @media (max-width: 768px) {
+    .wrapper-expertWallet{
+        display: none;
+    }
+    .mobile-userWallet{
+        display: block;
+    }
+}

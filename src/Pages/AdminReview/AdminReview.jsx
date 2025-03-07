@@ -7,6 +7,12 @@ import { useEffect, useState } from "react";
 import { BASE_URI } from "../../Config/url";
 import { useNavigate } from "react-router-dom";
 import { HashLoader } from "react-spinners";
+import defaultCourse from "../../assets/defaultCourse.svg";
+import Popup from "../../Components/PopUp/PopUp";
+import SearchNotFound from "../../assets/searchNotFound.svg";
+import Error from "../../Components/Error/Error";
+import { CustomLoader } from "../../Components/CustomLoader/CustomLoader";
+
 
 export default function AdminReview() {
   const [Approvals, setApprovals] = useState([]);
@@ -61,10 +67,10 @@ setIsLoading(true)
       }
     })
         setApprovals(response?.data?.data)
-        
+        console.log(response?.data?.data)
   }
   catch(error){
-   
+  //  setApprovals([])
     // toast.error(error?.response?.data?.message)
   }
   finally{
@@ -104,7 +110,8 @@ setIsLoading(true)
 
 
   return (
-    <div className="w-100">
+    <>
+    <div className="w-100 wrapper-experts">
 
 {
         loading ? 
@@ -236,5 +243,125 @@ setIsLoading(true)
       </>
       }
     </div>
+
+    <div className="mobile-experts w-100">
+      {
+        loading ? 
+        <div className="d-flex w-100 p-1 app-white flex-column mt-1">
+ <CustomLoader width="100%" height="3rem" className="rounded-3"/>
+ <CustomLoader width="100%" height="10rem" className="rounded-3 mt-2"/>
+ <CustomLoader width="100%" height="10rem" className="rounded-3 mt-2"/>
+
+ <CustomLoader width="100%" height="10rem" className="rounded-3 mt-2"/>
+
+ <CustomLoader width="100%" height="10rem" className="rounded-3 mt-2"/>
+
+        </div>
+        :
+        <>
+        <Popup 
+  isOpen={showDeclinePopup}
+  onClose={() => setShowDeclinePopup(false)}
+  title={`Are you sure you want to ${selectedCourse === "approved" ? "approve" : "decline"} the request?`}
+>
+  {selectedCourse !== "approved" && (
+    <textarea
+  className="form-control w-100 mb-3"
+  placeholder="Enter your reason..."
+  onChange={(e) => setReview(e.target.value)}
+  rows={4}
+/>
+  )}
+
+  <div className="d-flex justify-content-end gap-2">
+    <button className="app-black rounded-1 fs-5 border-0 py-1 px-2 app-text-white" onClick={handleDeclineCancel}>
+      Cancel
+    </button>
+    <button className="app-red rounded-1 fs-5 border-0 py-1 px-2 app-text-white" onClick={aproveRequest}>
+      Continue
+    </button>
+  </div>
+</Popup>
+
+    <div
+          style={{
+            zIndex: "100",
+            width: "max-content",
+            justifySelf: "start",
+            position: "sticky",
+            top: "-0.3%",
+          }}
+          className="mobile-top-myLearning w-100 gap-3 ps-3 p-2 px-2 justify-content-start mt-2 rounded-1 app-white d-flex gap-2"
+        >
+          <h4 
+                    style={{cursor:"pointer"}}
+
+          className={` rounded-2 fs-5 fw-regular border-2 app-text-black `}
+          >
+            Review Courses
+          </h4>
+          
+        </div>
+
+        <div
+          className="tab-content custom-box rounded-3 mt-1 mx-1 rounded-3 py-2  px-2 mt-1"
+          style={{ background: "white" }}
+        >
+          <div className="rounded-1">
+            <div className="container-courseRequest">
+              
+              {/* Loop through and render courses */}
+              {
+              Approvals?.length === 0 || !Approvals ?
+              <Error imageSrc={SearchNotFound} message="No Approvals Found" />
+              :
+              Approvals?.map((approval) => (
+                <div className="course-req border rounded-2" key={approval?.course_id}>
+                  <img src={approval?.thumbnail} alt={approval?.title} 
+                  onError={(e) => {
+                                      // console.log(e)
+                                      e.target.onerror = null;
+                                      e.target.src = defaultCourse; // Fallback image
+                  }}
+                  />
+                  <div className="course-details">
+                    <h3>{approval?.title}</h3>
+                    <p>{approval?.expert}</p>
+                    <span>{approval?.price}</span>
+                  </div>
+                  <div className="course-actions">
+
+                    <button
+                      onClick={() =>
+                        navigate(`/courses/courseView/${approval?.course_id}`)
+                      }
+                      className="overview"
+                    >
+                      Overview
+                    </button>
+                    <button
+                      onClick={() => handleDeclineClick("approved", approval?.request_id)}
+                      className="approve"
+                    >
+                      Approve
+                    </button>
+                    <button
+                      className="decline"
+                      onClick={() => handleDeclineClick("declined", approval?.request_id)}
+
+                    >
+                      Decline
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+        </>
+      }
+    
+    </div>
+    </>
   );
 }

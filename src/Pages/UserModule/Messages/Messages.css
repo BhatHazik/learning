@@ -18,6 +18,27 @@
   }
 }
 
+.modern-input {
+  font-size: 1.25rem; /* Input font size */
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 0.35rem 1rem;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.modern-input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 8px rgba(0, 123, 255, 0.4);
+  margin-bottom: 0.5%;
+}
+
+/* Style for the placeholder */
+.modern-input::placeholder {
+  font-size: 1rem; /* Adjust placeholder font size */
+  color: #000000b6;
+}
+
 
 #heart-messages{
   /* position: absolute;

@@ -10,16 +10,19 @@ import home from "../../assets/home.svg";
 import courses from "../../assets/courses.svg";
 
 import { FaFileInvoice, FaUsers, FaUserTie, FaHome,FaBookReader, FaPlusCircle } from "react-icons/fa";
-import { MdDashboard,MdMessage, MdWallet } from "react-icons/md";
+import { MdDashboard,MdFilterCenterFocus,MdMessage, MdWallet } from "react-icons/md";
 import "./SmallScreen.css";
 import { BiPlus, BiPlusCircle } from "react-icons/bi";
 import { TbLayoutDashboardFilled, TbMessages  } from "react-icons/tb";
 import { IoLogIn } from "react-icons/io5";
-
-const role = localStorage.getItem("userType");
-const token = localStorage.getItem("token");
+import { FaChalkboardUser } from "react-icons/fa6";
+import { HiFolderOpen } from "react-icons/hi";
+import { LuFocus } from "react-icons/lu";
 
 export default function SmallerScreenSidebar() {
+  const role = localStorage.getItem("userType");
+  const [token, setToken] = useState(localStorage.getItem("token"));
+
   const navigate = useNavigate();
   const location = useLocation();
   const path = location.pathname;
@@ -154,6 +157,11 @@ export default function SmallerScreenSidebar() {
     }
   };
 
+  // useEffect(() => {
+  //   console.log("Role: ", role);
+  // }, [location.pathname]);
+  
+
   return (
     
     <div className="app-white py-1 px-1 d-flex align-items-center justify-content-around w-100 small-screen u-screen px-2">
@@ -230,19 +238,7 @@ export default function SmallerScreenSidebar() {
 </svg>
       <span className={`${activeTab === "home" && `text-black`}`} style={{color:"#959595", fontSize:"0.8rem", fontWeight:"normal"}}>Home</span>
     </div>
-    <div
-    style={{cursor:"pointer",borderBottomLeftRadius:"0.5rem",borderBottomRightRadius:"0.5rem"}}
-      onClick={() => handleTabClick("courses")}
-      className={`d-flex navBarClick flex-column align-items-center py-1 px-2 fw-light ${
-        activeTab === "courses" && `text-black`
-      }`}
-    >
-     
-     <svg width="25" height="21" viewBox="0 0 25 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M8.46669 14.374C8.37706 14.374 8.28744 14.3877 8.20194 14.4166C7.71594 14.5811 7.20481 14.6865 6.66669 14.6865C6.12856 14.6865 5.61744 14.5811 5.13106 14.4166C5.04556 14.3877 4.95631 14.374 4.86669 14.374C2.53944 14.374 0.654312 16.3459 0.666687 18.7732C0.671937 19.799 1.48156 20.624 2.46669 20.624H10.8667C11.8518 20.624 12.6614 19.799 12.6667 18.7732C12.6791 16.3459 10.7939 14.374 8.46669 14.374ZM6.66669 13.124C8.65494 13.124 10.2667 11.4451 10.2667 9.37402C10.2667 7.30293 8.65494 5.62402 6.66669 5.62402C4.67844 5.62402 3.06669 7.30293 3.06669 9.37402C3.06669 11.4451 4.67844 13.124 6.66669 13.124ZM22.8667 0.624023H8.46669C7.47406 0.624023 6.66669 1.49316 6.66669 2.56113V4.37402C7.54494 4.37402 8.35794 4.63887 9.06669 5.06934V3.12402H22.2667V14.374H19.8667V11.874H15.0667V14.374H12.2077C12.9239 15.026 13.4497 15.8869 13.6961 16.874H22.8667C23.8593 16.874 24.6667 16.0049 24.6667 14.9369V2.56113C24.6667 1.49316 23.8593 0.624023 22.8667 0.624023Z" fill={`${activeTab === "courses" ? "black" : "#959595"}`}/>
-</svg>
-      <span className={`${activeTab === "courses" && `text-black`}`} style={{color:"#959595", fontSize:"0.8rem", fontWeight:"normal"}}>Courses</span>
-    </div>
+    
     <div
     style={{cursor:"pointer",borderBottomLeftRadius:"0.5rem",borderBottomRightRadius:"0.5rem"}}
       onClick={() => handleTabClick("myLearning")}
@@ -253,6 +249,18 @@ export default function SmallerScreenSidebar() {
      
      <IoMdBookmarks className={`${activeTab === "myLearning" && `text-black`} fs-2`} style={{color:"#959595"}}/>
       <span className={`${activeTab === "myLearning" && `text-black`}`} style={{color:"#959595", fontSize:"0.8rem", fontWeight:"normal"}}>Learning</span>
+    </div>
+    <div
+    style={{cursor:"pointer",borderBottomLeftRadius:"0.5rem",borderBottomRightRadius:"0.5rem"}}
+      onClick={() => handleTabClick("messages")}
+      className={`d-flex navBarClick flex-column align-items-center py-1 px-2 fw-light ${
+        activeTab === "messages" && `text-black`
+      }`}
+    >
+     
+     <TbMessages  className={`${activeTab === "messages" && `text-black`} fs-2`} style={{color:"#959595"}}/>
+
+      <span className={`${activeTab === "messages" && `text-black`}`} style={{color:"#959595", fontSize:"0.8rem", fontWeight:"normal"}}>Messages</span>
     </div>
     <div
     style={{cursor:"pointer",borderBottomLeftRadius:"0.5rem",borderBottomRightRadius:"0.5rem"}}
@@ -282,67 +290,132 @@ export default function SmallerScreenSidebar() {
 
 {role === "admin" && (
   <>
+    
     <div
-    style={{borderBottomLeftRadius:"0.5rem",borderBottomRightRadius:"0.5rem"}}
+    style={{cursor:"pointer",borderBottomLeftRadius:"0.5rem",borderBottomRightRadius:"0.5rem"}}
       onClick={() => handleTabClick("dashboard")}
-      className={`d-flex flex-column align-items-center py-1 px-1 fw-light ${
-        activeTab === "dashboard" && `bg-white text-black`
+      className={`d-flex navBarClick flex-column align-items-center py-1 px-1 fw-light p-right ${
+        activeTab === "dashboard" && `text-black`
       }`}
     >
-      <MdDashboard className="fs-8 d-block " />
-      <span className="small-screen-text">Dashboard</span>
+          <TbLayoutDashboardFilled  className={`${activeTab === "dashboard" && `text-black`} fs-2`} style={{color:"#959595"}}/>
+
+     {/* <svg className={`${activeTab === "dashboardd" && `text-black`}`} width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M7.82369 19.4232V13.419H12.1715V19.4232C12.1715 20.0836 12.6606 20.624 13.2584 20.624H16.5193C17.1171 20.624 17.6062 20.0836 17.6062 19.4232V11.0173H19.454C19.954 11.0173 20.1932 10.3328 19.8127 9.97257L10.7258 0.930238C10.3128 0.521952 9.68237 0.521952 9.26933 0.930238L0.182446 9.97257C-0.187116 10.3328 0.0411431 11.0173 0.541139 11.0173H2.38895V19.4232C2.38895 20.0836 2.87808 20.624 3.4759 20.624H6.73674C7.33456 20.624 7.82369 20.0836 7.82369 19.4232Z" fill={`${activeTab === "dashboardd" ? "black" : "#959595"}`}/>
+</svg> */}
+      <span className={`${activeTab === "dashboard" && `text-black`}`} style={{color:"#959595", fontSize:"0.8rem", fontWeight:"normal"}}>Dash</span>
     </div>
-    <div
-    style={{borderBottomLeftRadius:"0.5rem",borderBottomRightRadius:"0.5rem"}}
-      onClick={() => handleTabClick("experts")}
-      className={`d-flex flex-column align-items-center py-1 px-1 fw-light ${
-        activeTab === "experts" && `bg-white text-black `
-      }`}
-    >
-      <FaUserTie className="fs-7 d-block" />
-      <span className="small-screen-text">Experts</span>
-    </div>
-    <div
-    style={{borderBottomLeftRadius:"0.5rem",borderBottomRightRadius:"0.5rem"}}
-      onClick={() => handleTabClick("students")}
-      className={`d-flex flex-column align-items-center py-1 px-1 fw-light ${
-        activeTab === "students" && `bg-white text-black `
-      }`}
-    >
-      <FaUsers className="fs-7 d-block" />
-      <span className="small-screen-text">Students</span>
-    </div>
-    <div
-    style={{borderBottomLeftRadius:"0.5rem",borderBottomRightRadius:"0.5rem"}}
-      onClick={() => handleTabClick("transactions")}
-      className={`d-flex flex-column align-items-center py-1 px-1 fw-light ${
-        activeTab === "transactions" && `bg-white text-black `
-      }`}
-    >
-      <FaFileInvoice className="fs-7 d-block" />
-      <span className="small-screen-text">Transactions</span>
-    </div>
-    <div
-    style={{borderBottomLeftRadius:"0.5rem",borderBottomRightRadius:"0.5rem"}}
-      onClick={() => handleTabClick("review")}
-      className={`d-flex flex-column align-items-center py-1 fw-light ${
-        activeTab === "review" && `bg-white text-black `
-      }`}
-    >
-      <FaBookReader className="fs-7" />
-      <span className="small-screen-text">Review</span>
-    </div>
-    <div
-    style={{borderBottomLeftRadius:"0.5rem",borderBottomRightRadius:"0.5rem"}}
-      onClick={() => handleTabClick("support")}
-      className={`d-flex flex-column align-items-center py-1 fw-light ${
-        activeTab === "support" && `bg-white text-black`
-      }`}
-    >
-      <RiLifebuoyFill className="fs-7" />
-      <span className="small-screen-text">Support</span>
-    </div>
-  </>
+
+  <div
+  style={{cursor:"pointer",borderBottomLeftRadius:"0.5rem",borderBottomRightRadius:"0.5rem"}}
+    onClick={() => handleTabClick("experts")}
+    className={`d-flex navBarClick flex-column align-items-center py-1 px-2 fw-light ${
+      activeTab === "experts" && `text-black`
+    }`}
+  >
+             <FaChalkboardUser  className={`${activeTab === "experts" && `text-black`} fs-2`} style={{color:"#959595"}}/>
+
+    <span className={`${activeTab === "experts" && `text-black`}`} style={{color:"#959595", fontSize:"0.8rem", fontWeight:"normal"}}>Experts</span>
+  </div>
+
+  <div
+  style={{cursor:"pointer",borderBottomLeftRadius:"0.5rem",borderBottomRightRadius:"0.5rem"}}
+    onClick={() => handleTabClick("review")}
+    className={`d-flex navBarClick flex-column align-items-center py-1 px-2 fw-light ${
+      activeTab === "review" && `text-black`
+    }`}
+  >
+   <MdFilterCenterFocus className={`${activeTab === "review" && `text-black`} fs-2`} style={{color:"#959595"}}/>
+
+    <span className={`${activeTab === "review" && `text-black`}`} style={{color:"#959595", fontSize:"0.8rem", fontWeight:"normal"}}>Review</span>
+  </div>
+
+  <div
+  style={{cursor:"pointer",borderBottomLeftRadius:"0.5rem",borderBottomRightRadius:"0.5rem"}}
+    onClick={() => handleTabClick("transactions")}
+    className={`d-flex navBarClick flex-column align-items-center py-1 px-2 fw-light ${
+      activeTab === "transactions" && `text-black`
+    }`}
+  >
+   
+   <HiFolderOpen className={`${activeTab === "transactions" && `text-black`} fs-2`} style={{color:"#959595"}}/>
+    <span className={`${activeTab === "transactions" && `text-black`}`} style={{color:"#959595", fontSize:"0.8rem", fontWeight:"normal"}}>PayLog</span>
+  </div>
+  
+  {/* <div
+  style={{borderBottomLeftRadius:"0.5rem",borderBottomRightRadius:"0.5rem"}}
+    onClick={() => handleTabClick("support")}
+    className={`d-flex flex-column align-items-center py-1 px-2 fw-light ${
+      activeTab === "home" && `text-black`
+    }`}
+  >
+   
+    <img src={home} className="d-block w-75" />
+    <span style={{color:"#959595", fontSize:"0.8rem", fontWeight:"normal"}}>Home</span>
+  </div> */}
+</>
+  // <>
+  //   <div
+  //   style={{borderBottomLeftRadius:"0.5rem",borderBottomRightRadius:"0.5rem"}}
+  //     onClick={() => handleTabClick("dashboard")}
+  //     className={`d-flex flex-column align-items-center py-1 px-1 fw-light ${
+  //       activeTab === "dashboard" && `bg-white text-black`
+  //     }`}
+  //   >
+  //     <MdDashboard className="fs-8 d-block " />
+  //     <span className="small-screen-text">Dashboard</span>
+  //   </div>
+  //   <div
+  //   style={{borderBottomLeftRadius:"0.5rem",borderBottomRightRadius:"0.5rem"}}
+  //     onClick={() => handleTabClick("experts")}
+  //     className={`d-flex flex-column align-items-center py-1 px-1 fw-light ${
+  //       activeTab === "experts" && `bg-white text-black `
+  //     }`}
+  //   >
+  //     <FaUserTie className="fs-7 d-block" />
+  //     <span className="small-screen-text">Experts</span>
+  //   </div>
+  //   <div
+  //   style={{borderBottomLeftRadius:"0.5rem",borderBottomRightRadius:"0.5rem"}}
+  //     onClick={() => handleTabClick("students")}
+  //     className={`d-flex flex-column align-items-center py-1 px-1 fw-light ${
+  //       activeTab === "students" && `bg-white text-black `
+  //     }`}
+  //   >
+  //     <FaUsers className="fs-7 d-block" />
+  //     <span className="small-screen-text">Students</span>
+  //   </div>
+  //   <div
+  //   style={{borderBottomLeftRadius:"0.5rem",borderBottomRightRadius:"0.5rem"}}
+  //     onClick={() => handleTabClick("transactions")}
+  //     className={`d-flex flex-column align-items-center py-1 px-1 fw-light ${
+  //       activeTab === "transactions" && `bg-white text-black `
+  //     }`}
+  //   >
+  //     <FaFileInvoice className="fs-7 d-block" />
+  //     <span className="small-screen-text">Transactions</span>
+  //   </div>
+  //   <div
+  //   style={{borderBottomLeftRadius:"0.5rem",borderBottomRightRadius:"0.5rem"}}
+  //     onClick={() => handleTabClick("review")}
+  //     className={`d-flex flex-column align-items-center py-1 fw-light ${
+  //       activeTab === "review" && `bg-white text-black `
+  //     }`}
+  //   >
+  //     <FaBookReader className="fs-7" />
+  //     <span className="small-screen-text">Review</span>
+  //   </div>
+  //   <div
+  //   style={{borderBottomLeftRadius:"0.5rem",borderBottomRightRadius:"0.5rem"}}
+  //     onClick={() => handleTabClick("support")}
+  //     className={`d-flex flex-column align-items-center py-1 fw-light ${
+  //       activeTab === "support" && `bg-white text-black`
+  //     }`}
+  //   >
+  //     <RiLifebuoyFill className="fs-7" />
+  //     <span className="small-screen-text">Support</span>
+  //   </div>
+  // </>
 )}
 
 {role === "expert" && (

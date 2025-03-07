@@ -172,7 +172,7 @@ const UserPurchasedCourse = () => {
   });
 
   const courseData = useMemo(() => data?.data || [], [data]);
-
+  console.log(courseData)
 
   useEffect(() => {
       if (descriptionRef.current) {
@@ -1077,7 +1077,7 @@ const UserPurchasedCourse = () => {
         <div className="mobile-PurchasedCourse px-1 w-100 position-relative ">
          
           <MobileVideoPlayer
-                videoUrl="https://videos.pexels.com/video-files/6266890/6266890-uhd_2560_1440_30fps.mp4"
+                videoUrl={video_url}
                 videoType={viseo_type}
                 className="w-100 rounded-3"
               />
@@ -1155,7 +1155,9 @@ const UserPurchasedCourse = () => {
               >
                 Expert
               </h5>
-              <div className="d-flex mt-2 align-items-center gap-2">
+              <div className="d-flex mt-2 align-items-center gap-2" 
+              onClick={()=> navigate(`/userProfile/${courseData?.course?.expert_id}`)}
+              >
                 <img
                   style={{
                     borderRadius: "50%",

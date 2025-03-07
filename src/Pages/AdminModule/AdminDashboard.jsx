@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import "./AdminDashboard.css";
-import { Line, Doughnut } from "react-chartjs-2";
+import { Line, Doughnut, Bar } from "react-chartjs-2";
 
 import {
   Chart as ChartJS,
@@ -21,6 +21,7 @@ import { BASE_URI } from "../../Config/url";
 import axios from "axios";
 import { RiH1 } from "react-icons/ri";
 import { HashLoader } from "react-spinners";
+import { CustomLoader } from "../../Components/CustomLoader/CustomLoader";
 
 ChartJS.register(
   LineElement,
@@ -288,15 +289,53 @@ const enrollmentData = {
     : enrollments.map((e) => e.year), // For 'all time'
   datasets: [
     {
+      
       label: "Enrollments",
       data: enrollments.map((e) => e.value),
-      backgroundColor: "rgba(75,192,192,0.2)",
-      borderColor: "rgba(75,192,192,1)",
-      fill: true,
+      backgroundColor: "#F90815",
+      borderColor: "#F90815",
+      fill: false,
       tension: 0.4,
     },
   ],
 };
+
+const chartOptions = {
+  responsive: true,
+  
+  // maintainAspectRatio: false, // Allows better control of chart size
+  scales: {
+    x: {
+      grid: {
+        display: false, // Remove X-axis grid lines
+      },
+    },
+    y: {
+      grid: {
+        display: false, // Remove Y-axis grid lines
+      },
+    },
+  },
+  plugins: {
+    legend: {
+      display: false, // Hides the label (legend)
+    },
+  },
+};
+
+
+
+const doughnutOptions = {
+  // maintainAspectRatio: false, // Allows manual height adjustment
+  responsive: true, // Ensures responsiveness
+  plugins: {
+    legend: {
+      position: "top",
+      labels: { color: "#666", font: { size: 12 }, usePointStyle: true }
+    }
+  }
+};
+
 
 // Revenue chart data
 const revenueData = {
@@ -311,10 +350,16 @@ const revenueData = {
     {
       label: "Revenue",
       data: revenue.map((r) => r.value),
-      backgroundColor: "rgba(153,102,255,0.2)",
-      borderColor: "rgba(153,102,255,1)",
-      fill: true,
+      backgroundColor: "#F90815",
+      borderColor: "#F90815",
+      fill: false,
       tension: 0.4,
+      borderRadius: {
+        topLeft: 5,   // Round top-left corner
+        topRight: 5,  // Round top-right corner
+        bottomLeft: 0, // Keep bottom square
+        bottomRight: 0 // Keep bottom square
+      },
     },
   ],
 };
@@ -381,8 +426,7 @@ const revenueData = {
     datasets: [
       {
         data: [courseCompletion.completed, courseCompletion.incomplete],
-        backgroundColor: ["#00AEEF", "#F7464A"],
-        cutout: "80%",
+        backgroundColor: ["#000000", "#F90815", "#8B0000", "#FF4500", "#FFA500"],        cutout: "80%",
       },
     ],
   };
@@ -393,143 +437,168 @@ const revenueData = {
     datasets: [
       {
         data: mostBoughtCourses.map((course) => course.value),
-        backgroundColor: mostBoughtCourses.map((course) => course.color),
-        cutout: "80%",
+        backgroundColor: ["#000000", "#F90815", "#8B0000", "#FF4500", "#FFA500"],
+                cutout: "80%",
       },
     ],
   };
 
-  return (
-    <div className="container-fluid">
-      {(loading || loading1) ? <div style={{height:"90vh"}} className="flex align-items-center justify-content-center w-100">
-        <HashLoader size="60" color="#0c243c"/>
-      </div>
-      :
-      <>
-      <div className="d-flex align-items-center justify-content-between w-100 mb-5">
-        <div>
-          <h3>Welcome Back, {user?.name}</h3>
-          <p>Track & Manage your Platform</p>
-        </div>
-        {/* <div className="d-flex align-items-center gap-3 border shadow-sm rounded-3 px-3 py-2"> */}
-        {/* <FaCalendar className="fs-4" /> */}
+  const iconMap = {
+    TotalStudents: "fas fa-users",
+    TotalCourses: "fas fa-book",
+    TotalExperts: "fas fa-chalkboard-teacher",
+    TotalRevenue: "fas fa-dollar-sign",
+    TotalCommission: "fas fa-percentage",
+    default: "fas fa-chart-bar",
+  };
+  
+  
+  
 
-        {/* <DatePicker
-            selected={startDate}
-            onChange={handleWeekChange}
-            dateFormat="MM/yyyy"
-            showWeekNumbers
-            showPopperArrow={false}
-            customInput={<FaCalendar className="fs-4" />}
-            highlightDates
-            calendarStartDay={0}
-          /> */}
-        {/* <h5 className="fw-normal">{formatWeekRange()}</h5> */}
-        {/* </div> */}
+  return (
+   <div className="container-fluid p-3">
+  {(loading || loading1) ? (
+    <div className="app-white rounded-3 p-1 ">
+
+    <div className="d-flex align-items-center w-100 justify-content-between">
+      <CustomLoader width="48.5%" height="7rem" className="rounded-3"/>
+      <CustomLoader width="48.5%" height="7rem" className="rounded-3"/>
+    </div> 
+    <div className="d-flex mt-2 align-items-center w-100 justify-content-between">
+      <CustomLoader width="48.5%" height="7rem" className="rounded-3"/>
+      <CustomLoader width="48.5%" height="7rem" className="rounded-3"/>
+    </div> 
+    <CustomLoader width="100%" height="15rem" className="rounded-3 mt-2"/>
+    <CustomLoader width="100%" height="15rem" className="rounded-3 mt-1"/>
+
+
+    </div>
+  ) : (
+    <>
+      {/* Header Section */}
+      <div className="row mb-3">
+        <div className="col-12 w-100 app-white py-2">
+          <h3 className="text-capitalize fs-5 d-flex gap-2">
+            Good Morning
+            <h6 className="app-text-white app-black p-1 px-2 rounded-1" style={{ width: "max-content" }}>
+              {user?.name}
+            </h6>
+          </h3>
+        </div>
       </div>
-      <div className="row admin-card-row">
-        {Object.keys(data).map((key) => (
-          <div key={key} className="col-md-4 card-md-4">
-            <div
-              className="card shadow-sm mb-3"
-              style={{ width: "300px", margin: "auto" }}
-            >
-              <div className="card-body">
-                <h5 className="card-title text-center">
-                  {key.replace(/([A-Z])/g, " $1").trim()}
-                </h5>
-                <div className="d-flex justify-content-center align-items-center">
-                  <i
-                    className={`fas fa-lg ${data[key].icon} me-2`}
-                    style={{ color: "#007bff" }}
-                  ></i>
-                  <h2 className="card-text me-2">{data[key].value}</h2>
-                  {/* <span
-                    className={`text-${
-                      data[key].type === "increase" ? "success" : "danger"
-                    }`}
-                  >
-                    {data[key].percentage}
-                    <i
-                      className={`fas fa-${
-                        data[key].type === "increase"
-                          ? "arrow-up"
-                          : "arrow-down"
-                      }`}
-                      style={{ fontSize: "0.8rem" }}
-                    ></i>
-                  </span> */}
-                </div>
+
+      {/* Metrics Cards Section */}
+      <div className="row mt-1 mb-1">
+        {Object.keys(data).map((key, index) => (
+          <div className="col-6 px-1 col-md-3 pb-2" key={key}>
+            <div className="custom-box border-0 app-white px-3 py-3 h-100 d-flex flex-column align-items-center justify-content-between text-center gap-2">
+              <div
+                className="p-2 px-3 w-50 rounded-pill border border-2 d-flex justify-content-center align-items-center"
+                style={{ minHeight: "65px" }}
+              >
+<i
+  className={`fas fa-lg ${iconMap[key] || iconMap.default} `}
+  style={{ color: "grey" }}
+></i>
               </div>
+              <h5 className="fw-normal fs-6 flex-grow-1 text-truncate">
+                {key.replace(/([A-Z])/g, " $1").trim()}
+              </h5>
+              <h2 className="mb-0 fs-4 fw-lightBold">{data[key].value}</h2>
             </div>
           </div>
         ))}
       </div>
 
-      <div className="row position-relative">
-      <select 
-  style={{ top: "-10%", right: "7.5%", width: "7rem" }} 
-  className="position-absolute w-10 p-second  "
-  value={type} // This binds the select element to the state
-  onChange={(e) => setType(e.target.value)} // Handle change here
->
-  <option  className="custom-option" value="week">Week</option>
-  <option   className="custom-option"value="month">Month</option>
-  <option   className="custom-option"value="year">Year</option>
-  <option  className="custom-option" value="all time">All Time</option>
-</select>
-
-
-  
-
-        <div className="col-md-6">
-          <div className="card shadow-sm mb-4 admin-card">
-            <div className="card-body">
-              <h5 className="card-title text-center">New Enrollments</h5>
-              <Line data={enrollmentData} />
-            </div>
-          </div>
-        </div>
-        <div className="col-md-6">
-          <div className="card shadow-sm mb-4 admin-card">
-            <div className="card-body">
-              <h5 className="card-title text-center">Revenue</h5>
-              <Line data={revenueData} />
-            </div>
-          </div>
-        </div>
+      {/* Time Period Selector */}
+      <div className="w-100 mb-2 gap-3 ps-3 p-2 px-2 justify-content-start mt-2 rounded-1 app-white d-flex gap-2">
+        {["week", "month", "year", "all time"].map((btnType) => (
+          <h4
+            key={btnType}
+            style={{ cursor: "pointer" }}
+            className={`p-1 px-2 rounded-2 fs-6 fw-regular border-2 ${
+              type === btnType ? "app-black app-text-white border-black" : "border border-1 text-secondary"
+            }`}
+            onClick={() => setType(btnType)}
+          >
+            {btnType.charAt(0).toUpperCase() + btnType.slice(1)}
+          </h4>
+        ))}
       </div>
 
+      {/* Charts Section - First Row */}
       <div className="row">
-        <div className="col-md-6">
-          <div className="  mb-4">
-            <div className="card-body">
-              <h5 className="card-title text-center">Course Completion Rate</h5>
-              <div className="d-flex align-items-center justify-content-center">
-                <div className="completion-class" style={{ width: "20rem", height: "20rem" }}>
-                  <Doughnut data={courseCompletionData} />
-                </div>
-              </div>
+        <div className="col-md-6 mb-3">
+          <div className="card p-0 w-100 custom-box">
+            <div className="card-body" style={{ maxHeight: "500px" }}>
+              <h5
+                className="p-1 rounded-1 fs-6 fw-normal app-black app-text-white"
+                style={{ width: "max-content" }}
+              >
+                New Enrollments
+              </h5>
+              <Line data={enrollmentData} options={chartOptions} height={200}/>
             </div>
           </div>
         </div>
-        <div className="col-md-6">
-          <div className="mb-4">
-            <div className="card-body">
-              <h5 className="card-title text-center">Most Bought Courses</h5>
-              <div className="d-flex align-items-center justify-content-center">
-                <div  className="bought-class"style={{ width: "20rem", height: "20rem" }}>
-                  <Doughnut data={mostBoughtCoursesData} />
-                </div>
-              </div>
+        <div className="col-md-6 mb-3">
+          <div className="card p-0 w-100 custom-box">
+            <div className="card-body" style={{ maxHeight: "500px"}}>
+              <h5
+                className="p-1 rounded-1 fs-6 fw-normal app-black app-text-white"
+                style={{ width: "max-content" }}
+              >
+                Revenue
+              </h5>
+              <Bar data={revenueData} options={chartOptions} height={200}/>
             </div>
           </div>
         </div>
       </div>
-      </>
-      }
-      
+
+      {/* Charts Section - Second Row (Additional Sections) */}
+      <div className="row  mb-5">
+      <div className="col-md-6 mb-3">
+  <div className="card p-0 w-100 custom-box">
+    <div className="card-body" style={{ maxHeight: "400px" }}>
+      <h5
+        className="p-1 rounded-1 fs-6 fw-normal app-black app-text-white"
+        style={{ width: "max-content" }}
+      >
+                Course Completion Rate
+                </h5>
+      <div className="d-flex align-items-center justify-content-center">
+        <div className="bought-class" style={{ height: "250px" }}>
+        <Doughnut data={courseCompletionData} options={doughnutOptions} />
+        </div>
+      </div>
     </div>
+  </div>
+</div>
+        
+        <div className="col-md-6 mb-3">
+  <div className="card p-0 w-100 custom-box">
+    <div className="card-body" style={{ maxHeight: "400px", paddingBottom: "20px" }}>
+      <h5
+        className="p-1 rounded-1 fs-6 fw-normal app-black app-text-white"
+        style={{ width: "max-content" }}
+      >
+        Most Bought Courses
+      </h5>
+      <div className="d-flex align-items-center justify-content-center">
+        <div className="bought-class" style={{ height: "250px" }}>
+          <Doughnut data={mostBoughtCoursesData} options={doughnutOptions} />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      </div>
+    </>
+  )}
+</div>
+
   );
 }
 

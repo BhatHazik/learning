@@ -5,6 +5,10 @@ import axios from "axios";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { HashLoader } from "react-spinners";
+import defaultUser from "../../assets/defaultUser.svg";
+import formatDate1 from "../../utils/formatDate";
+import LikeButton from "../../Components/Like/LikeButton";
+import defaultCourse from "../../assets/defaultCourse.svg";
 
 const getSocialLinks = (profile) => [
   {
@@ -21,6 +25,7 @@ const getSocialLinks = (profile) => [
 ];
 
 export default function UserProfile() {
+  const token = localStorage.getItem("token");
   const navigate = useNavigate();
   // const location = useLocation();
   const {id} = useParams()
@@ -29,8 +34,11 @@ export default function UserProfile() {
   const [profile, setProfile] = useState(null);
   const [courseData, setCourse] = useState(null);
   const [loadingItems, setLoadingItems] = useState({});
-  const [loading , setLoading] = useState(false)
+  const [loading , setLoading] = useState(false);
+  const [pastMatches, setPastMatches] = useState([]);
+  const [upcomingMatches, setUpcomingMatches] = useState([]);
   // const token = localStorage.getItem("token");
+
 
   useEffect(() => {
     
@@ -42,6 +50,7 @@ export default function UserProfile() {
         );
         setProfile(response?.data?.data.expert); // Set profile data
         setCourse(response?.data?.data?.courses || []);
+        console.log(response?.data?.data);
       } catch (err) {
         console.error("Error fetching profile data:", err);
       }
@@ -52,6 +61,51 @@ export default function UserProfile() {
 
     fetchProfile();
   }, [expertId]);
+
+
+  const fetchPastMatches = async () => {
+
+    try {
+      const response = await axios.get(
+        `${BASE_URI}/api/v1/users/getPastMatch/?id=${expertId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setPastMatches(response?.data?.data); // Set past matches data
+      console.log(response?.data?.data)
+    } catch (err) {
+      console.error("Error fetching past matches data:", err);
+    }
+  };
+
+  const fetchUpcomingMatches = async () => {
+
+    try {
+      const response = await axios.get(
+        `${BASE_URI}/api/v1/users/getUpcomingMatch/?id=${expertId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setUpcomingMatches(response?.data?.data); // Set past matches data
+      console.log(response?.data?.data);
+    } catch (err) {
+      console.error("Error fetching past matches data:", err);
+    }
+  };
+
+
+
+  useEffect(() => {
+    fetchUpcomingMatches();
+    fetchPastMatches();
+  }, []);
+
 
 
   const getRandomColor = () => {
@@ -82,6 +136,7 @@ export default function UserProfile() {
   };
 
   return (
+    <>
     <div
       className="wrapper-userCourseview position-relative"
       style={{ backgroundColor: "white" }}
@@ -223,10 +278,265 @@ export default function UserProfile() {
           </div>
         </div>
       </div>
+
+      
       </>
 }
 
 
     </div>
+    <div style={{marginBottom:"4.5rem"}} className="mobile-experts w-100 ms-1 px-2">
+      <div className="container c-profile app-white rounded p-3 shadow-sm">
+        <div className="d-flex align-items-center gap-3">
+          {/* Profile Image or Initials */}
+          <div className="profile-image">
+            {profile?.profile_picture ? (
+              <img
+                alt="Profile"
+                src={profile.profile_picture}
+                className="rounded-circle"
+                style={{ width: 60, height: 60, objectFit: "cover" }}
+                onError={(e) => {
+                  // console.log(e)
+                  e.target.onerror = null;
+                  e.target.src = defaultUser; // Fallback image
+                }}
+              />
+            ) : (
+              <div
+                style={{
+                  width: 60,
+                  height: 60,
+                  borderRadius: "50%",
+                  backgroundColor: getRandomColor(),
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: "#fff",
+                  fontWeight: "bold",
+                  fontSize: "24px",
+                }}
+              >
+                {profile?.name ? profile.name.charAt(0).toUpperCase() : "?"}
+              </div>
+            )}
+          </div>
+
+          {/* Profile Info */}
+          <div className="flex-grow-1">
+            <h5 className="mb-1">{profile?.name || "Unknown Expert"}</h5>
+            <p className="text-muted mb-1">{profile?.title || "JiuJitsu Expert"}</p>
+            <div className="d-flex gap-3 text-muted small">
+              <span>👨‍🎓 Students: {profile?.total_students || 0}</span>
+              <span>⭐ Reviews: {profile?.total_reviews || 0}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Social Links */}
+        {profile?.socials && profile.socials.length > 0 && (
+          <div className="mt-3">
+            <h6 className="mb-2">My Socials</h6>
+            <div className="d-flex gap-2">
+              {getSocialLinks(profile).map((social, index) => (
+                <a
+                  href={social.url}
+                  key={index}
+                  className="text-decoration-none text-dark"
+                >
+                  <i className={social.icon} /> {social.name}
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* About Section */}
+        {profile?.bio && (
+          <div className="mt-3">
+            <h6>About Me</h6>
+            <p className="text-muted">{profile.bio}</p>
+          </div>
+        )}
+
+        {/* Past Competitions */}
+        <div className="mt-3">
+          <h6 style={{width:"max-content"}} className="app-black p-1 app-text-white border-0 rounded-1 px-2 mb-2">Past Competitions</h6>
+          {pastMatches.length && pastMatches.length > 0 ? (
+            <ul className="list-group mt-1">
+              {pastMatches?.map((comp, index) => (
+                <li key={index} className="list-group-item d-flex justify-content-between align-items-center">
+                  <div>
+                    <strong>{comp.competition_name}</strong> <br />
+                    <small className="text-muted">
+                       {formatDate1(comp.competition_date)} | {comp.location}
+                    </small>
+                  </div>
+                  <span className="badge bg-success text-white">Attended</span>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-muted">No past competitions available.</p>
+          )}
+        </div>
+
+        {/* Upcoming Competitions */}
+        <div className="mt-3">
+          <h6 style={{width:"max-content"}} className="app-black p-1 app-text-white border-0 rounded-1 px-2 mb-2">Upcoming Competitions</h6>
+          {upcomingMatches.length && pastMatches.length > 0 ? (
+            <ul className="list-group mt-1">
+              {upcomingMatches?.map((comp, index) => (
+                <li key={index} className="list-group-item d-flex justify-content-between align-items-center">
+                  <div>
+                    <strong>{comp.competition_name}</strong> <br />
+                    <small className="text-muted">
+                       {formatDate1(comp.competition_date)} | {comp.location}
+                    </small>
+                  </div>
+                  <span className="badge bg-warning text-dark">Upcoming</span>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-muted">No upcoming competitions available.</p>
+          )}
+        </div>
+        <h6 style={{width:"max-content"}} className="app-black p-1 app-text-white border-0 rounded-1 px-2 mt-3 mb-0">More Courses by {profile?.name}</h6>
+        {
+          courseData?.map((course, index) =>
+            <div
+         
+          onClick={() => 
+              navigate(course.is_purchased 
+                ? `/userPurchasedCourses/${course.id}` 
+                : `/userCourses/userCourseView/${course.id}`
+              )
+            }
+             key={index}
+              style={{boxShadow: "1px 3px 7px rgba(0, 0, 0, 0.2)", width:"95%", alignSelf:"center"}} 
+             className="rounded-3 border-1 h-25 justify-content-between bg-white d-block responsive-card mt-3">
+                          <div className="card-image position-relative" style={{ maxWidth: "100%", zIndex:"99"}}>
+                            <img
+                              className=" w-100 object-fit-cover rounded-bottom-0 rounded-2"
+                              src={course.thumbnail || defaultCourse}
+                              alt=""
+                              onError={(e) => {
+                                // console.log(e)
+                                e.target.onerror = null;
+                                e.target.src = defaultCourse; // Fallback image
+                              }}
+                            />
+            
+            
+                            <LikeButton size="22px" className="position-absolute" top = "2%" right = "2%" token={token} heart={course.is_favourite} id={course.id}/>
+            
+                          </div>
+                        
+                          <div className="card-details p-2" style={{ width: "100%" }}>
+                            <div style={{ width: "100%" }} className="d-flex justify-content-between">
+                              <div style={{width:"100%"}}>
+                                {/* <h4
+                                style={{ fontSize: "1.1rem", color: "#8B8B8B" }}
+                                className="text-black">{course.title}</h4> */}
+                                <h4
+                                style={{ fontSize: "1.6rem", }}
+                                className="app-text-black fw-normal">{course.title}</h4>
+                                {/* <h5
+                                  style={{ fontSize: "0.8rem", color: "#8B8B8B" }}
+                                  className="fw-medium"
+                                >
+                                  {course.expert}, Desginer
+                                </h5> */}
+                                <h5
+                                  style={{ fontSize: "0.8rem", color: "#8B8B8B" }}
+                                  className="fw-normal mt-1"
+                                >
+                                  {course.tags}
+                                </h5>
+                              </div>
+                        
+                              <div>
+                                <div
+                                  // style={{ border: `2px solid ${bgColor}` }}
+                                  style={{ border: `2px solid grey` }}
+                                  className="rounded-2 d-flex justify-content-center align-items-center p-1"
+                                >
+                                  <h6 
+                                  // style={{ fontSize: "0.8rem", color: bgColor, textAlign:"center" }}
+                                  style={{ fontSize: "0.8rem", color: "grey", textAlign:"center" }}
+                                  >
+                                    {course.category}</h6>
+                                </div>
+                              </div>
+                            </div>
+                        
+                            <div style={{ width: "100%" }} className="d-flex justify-content-between mt-3 h-50">
+                              
+                              
+                              
+                              <div className="d-flex gap-2 align-items-center">
+                              
+                              <img 
+              style={{ width: "2rem", height: "2rem" }} 
+              className="object-fit-cover rounded-pill" 
+              src={course.expert_profile || defaultUser} 
+              alt="" 
+              onError={(e) => {
+                // console.log(e)
+                e.target.onerror = null;
+                e.target.src = defaultUser; // Fallback image
+              }}
+            />
+            
+                              <div>
+                                
+                              <h5
+                                  style={{ fontSize: "0.8rem" }}
+                                  className="fw-normal app-text-black"
+                                >
+                                  By {profile.name}
+                                </h5>
+                                <div className="d-flex mt-1 gap-1 align-items-center">
+                                  <h4
+                                    style={{ fontSize: "1.1rem", color: "#000" }}
+                                    className="fw-medium"
+                                  >
+                                    ${course.discounted_price}
+                                  </h4>
+                                  <h4
+                                    style={{
+                                      fontSize: "1rem",
+                                      color: "#8B8B8B",
+                                    }}
+                                    className="fw-light text-decoration-line-through"
+                                  >
+                                    ${course.price}
+                                  </h4>
+                                </div>
+                              </div>
+                              </div>
+            
+                              
+                              <div className="d-flex align-items-end">
+                                <div
+                                  // style={{ background: "#0C243C" }}
+                                  className="d-flex app-red justify-content-center align-items-center p-2 px-3 rounded-1"
+                                >
+                                  <h5 style={{ fontSize: "0.8rem", color: "#fff" }} className="fw-normal">
+                                    {course.is_purchased ? "Purchased" : "See Details" }
+                                  
+                                  </h5>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+          )
+        }
+        
+      </div>
+    </div>
+    </>
   );
 }

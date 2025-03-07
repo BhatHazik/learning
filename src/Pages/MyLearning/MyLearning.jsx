@@ -12,6 +12,12 @@ import LikeButton from "../../Components/Like/LikeButton";
 import defaultCourse from "../../assets/defaultCourse.svg";
 import defaultUser from "../../assets/defaultUser.svg";
 import Popup from "../../Components/PopUp/PopUp";
+import { CategorySkeleton } from "../../Components/CategoryLoader/CategoryLoader";
+import CategorySkeletonLoader from "../../Components/CategoriesLoader/CategoriesLoader";
+import SkeletonLoader from "../../Components/CardLoader/CardLoader";
+import SearchNotFound from "../../assets/searchNotFound.svg";
+import Error from "../../Components/Error/Error";
+import { TiStarFullOutline } from "react-icons/ti";
 
 
 const ShimmerCard = () => (
@@ -503,7 +509,9 @@ if(status === 'purchased'){
         </div>
       
 
-        <div
+       {
+       
+       <div
           style={{
             zIndex: "100",
             width: "max-content",
@@ -511,31 +519,31 @@ if(status === 'purchased'){
             position: "sticky",
             top: "-0.3%",
           }}
-          className="mobile-top-myLearning w-100 gap-3 ps-3 p-2 px-2 justify-content-start mt-2 rounded-1 app-white d-flex gap-2"
+          className="mobile-top-myLearning w-100 gap-3 ps-3 p-2 px-2 justify-content-start mt-2 rounded-1 app-white gap-2"
         >
           <h4 
                     style={{cursor:"pointer"}}
 
-          className={`p-1 px-2 rounded-2 fs-6 fw-regular border-2 ${mobileActiveTab === "purchased" ? "app-black app-text-white border-black" : "border border-1 text-secondary"}`}
-          onClick={() => setMobileActiveTab("purchased")}>
+          className={`p-1 px-2 rounded-2 fs-6 fw-regular border-2 ${activeTab === "" ? "app-black app-text-white border-black" : "border border-1 text-secondary"}`}
+          onClick={() => setActiveTab("")}>
             Purchased Courses
           </h4>
           <h4
                     style={{cursor:"pointer"}}
 
             className={`p-1 px-2 rounded-2 fs-6 border-2 ${
-              mobileActiveTab === "wishlisted"
+              activeTab === "favourite"
                 ? "app-black border-black app-text-white"
                 : "border border-1 text-secondary"
             }`}
-            onClick={() => setMobileActiveTab("wishlisted")}
+            onClick={() => setActiveTab("favourite")}
           >
             {/* {category.category_name} */}
             Wishlisted
           </h4>
-        </div>
+        </div>}
 
-      <div className="mobileUserCourses pb-5 mb-4 px-3 pt-3 gap-3">
+      <div className="mobileUserCourses pb-5 mb-4 px-3 pt-3 gap-3 w-100">
           {/* {coursesData.length === 0 && 
               <div style={{height:"60vh"}} className="w-100 align-self-center d-flex flex-column justify-content-center align-items-center">
               <img src={SearchNotFound} alt="" className="w-75"/>
@@ -543,13 +551,23 @@ if(status === 'purchased'){
             </div>
              } */}
             {/* {coursesData.map((course, index) => { */}
-            {coursesData?.course?.map((course, index) => {
+            {
+            isLoading ?
+            <>
+            {[...Array(3)].map((_, index) => (
+              <SkeletonLoader key={index} />
+            ))}
+</> : 
+coursesData.length === 0 ? 
+  <Error imageSrc={SearchNotFound} message="No courses found" />
+ :
+            coursesData?.course?.map((course, index) => {
               {/* const bgColor = colors[Math.floor(Math.random() * colors.length)];
               const image = category[index].imageUrl; */}
             return( 
 
               <>
-             {mobileActiveTab === "purchased" &&
+             {activeTab === "" &&
               <div onClick={() => 
   navigate(course.is_purchased 
     ? `/userPurchasedCourses/${course.id}` 
@@ -573,9 +591,9 @@ if(status === 'purchased'){
                 <div
                 style={{right:"0.5rem", bottom:"0.5rem"}}
                 className="position-absolute app-white d-flex justify-content-between p-1 px-2 rounded-1"> 
-                  <h5 className="fs-6 fw-medium ">{course.completion_percentage}% Completed</h5>
+                  <h5 className="fs-6 fw-medium ">{Math.floor(course.completion_percentage)}% Completed</h5>
                 </div>
-                <LikeButton size="22px" className="position-absolute" top = "2%" right = "2%"/>
+                <LikeButton size="22px" className="position-absolute" top = "2%" right = "2%" heart={course.is_favourite} token={token} id={course.id}/>
               </div>
 
               <div className="w-100 p-0 px-2">
@@ -683,7 +701,7 @@ if(status === 'purchased'){
                   <div className="d-flex align-items-end">
                     <div
                       // style={{ background: "#0C243C" }}
-                      className="d-flex app-red justify-content-center cursor-pointer align-items-center p-2 px-3 rounded-1"
+                      className={`d-flex ${course?.user_rating ? "px-1 py-1": "app-red p-2 px-3" }  justify-content-center cursor-pointer align-items-center rounded-1`}
                       onClick={(e) => {!course?.user_rating && setRating(e, course.id)}}
                     >
                       {/* <h5 style={{ fontSize: "0.8rem", color: "#fff" }} className="fw-normal">
@@ -691,7 +709,12 @@ if(status === 'purchased'){
                       </h5> */}
                       {course?.user_rating ? (
                 <div style={{ display: "flex" }}>
-                  <h6>{"⭐".repeat(course.user_rating)}</h6>
+                  <p>
+  {Array.from({ length: course.user_rating }, (_, index) => (
+    <TiStarFullOutline className="" color="gold" key={index} />
+  ))}
+</p>
+
                   
                 </div>
               ) : (
@@ -704,7 +727,7 @@ if(status === 'purchased'){
             </div>
             }
             {
-              mobileActiveTab === "wishlisted" &&
+              activeTab === "favourite" &&
               <div onClick={() => 
                 navigate(course.is_purchased 
                   ? `/userPurchasedCourses/${course.id}` 
@@ -727,9 +750,8 @@ if(status === 'purchased'){
                               />
               
               
-                              <LikeButton size="22px" className="position-absolute" top = "2%" right = "2%" token={token}/>
-              
-                            </div>
+              <LikeButton size="22px" className="position-absolute" top = "2%" right = "2%" heart={course.is_favourite} token={token} id={course.id}/>
+              </div>
                           
                             <div className="card-details p-2" style={{ width: "100%" }}>
                               <div style={{ width: "100%" }} className="d-flex justify-content-between">

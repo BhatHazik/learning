@@ -15,6 +15,7 @@ const CourseDropdown = ({
   isFirst = false,
   setVideoUrl,
 }) => {
+
   const [isOpen, setIsOpen] = useState(isFirst);
   const [selected, setSelected] = useState(null);
   const [contentHeight, setContentHeight] = useState(0);

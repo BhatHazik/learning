@@ -451,6 +451,9 @@
   .top-userCourses{
     display: none;
   }
+  .no-courses-courses{
+    display: none;
+  }
   
   .top-mobileUserCourses {
     
