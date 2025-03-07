@@ -236,7 +236,9 @@ console.log(courseData)
       [chapterIndex]: !prevOpenChapters[chapterIndex],
     }));
   };
-
+  const socialMediaLinks = courseData[0]?.social_media_links || "";
+  const [youtubeLink, twitterLink] = socialMediaLinks ? socialMediaLinks.split(',').map(link => link.trim()) : ["", ""];
+  
   return (
     <>
       
@@ -891,17 +893,12 @@ console.log(courseData)
                 style={{ width: "max-content" }}
                 className="d-flex gap-2 p-1 px-2 align-items-center mt-1"
               >
-                <BsTwitterX className="fs-3 app-text-white app-black p-1 rounded-1" />
-                <FaYoutube className="fs-3 app-text-white app-black p-1 rounded-1" />
-                <BiLink className="fs-3 app-text-white app-black p-1 rounded-1" />
+                <a href={`https://${twitterLink}`}><BsTwitterX  className="fs-3 app-text-white app-black p-1 rounded-1" /></a>
+                <a href={`https://${youtubeLink}`}><FaYoutube className="fs-3 app-text-white app-black p-1 rounded-1" /></a>
+                <a href={`https://${courseData[0]?.website}`}><BiLink className="fs-3 app-text-white app-black p-1 rounded-1" /></a>
               </div>
               <p className="fs-6 fw-light app-text-black">
-                I am a Jiu-Jitsu expert Jhon with years of experience mastering
-                the art of grappling, control, and submissions. My game is built
-                on precision, strategy, and adaptability, allowing me to
-                dominate opponents using technique rather than brute strength.
-                Whether it’s teaching, competing, or refining my craft, I
-                constantly push my limits to evolve as a martial artist.
+              {courseData[0]?.bio || "No Bio available"}
               </p>
             </div>
             <h5

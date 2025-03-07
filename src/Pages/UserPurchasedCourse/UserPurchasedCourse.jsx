@@ -492,6 +492,10 @@ const UserPurchasedCourse = () => {
     newWindow.print();
   };
 
+  const socialMediaLinks = courseData?.course?.social_media_links || "";
+  const [youtubeLink, twitterLink] = socialMediaLinks ? socialMediaLinks.split(',').map(link => link.trim()) : ["", ""];
+  
+
   return (
     <>
       {/* {isLoading ? (
@@ -1087,7 +1091,7 @@ const UserPurchasedCourse = () => {
 
           <h3 className="fs-3 fw-medium ">Half Guard</h3>
           <div className="p-1 px-2 app-black rounded-1 d-flex justify-content-between align-items-center">
-            <h6 className="fs-6 fw-medium app-text-white d-flex gap-2">70% <RiProgress7Line className="fs-5 fw-medium app-text-white"/></h6>
+            <h6 className="fs-6 fw-medium app-text-white d-flex gap-2">{Math.floor(courseData?.course?.completion_percentage) || 0}% <RiProgress7Line className="fs-5 fw-medium app-text-white"/></h6>
           
           </div>
           </div>
@@ -1185,17 +1189,12 @@ const UserPurchasedCourse = () => {
                 style={{ width: "max-content" }}
                 className="d-flex gap-2 p-1 px-2 align-items-center mt-1"
               >
-                <BsTwitterX className="fs-3 app-text-white app-black p-1 rounded-1" />
-                <FaYoutube className="fs-3 app-text-white app-black p-1 rounded-1" />
-                <BiLink className="fs-3 app-text-white app-black p-1 rounded-1" />
+               <a href={`https://${twitterLink}`}><BsTwitterX  className="fs-3 app-text-white app-black p-1 rounded-1" /></a>
+                <a href={`https://${youtubeLink}`}><FaYoutube className="fs-3 app-text-white app-black p-1 rounded-1" /></a>
+                <a href={`https://${courseData?.course?.website}`}><BiLink className="fs-3 app-text-white app-black p-1 rounded-1" /></a>
               </div>
               <p className="fs-6 fw-light app-text-black">
-                I am a Jiu-Jitsu expert Jhon with years of experience mastering
-                the art of grappling, control, and submissions. My game is built
-                on precision, strategy, and adaptability, allowing me to
-                dominate opponents using technique rather than brute strength.
-                Whether it’s teaching, competing, or refining my craft, I
-                constantly push my limits to evolve as a martial artist.
+              {courseData?.course?.bio || "No Bio available"}
               </p>
             </div>
             <h5

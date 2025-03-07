@@ -13,6 +13,7 @@ const Dashboard = () => {
   const [type, setType] = useState("week");
   const [loading, setLoading] = useState(false);
   const [graphData, setGraphData] = useState(null);
+  const [dashboardData, setDashboardData] = useState(null);
   const revenueChartRef = useRef(null);
   const enrollmentsChartRef = useRef(null);
   const ratingsChartRef = useRef(null);
@@ -40,24 +41,42 @@ const Dashboard = () => {
     }
   };
 
+  
+
+
+  const fetchDashboardData = async () => {
+    try{
+      const response = await axios.get(
+        `${BASE_URI}/api/v1/expert/expertDashboard?type=${type}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      setDashboardData(response.data.data);
+      console.log(response.data.data);
+    }
+    catch(error){
+      console.error("Error fetching dashboard data:", error);
+    }
+  }
+
   useEffect(() => {
     fetchGraphData();
+    fetchDashboardData()
   }, [type]);
 
   // Static data for non-API parts
   // const user = { name: "John Doe" };
   const staticData = {
     enrolls: {
-      total_students: 1200,
-      current_month_revenue: "$15,000",
-      today_enrolled: 30,
-      total_revenue: "$200,000",
+      total_students: dashboardData?.enrolls?.total_students,
+      current_month_revenue: dashboardData?.enrolls?.current_month_revenue,
+      today_enrolled: dashboardData?.enrolls?.today_enrolled,
+      total_revenue: dashboardData?.enrolls?.total_revenue,
     },
-    coursesInDemand: [
-      { id: 1, title: "React for Beginners", enrolled: 300 },
-      { id: 2, title: "Advanced Node.js", enrolled: 250 },
-      { id: 3, title: "Python Data Science", enrolled: 220 },
-    ],
+    coursesInDemand: dashboardData?.coursesInDemand,
     ratings: [50, 30, 10, 5, 5],
   };
 
@@ -466,6 +485,16 @@ const Dashboard = () => {
     return cleanupCharts;
   }, [graphData, type]);
 
+  const reviewData = dashboardData?.reviews[0] || {};
+
+// Transform string values to numbers and order them from 5 stars to 1 star
+const chartData = [
+  parseFloat(reviewData["5_stars"] || "0"),
+  parseFloat(reviewData["4_stars"] || "0"),
+  parseFloat(reviewData["3_stars"] || "0"),
+  parseFloat(reviewData["2_stars"] || "0"),
+  parseFloat(reviewData["1_stars"] || "0")
+];
   // Static Ratings Chart
   useEffect(() => {
     if (ratingsChartInstance.current) {
@@ -516,7 +545,7 @@ const Dashboard = () => {
         data: {
           labels: ["5 Stars", "4 Stars", "3 Stars", "2 Stars", "1 Star"],
           datasets: [{
-            data: staticData?.ratings,
+            data: chartData,
             backgroundColor: ["#000000", "#F90815", "#8B0000", "#FF4500", "#FFA500"],
             borderWidth: 0,
             hoverOffset: 8,
@@ -532,6 +561,7 @@ const Dashboard = () => {
           }
         }
       });
+      
     }
     return () => {
       if (ratingsChartInstance.current) {
@@ -647,7 +677,7 @@ const Dashboard = () => {
                 Courses in Demand
               </h5>
               <ul className="list-group mt-1">
-                {staticData.coursesInDemand.map((course, index) => (
+                {staticData?.coursesInDemand?.map((course, index) => (
                   <li key={course.id} className="list-group-item ps-0 border-0">
                     {index + 1}. {course.title} (Enrolled: {course.enrolled})
                   </li>
