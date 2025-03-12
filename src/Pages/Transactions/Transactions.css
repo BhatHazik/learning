@@ -197,3 +197,21 @@
     margin-bottom: 10px;
   }
 }
+
+@keyframes popIn {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  80% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.checkmark-animation {
+  animation: popIn 0.4s ease-out;
+}

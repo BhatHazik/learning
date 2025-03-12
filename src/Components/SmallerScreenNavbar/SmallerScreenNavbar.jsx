@@ -168,6 +168,8 @@ export default function SmallerScreenNavbar({ collapsed, search, setSearch, cart
   const [UserType, setUserType] = useState("Expert")
   const profileUrl = `${BASE_URI}/api/v1/users/profile`;
   const [ballance , setBallance] = useState(0);
+  const [name, setName] = useState("");
+  const [profile_picture, setProfilePicture] = useState("");
   // console.log(token)
 
   
@@ -179,9 +181,9 @@ export default function SmallerScreenNavbar({ collapsed, search, setSearch, cart
   const notifications = useSelector((state) => state.payouts.notifications);
   useSelector((state) => state.cart);
 
-  const { data, refetch } = useFetch(profileUrl, fetchOptions);
-  const { name, profile_picture } = data?.data[0] || [];
-  
+  // const { data, refetch } = useFetch(profileUrl, fetchOptions);
+  // const { name, profile_picture } = data?.data[0] || [];
+  // console.log(data?.data[0])
 
   const fetchWalletBallance = async () => {
     try {
@@ -200,9 +202,27 @@ export default function SmallerScreenNavbar({ collapsed, search, setSearch, cart
     }
   };
 
+  const profileData = async () => {
+    console.log("hii")
+    try {
+      const response = await axios.get(`${BASE_URI}/api/v1/users/profile`, {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      });
+      console.log(response)
+      setName(response.data.data[0].name);
+      setProfilePicture(response.data.data[0].profile_picture);
+    }
+    catch (error) {
+      console.error("Error fetching profile data:", error);
+    }
+  };
+
   useEffect(() => {
     if (token) {
       fetchWalletBallance();
+      profileData();
     }
   }, [token]);
 
@@ -383,9 +403,12 @@ export default function SmallerScreenNavbar({ collapsed, search, setSearch, cart
       <img
         style={{ cursor: "pointer", width: "40px", height: "40px" }}
         onClick={() => navigate('/settings')}
-        src={defaultUser}
+        src={ profile_picture || defaultUser}
         alt="profile"
         className=" rounded-circle"
+        onError={(e) => {
+          e.target.src = defaultUser;
+        }}
       />
     </div>
   )}
@@ -680,10 +703,13 @@ export default function SmallerScreenNavbar({ collapsed, search, setSearch, cart
               </div>
              
               <img
-                src={profile_picture}
+                src={profile_picture || defaultUser}
                 alt="Profile"
                 className="profile-picture"
                 style={{ objectFit: "cover", height: "5rem", width: "5rem" }} 
+                onError={(e) => {
+                  e.target.src = defaultUser;
+                }}
               />
        
               

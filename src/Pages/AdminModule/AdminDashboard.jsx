@@ -119,9 +119,11 @@ function AdminDashboard() {
       },
     });
     setCourseCompletion({
-      completed: adminData?.data?.data?.total_users?.certified_user,
+      completed: adminData?.data?.data?.total_users?.certified_users,
       incomplete: adminData?.data?.data?.total_users?.uncertified_users,
     });
+    console.log(adminData?.data?.data?.total_users?.certified_users)
+    // console.log(adminData?.data?.data?.total_users)
 
     const colors = ["#82CA9D", "#00AEEF", "#88929D", "#A4A7AD"];
     setMostBoughtCourses(
@@ -147,6 +149,7 @@ function AdminDashboard() {
     
   
     if (type === "week") {
+      console.log(adminGraphData?.data?.data?.Enrolled)
       // Handling weekly data
       setEnrollments([
         { day: "Mon", value: adminGraphData?.data?.data?.Enrolled[0]?.daily_enrolled },
@@ -302,8 +305,6 @@ const enrollmentData = {
 
 const chartOptions = {
   responsive: true,
-  
-  // maintainAspectRatio: false, // Allows better control of chart size
   scales: {
     x: {
       grid: {
@@ -311,6 +312,8 @@ const chartOptions = {
       },
     },
     y: {
+      beginAtZero: true, // Ensures Y-axis starts from 0
+      suggestedMin: 0, // Suggests a minimum of 0
       grid: {
         display: false, // Remove Y-axis grid lines
       },
@@ -322,6 +325,7 @@ const chartOptions = {
     },
   },
 };
+
 
 
 
@@ -422,6 +426,7 @@ const revenueData = {
 
   // Course completion doughnut data
   const courseCompletionData = {
+    
     labels: ["Completed", "Incomplete"],
     datasets: [
       {

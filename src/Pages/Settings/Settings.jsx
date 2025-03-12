@@ -1747,205 +1747,209 @@ export default function Settings() {
                           onChange={handleImageChange}
                 />
               </div>
+              {role === "expert" &&
+              <>
               <div className="form-group col-12 col-md-6 mb-4">
-  <label htmlFor="company_name" className="mb-1 fs-5">
-    Company Name
-  </label>
-  <div className="input-group">
-    <input
-      type="text"
-      className="form-control py-3"
-      id="company_name"
-      value={userData.users.company_name}
-      placeholder="Enter company name"
-      readOnly={isReadOnly}
-      ref={companyRef}
-      onChange={(e) =>
-        setUserData({
-          ...userData,
-          users: {
-            ...userData.users,
-            company_name: e.target.value,
-          },
-        })
-      }
-    />
-    <div className="input-group-append">
-                          <span
-                            className="input-group-text h-100 rounded-start-0 px-4 bg-light-custom cursor-pointer"
-                            onClick={handleEditcompanyClick}
-                          >
-                            <FaPen />
-                          </span>
-                        </div>
-  </div>
-</div>
-
-<div className="form-group w-md-50 mb-4">
-                      <label
-                        htmlFor="youtube"
-                        className="mb-1"
-                        style={{ fontSize: "20px" }}
-                      >
-                        Youtube
-                      </label>
-                      <div className="input-group">
-                        <input
-                          type="text"
-                          className="form-control py-3"
-                          id="youtube"
-                          // value={isReadOnly ? youtube : userData.users.youtube}
-                          value={
-                            isReadOnly
-                              ? userData.users.youtube
-                              : userData.users.youtube
-                          }
-                          placeholder="Enter Youtube Url"
-                          readOnly={isReadOnly}
-                          ref={youtubeRef}
-                          onChange={(e) =>
-                            setUserData({
-                              ...userData,
-                              users: {
-                                ...userData.users,
-                                youtube: e.target.value,
-                              },
-                            })
-                          }
-                        />
-                        <div className="input-group-append">
-                          <span
-                            className="input-group-text h-100 rounded-start-0 px-4 bg-light-custom cursor-pointer"
-                            onClick={handleEditYoutubeClick}
-                          >
-                            <FaPen />
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* twitter */}
-                    <div className="form-group w-md-50 mb-4">
-                      <label
-                        htmlFor="twitter"
-                        className="mb-1"
-                        style={{ fontSize: "20px" }}
-                      >
-                        Twitter
-                      </label>
-                      <div className="input-group">
-                        <input
-                          type="text"
-                          className="form-control py-3"
-                          id="twitter"
-                          // value={isReadOnly ? twitter : userData.users.twitter}
-                          value={
-                            isReadOnly
-                              ? userData.users.twitter
-                              : userData.users.twitter
-                          }
-                          placeholder="Enter twitter Url"
-                          readOnly={isReadOnly}
-                          ref={twitterRef}
-                          onChange={(e) =>
-                            setUserData({
-                              ...userData,
-                              users: {
-                                ...userData.users,
-                                twitter: e.target.value,
-                              },
-                            })
-                          }
-                        />
-                        <div className="input-group-append">
-                          <span
-                            className="input-group-text h-100 rounded-start-0 px-4 bg-light-custom cursor-pointer"
-                            onClick={handleEditTwitterClick}
-                          >
-                            <FaPen />
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/*  personal website*/}
-                    <div className="form-group w-md-50 mb-4">
-                      <label
-                        htmlFor="website"
-                        className="mb-1"
-                        style={{ fontSize: "20px" }}
-                      >
-                        Personal Website
-                      </label>
-                      <div className="input-group">
-                        <input
-                          type="text"
-                          className="form-control py-3"
-                          id="website"
-                          // value={isReadOnly ? website : userData.users.website}
-                          value={
-                            isReadOnly
-                              ? userData.users.website
-                              : userData.users.website
-                          }
-                          placeholder="Enter website Url"
-                          readOnly={isReadOnly}
-                          ref={websiteRef}
-                          onChange={(e) =>
-                            setUserData({
-                              ...userData,
-                              users: {
-                                ...userData.users,
-                                website: e.target.value,
-                              },
-                            })
-                          }
-                        />
-                        <div className="input-group-append">
-                          <span
-                            className="input-group-text h-100 rounded-start-0 px-4 bg-light-custom cursor-pointer"
-                            onClick={handleEditWebsiteClick}
-                          >
-                            <FaPen />
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    {/* bio */}
-                    <div className="form-group w-md-50 mb-4">
-                      <label
-                        htmlFor="bio"
-                        className="mb-1"
-                        style={{ fontSize: "20px" }}
-                      >
-                        Add your bio
-                      </label>
-                      <div className="input-group">
-                        <input
-                          type="text"
-                          className="form-control py-3"
-                          id="bio"
-                          // value={isReadOnly ? bio : userData.users.bio} // Corrected value attribute
-                          value={isReadOnly ? userData.users.bio : userData.bio}
-                          placeholder="Add your bio"
-                          ref={bioRef}
-                          onChange={(e) =>
-                            setUserData({
-                              ...userData,
-                              users: { ...userData.users, bio: e.target.value }, // Fixed key from bio to website
-                            })
-                          }
-                        />
-                        <div className="input-group-append">
-                          <span
-                            className="input-group-text h-100 rounded-start-0 px-4 bg-light-custom cursor-pointer"
-                            onClick={handleEditBioClick}
-                          >
-                            <FaPen />
-                          </span>
-                        </div>
-                      </div>
-                    </div>
+              <label htmlFor="company_name" className="mb-1 fs-5">
+                Company Name
+              </label>
+              <div className="input-group">
+                <input
+                  type="text"
+                  className="form-control py-3"
+                  id="company_name"
+                  value={userData.users.company_name}
+                  placeholder="Enter company name"
+                  readOnly={isReadOnly}
+                  ref={companyRef}
+                  onChange={(e) =>
+                    setUserData({
+                      ...userData,
+                      users: {
+                        ...userData.users,
+                        company_name: e.target.value,
+                      },
+                    })
+                  }
+                />
+                <div className="input-group-append">
+                                      <span
+                                        className="input-group-text h-100 rounded-start-0 px-4 bg-light-custom cursor-pointer"
+                                        onClick={handleEditcompanyClick}
+                                      >
+                                        <FaPen />
+                                      </span>
+                                    </div>
+              </div>
+            </div>
+            
+            <div className="form-group w-md-50 mb-4">
+                                  <label
+                                    htmlFor="youtube"
+                                    className="mb-1"
+                                    style={{ fontSize: "20px" }}
+                                  >
+                                    Youtube
+                                  </label>
+                                  <div className="input-group">
+                                    <input
+                                      type="text"
+                                      className="form-control py-3"
+                                      id="youtube"
+                                      // value={isReadOnly ? youtube : userData.users.youtube}
+                                      value={
+                                        isReadOnly
+                                          ? userData.users.youtube
+                                          : userData.users.youtube
+                                      }
+                                      placeholder="Enter Youtube Url"
+                                      readOnly={isReadOnly}
+                                      ref={youtubeRef}
+                                      onChange={(e) =>
+                                        setUserData({
+                                          ...userData,
+                                          users: {
+                                            ...userData.users,
+                                            youtube: e.target.value,
+                                          },
+                                        })
+                                      }
+                                    />
+                                    <div className="input-group-append">
+                                      <span
+                                        className="input-group-text h-100 rounded-start-0 px-4 bg-light-custom cursor-pointer"
+                                        onClick={handleEditYoutubeClick}
+                                      >
+                                        <FaPen />
+                                      </span>
+                                    </div>
+                                  </div>
+                                </div>
+            
+                                {/* twitter */}
+                                <div className="form-group w-md-50 mb-4">
+                                  <label
+                                    htmlFor="twitter"
+                                    className="mb-1"
+                                    style={{ fontSize: "20px" }}
+                                  >
+                                    Twitter
+                                  </label>
+                                  <div className="input-group">
+                                    <input
+                                      type="text"
+                                      className="form-control py-3"
+                                      id="twitter"
+                                      // value={isReadOnly ? twitter : userData.users.twitter}
+                                      value={
+                                        isReadOnly
+                                          ? userData.users.twitter
+                                          : userData.users.twitter
+                                      }
+                                      placeholder="Enter twitter Url"
+                                      readOnly={isReadOnly}
+                                      ref={twitterRef}
+                                      onChange={(e) =>
+                                        setUserData({
+                                          ...userData,
+                                          users: {
+                                            ...userData.users,
+                                            twitter: e.target.value,
+                                          },
+                                        })
+                                      }
+                                    />
+                                    <div className="input-group-append">
+                                      <span
+                                        className="input-group-text h-100 rounded-start-0 px-4 bg-light-custom cursor-pointer"
+                                        onClick={handleEditTwitterClick}
+                                      >
+                                        <FaPen />
+                                      </span>
+                                    </div>
+                                  </div>
+                                </div>
+            
+                                {/*  personal website*/}
+                                <div className="form-group w-md-50 mb-4">
+                                  <label
+                                    htmlFor="website"
+                                    className="mb-1"
+                                    style={{ fontSize: "20px" }}
+                                  >
+                                    Personal Website
+                                  </label>
+                                  <div className="input-group">
+                                    <input
+                                      type="text"
+                                      className="form-control py-3"
+                                      id="website"
+                                      // value={isReadOnly ? website : userData.users.website}
+                                      value={
+                                        isReadOnly
+                                          ? userData.users.website
+                                          : userData.users.website
+                                      }
+                                      placeholder="Enter website Url"
+                                      readOnly={isReadOnly}
+                                      ref={websiteRef}
+                                      onChange={(e) =>
+                                        setUserData({
+                                          ...userData,
+                                          users: {
+                                            ...userData.users,
+                                            website: e.target.value,
+                                          },
+                                        })
+                                      }
+                                    />
+                                    <div className="input-group-append">
+                                      <span
+                                        className="input-group-text h-100 rounded-start-0 px-4 bg-light-custom cursor-pointer"
+                                        onClick={handleEditWebsiteClick}
+                                      >
+                                        <FaPen />
+                                      </span>
+                                    </div>
+                                  </div>
+                                </div>
+                                {/* bio */}
+                                <div className="form-group w-md-50 mb-4">
+                                  <label
+                                    htmlFor="bio"
+                                    className="mb-1"
+                                    style={{ fontSize: "20px" }}
+                                  >
+                                    Add your bio
+                                  </label>
+                                  <div className="input-group">
+                                    <input
+                                      type="text"
+                                      className="form-control py-3"
+                                      id="bio"
+                                      // value={isReadOnly ? bio : userData.users.bio} // Corrected value attribute
+                                      value={isReadOnly ? userData.users.bio : userData.bio}
+                                      placeholder="Add your bio"
+                                      ref={bioRef}
+                                      onChange={(e) =>
+                                        setUserData({
+                                          ...userData,
+                                          users: { ...userData.users, bio: e.target.value }, // Fixed key from bio to website
+                                        })
+                                      }
+                                    />
+                                    <div className="input-group-append">
+                                      <span
+                                        className="input-group-text h-100 rounded-start-0 px-4 bg-light-custom cursor-pointer"
+                                        onClick={handleEditBioClick}
+                                      >
+                                        <FaPen />
+                                      </span>
+                                    </div>
+                                  </div>
+                                </div>
+                                </>
+              }
 
 
               <div

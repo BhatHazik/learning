@@ -12,6 +12,7 @@ import ReactQuill from "react-quill";
 import DOMPurify from "dompurify";
 import { PulseLoader } from "react-spinners";
 import { MdDone } from "react-icons/md";
+import defaultCourse from "../../assets/defaultCourse.png"
 
 const tagsData = ['JavaScript', 'React', 'CSS', 'HTML', 'Node.js', 'Python', 'Java', "i", "i"];
 export default function CourseCreation({ editCourse, courseeId }) {
@@ -285,6 +286,46 @@ export default function CourseCreation({ editCourse, courseeId }) {
       .then((response) => {
         setLoading(false);
         toast.success("Course updated successfully!");
+        axios
+        .get(`${BASE_URI}/api/v1/courses/${courseeId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((response) => {
+          const courseDetails = response?.data?.data[0];
+        
+          // Ensure both course details and gettags are available before sorting
+          if (courseDetails?.tag_ids && gettags.length > 0) {
+            const sortedTags = courseDetails.tag_ids
+              .map((tagId) => {
+                const tag = gettags.find((tag) => tag.id === tagId);
+                return tag ? { id: tag.id, name: tag.name } : null;
+              })
+              .filter((tag) => tag !== null); // Remove any null values
+  
+            setSelectedTags(sortedTags);
+          }
+  
+          setCourseData({
+            title: courseDetails.title || "",
+            description: courseDetails.description || "",
+            category_id: courseDetails.category_id || "",
+            status: courseDetails.status || "",
+            price: courseDetails.price || "",
+            discount: courseDetails.discount || "",
+            thumbnail: courseDetails.thumbnail || null,
+            tag_ids: courseDetails.tag_ids || [],
+            access: courseDetails.access || "",
+          });
+  
+          setThumbnailPreview(
+            courseDetails.thumbnail ? courseDetails.thumbnail : null
+          );
+        })
+        .catch(() => {
+          toast.error("Failed to load course details.");
+        });
         setCourseId(response.data.data.course_id);
         setIsModal(true);
         navigate("/courses");
@@ -341,7 +382,7 @@ export default function CourseCreation({ editCourse, courseeId }) {
       <header className="d-flex align-items-center justify-content-between px-2 ps-3 py-2 mt-2 mb-2 app-white">
         <h3 className="fw-semibold fs-5">Course Creation</h3>
         <button className="app-black rounded-2 border-0 py-1 px-3 fw-lightBold mb-0 h-auto app-black">
-          <Link to="/courses" className="text-decoration-none text-white">
+          <Link onClick={handleCancel} to="/courses" className="text-decoration-none text-white">
             Cancel
           </Link>
         </button>
@@ -576,6 +617,10 @@ export default function CourseCreation({ editCourse, courseeId }) {
                   alt="Thumbnail Preview"
                   className="mt-2"
                   style={{ maxWidth: "200px", maxHeight: "200px" }}
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = defaultCourse; // Fallback image
+                  }}
                 />
               )}
             </div>
@@ -658,8 +703,8 @@ export default function CourseCreation({ editCourse, courseeId }) {
             <div className="d-flex justify-content-between align-items-center">
               <button
                 type="button"
-                className="signup-now py-2 px-3 fw-light mb-0 h-auto"
-                style={{ background: "#CC3737" }}
+                className="app-black rounded-1 border-0 app-text-white py-2 px-3 fw-light mb-0 h-auto"
+                // style={{ background: "#CC3737" }}
                 // onClick={handleCancelEdit}
                 onClick={() => setIsDelete(true)}
               >
@@ -667,7 +712,7 @@ export default function CourseCreation({ editCourse, courseeId }) {
               </button>
               <button
                 type="submit"
-                className="signup-now py-2 px-3 fw-light mb-0 h-auto"
+                className="app-red rounded-1 border-0 app-text-white py-2 px-3 fw-light mb-0 h-auto"
                 onClick={handleSaveChanges}
               >
                 {loading ? (

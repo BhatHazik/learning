@@ -15,11 +15,13 @@ import toast from "react-hot-toast";
 import Error from "../../Components/Error/Error";
 import SearchNotFound from "../../assets/searchNotFound.svg";
 import { CustomLoader } from "../../Components/CustomLoader/CustomLoader";
+import Popup from "../../Components/PopUp/PopUp";
 
 
 const UserManagement = () => {
   const dispatch = useDispatch();
   const [activeTab, setActiveTab] = useState("payoutRequests");
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   const token = localStorage.getItem("token");
 
@@ -141,6 +143,12 @@ const UserManagement = () => {
     }
   }, [activeTab]);
 
+  useEffect(() => {
+    if (activeTab === "payoutRequests") {
+      fetchPayoutRequests();
+    }
+  }, [refreshTrigger]);
+
   const handleAction = async (request) => {
     setLoading(true)
 
@@ -155,8 +163,17 @@ const UserManagement = () => {
         }
       );
       setPayoutSuccess(true);
+      // Update the local state immediately
+      setPayoutRequests(prevRequests => 
+        prevRequests.map(req => 
+          req.id === request 
+            ? { ...req, is_paid: 1 } 
+            : req
+        )
+      );
     } catch (err) {
       setError(err?.response?.data?.message);
+      toast.error(err?.response?.data?.message || "Payout failed");
     } finally {
       setLoading(false);
     }
@@ -199,10 +216,14 @@ const UserManagement = () => {
 
   const closePopup = () => {
     setPayoutSuccess(false);
-    setTimeout(() => {
-      fetchPayoutRequests(); // Refetch payout requests
-    }, 0);
+    fetchPayoutRequests(); // Fetch fresh data when popup closes
   };
+
+  // useEffect(() => {
+  //   if(payoutSuccess === "false"){
+  //     fetchPayoutRequests();
+  //   }
+  // }, [payoutSuccess, closePopup]);
 
   // const handlePageClick = (pageNumber) => {
   //   setPageNumber(pageNumber);
@@ -720,7 +741,7 @@ const UserManagement = () => {
           </span>
     
           <span className="w-100 d-flex justify-content-evenly pt-2">
-            <h6 style={{ fontSize: "0.9rem", width: "40%" }} className="fw-regular app-text-black opacity-75">Joined On:</h6>
+            <h6 style={{ fontSize: "0.9rem", width: "40%" }} className="fw-regular app-text-black opacity-75">Date:</h6>
             <h6 style={{ fontSize: "0.9rem", width: "25%" }} className="fw-regular app-text-black opacity-75">{formatDate(order.created_at)}</h6>
           </span>
     
@@ -741,7 +762,7 @@ const UserManagement = () => {
               Pay
             </button> :
              <button
-             onClick={() => toast("Already paid")}
+             onClick={() => toast.success("Already paid")}
              style={{ fontSize: "0.9rem", width: "25%" }}
              className="fw-regular border-0 app-text-white app-black d-flex align-items-center justify-content-center p-1 px-2 rounded-1"
            >
@@ -906,6 +927,18 @@ activeTab === "editCommission" && (
 
         
     </div>
+    <Popup isOpen={payoutSuccess} onClose={closePopup} title="Payout Successful!">
+  <div className="text-center p-4">
+    <div className="checkmark-container">
+      <i className="bi bi-check-circle-fill text-success fs-1 checkmark-animation"></i>
+    </div>
+    <p className="mt-3 fw-semibold text-secondary">Your payout has been processed successfully!</p>
+    <button className="btn btn-success mt-3 px-4" onClick={closePopup}>
+      Close
+    </button>
+  </div>
+</Popup>
+
     </>
   );
 };

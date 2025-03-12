@@ -275,7 +275,8 @@ export default function ExpertWallet() {
           },
         }
       );
-      setWithdrawalAmount(null);
+      setWithdrawalAmount("");
+      setMobileWithdrawPopup(false);
       setWithDrawPopup(false);
       toast.success("Withdrawal successful");
     } catch (err) {
@@ -920,10 +921,10 @@ export default function ExpertWallet() {
           style={{ fontSize: "0.8rem" }}
           className=" fw-regular app-text-black opacity-75"
         >
-          Recent Purchase
+          Recent Payout
         </h6>
         <h4 className="fw-regular app-text-black opacity-75 pt-1">
-          {recentPayout} Coins
+          ${recentPayout} 
         </h4>
       </div>
       <div className="w-50 d-flex flex-column align-items-center gap-1 justify-content-center">

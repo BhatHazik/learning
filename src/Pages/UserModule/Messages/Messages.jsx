@@ -98,6 +98,7 @@ const Messages = () => {
   const chatListUrl = `${BASE_URI}/api/v1/chat${searchChat && `?search=${searchChat}`}`;
   const chatBottomRef = useRef(null);
   const chatBottom1Ref = useRef(null);
+  const inputRef = useRef(null);
   const fetchOptions = {
     headers: {
       Authorization: "Bearer " + token,
@@ -192,6 +193,11 @@ const Messages = () => {
   
       };
     setInputValue("");
+    
+    // Keep focus on the input field to prevent keyboard from closing on mobile
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
   };
 
   useEffect(() => {
@@ -756,16 +762,26 @@ const Messages = () => {
                 ))}
               </div>
               <div ref={chatBottomRef} />
-              <form className="sendmessagesinput d-flex position-fixed">
+              <form
+                className="d-flex fixed-bottom p-3 py-3 app-black"
+                style={{ borderTop: "1px solid #ddd" }}
+                onSubmit={handleSendMessage}
+              >
                 <input
                   type="text"
                   value={inputValue}
+                  placeholder="Enter your message"
                   onChange={(e) => setInputValue(e.target.value)}
-                  className="form-control me-2"
-                  placeholder="Type your message"
+                  className="modern-input form-control me-2"
+                  ref={inputRef}
                 />
-                <button disabled={inputValue === "" ? true : false} onClick={handleSendMessage} className="btn btn-primary">
-                  Send
+
+                <button
+                  type="submit"
+                  disabled={inputValue === ""}
+                  className="app-red rounded-1 border-0 px-4 app-text-white"
+                >
+                  <IoIosSend className="fs-5"/>
                 </button>
               </form>
             </div>
@@ -956,8 +972,8 @@ const Messages = () => {
                     src={chat.profile_picture}
                     alt={chat.name}
                     className="rounded-circle"
-                    width="30"
-                    height="30"
+                    width="35"
+                    height="35"
                     onError={(e) => {
                       // console.log(e)
                       e.target.onerror = null;
@@ -1158,7 +1174,7 @@ const Messages = () => {
       ) : (
         <div
           className="d-flex flex-column justify-content-between"
-          style={{ height: "calc(100vh - 10rem)", overflowY: "auto" }}
+          style={{ height: "calc(100vh - 10rem)", overflowY: "auto", paddingBottom:"55px" }}
         >
           <div className="message-list">
             {messages[selectedChat]?.map((msg, index) => (
@@ -1179,21 +1195,22 @@ const Messages = () => {
           <form
             className="d-flex fixed-bottom p-3 py-3 app-black"
             style={{ borderTop: "1px solid #ddd" }}
+            onSubmit={handleSendMessage}
           >
             <input
-  type="text"
-  value={inputValue}
-  placeholder="Enter your message"
-  onChange={(e) => setInputValue(e.target.value)}
-  className="modern-input form-control me-2"
-/>
+              type="text"
+              value={inputValue}
+              placeholder="Enter your message"
+              onChange={(e) => setInputValue(e.target.value)}
+              className="modern-input form-control me-2"
+              ref={inputRef}
+            />
 
             <button
+              type="submit"
               disabled={inputValue === ""}
-              onClick={handleSendMessage}
               className="app-red rounded-1 border-0 px-4 app-text-white"
             >
-              
               <IoIosSend className="fs-5"/>
             </button>
           </form>

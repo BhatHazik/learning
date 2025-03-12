@@ -484,8 +484,8 @@ console.log(orders)
           },
         }
       );
-      setWithdrawalHistory(response?.data);
-      console.log(response?.data);
+      setWithdrawalHistory(response?.data?.data?.coins);
+      console.log(response?.data?.data?.coins);
     } catch (err) {
       // toast.error(err?.response?.data?.message);
     }
@@ -1365,10 +1365,10 @@ console.log(orders)
   :
   <>
   {
-  !withdrawalHistory?.data?.data?.coins?.length && mobileActiveTab === "transactions" ?
+  !withdrawalHistory?.length && mobileActiveTab === "transactions" ?
   <Error imageSrc={SearchNotFound} message="No Transactions Found" /> 
   :
-  mobileActiveTab === "transactions" && withdrawalHistory?.data?.coins?.map((transaction, index) => (
+  mobileActiveTab === "transactions" && withdrawalHistory?.map((transaction, index) => (
           <div key={index} className="w-100 border border-1 p-2 rounded-1 mb-2">
             <span className="w-100 d-flex justify-content-evenly">
               <h6 style={{ fontSize: "0.9rem", width: "40%" }} className="fw-regular app-text-black opacity-75">Date:</h6>
@@ -1384,7 +1384,7 @@ console.log(orders)
             </span>
             <span className="w-100 d-flex justify-content-evenly pt-2">
               <h6 style={{ fontSize: "0.9rem", width: "40%" }} className="fw-regular app-text-black opacity-75">Status:</h6>
-              <h6 style={{ fontSize: "0.9rem", width: "25%" }} className="fw-regular app-text-black opacity-75">{transaction.payment_status}</h6>
+              <h6 style={{ fontSize: "0.9rem", width: "25%" }} className={`fw-regular ${transaction.payment_status !== "paid" ? "text-danger" : "text-success"}`}>{transaction.payment_status}</h6>
             </span>
           </div>
         ))}
