@@ -463,9 +463,24 @@ const UserCourses = ({ search }) => {
       ) : ( */}
         <div className="wrapper-userCourses w-100">
           
-            <div className="top-userCourses ">
-              <h4>Web Development</h4>
-            </div>
+        {categoriesLoading ? (
+  <CategorySkeletonLoader />
+) : categories.length > 0 ? (
+  <div style={{ zIndex: "100" }} className="overflow-x-auto desktop-view py-1 px-2  justify-content-start mt-2 rounded-1 app-white gap-2">
+    {categories.map((category, index) => (
+      <h4
+        key={index}
+        style={{ cursor: "pointer" }}
+        className={`p-1 px-3 rounded-2 fs-6 border-2 ${
+          mobileActiveTab === category.subcategory_name ? "app-black app-text-white border-black" : "border border-1 text-secondary"
+        }`}
+        onClick={() => setMobileActiveTab(category.subcategory_name)}
+      >
+        {category.subcategory_name}
+      </h4>
+    ))}
+  </div>
+) : null}
 
           <div className="bottom-userCourses">
             {error?.response?.data?.message === "No courses found" ? (
@@ -510,12 +525,12 @@ const UserCourses = ({ search }) => {
           {categoriesLoading ? (
   <CategorySkeletonLoader />
 ) : categories.length > 0 ? (
-  <div style={{ zIndex: "100" }} className="top-mobileUserCourses justify-content-start mt-2 rounded-1 app-white d-flex gap-2">
+  <div style={{ zIndex: "100" }} className="mobile-top-myLearning overflow-x-auto text-nowrap ps-4 py-1 px-2  justify-content-start mt-2 rounded-1 app-white gap-2">
     {categories.map((category, index) => (
       <h4
         key={index}
         style={{ cursor: "pointer" }}
-        className={`p-1 px-2 rounded-2 fs-6 border-2 ${
+        className={`p-1 px-3 rounded-2 fs-6 border-2 ${
           mobileActiveTab === category.subcategory_name ? "app-black app-text-white border-black" : "border border-1 text-secondary"
         }`}
         onClick={() => setMobileActiveTab(category.subcategory_name)}

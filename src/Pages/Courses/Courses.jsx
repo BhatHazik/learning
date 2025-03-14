@@ -269,6 +269,9 @@ console.log(coursesData)
               <Link
                 to="/courseCreation"
                 className="text-decoration-none text-white"
+                onClick={() => {
+                  setEditCourse(false);
+                }}
               >
                 <FontAwesomeIcon
                   icon={faSquarePlus}

@@ -1,7 +1,7 @@
 import { useMemo, useRef, useState, useCallback, useEffect } from "react";
 import { RiGalleryUploadFill } from "react-icons/ri";
 import { useDropzone } from "react-dropzone";
-import "./CourseCreation.css";
+import "./CourseEdit.css";
 import { BASE_URI } from "../../Config/url";
 import useFetch from "../../hooks/useFetch";
 import axios from "axios";
@@ -16,7 +16,7 @@ import defaultCourse from "../../assets/defaultCourse.png"
 import Popup from "../../Components/PopUp/PopUp";
 import { TiTickOutline } from "react-icons/ti";
 const tagsData = ['JavaScript', 'React', 'CSS', 'HTML', 'Node.js', 'Python', 'Java', "i", "i"];
-export default function CourseCreation() {
+export default function CourseEdit() {
   // Get course ID from URL params
   const { courseId } = useParams();
   const isEditMode = !!courseId;

@@ -15,7 +15,7 @@ export const Layout = ({ children, search, setSearch, cartItemNumber }) => {
   // localStorage.removeItem("role");
   return (
     <>
-      <div className="layout position-relative app-smooth-white">
+      <div className="layout position-relative">
         <div className="responsive-md">
           <SmallerScreenNavbar 
           collapsed={collapsed}
@@ -24,7 +24,7 @@ export const Layout = ({ children, search, setSearch, cartItemNumber }) => {
           cartItemNumber={cartItemNumber}
           />
         </div>
-        <div className="responsive-lg w-100" style={{background: '#FAF9F6'}}>
+        <div className="responsive-lg w-100" >
           <Navbar
             collapsed={collapsed}
             search={search}

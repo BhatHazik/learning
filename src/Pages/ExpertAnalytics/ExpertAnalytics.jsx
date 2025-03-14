@@ -77,7 +77,7 @@ const Dashboard = () => {
       total_revenue: dashboardData?.enrolls?.total_revenue,
     },
     coursesInDemand: dashboardData?.coursesInDemand,
-    ratings: [50, 30, 10, 5, 5],
+    ratings: dashboardData?.reviews[0],
   };
 
   // Process data and update charts
@@ -507,7 +507,13 @@ const chartData = [
         data: {
           labels: ["5 Stars", "4 Stars", "3 Stars", "2 Stars", "1 Star"],
           datasets: [{
-            data: staticData?.ratings,
+            data: [
+              parseFloat(staticData?.ratings?.["5_stars"]) || 0,
+              parseFloat(staticData?.ratings?.["4_stars"]) || 0,
+              parseFloat(staticData?.ratings?.["3_stars"]) || 0,
+              parseFloat(staticData?.ratings?.["2_stars"]) || 0,
+              parseFloat(staticData?.ratings?.["1_stars"]) || 0
+            ],
             backgroundColor: ["#000000", "#F90815", "#8B0000", "#FF4500", "#FFA500"],
             borderWidth: 0,
             hoverOffset: 8,
@@ -524,6 +530,7 @@ const chartData = [
         }
       });
     }
+    
 
     return () => {
       if (ratingsChartInstance.current) {

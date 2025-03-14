@@ -399,7 +399,7 @@ export default function AddLesson({ setEditCourse, setCourseId }) {
   const handleEditCourse = () => {
     setEditCourse(true);
     setCourseId(id);
-    navigate("/courseCreation");
+    navigate(`/courseEdit/${id}`);
   };
 
   const handleYouTubeClick = (lesson) => {
@@ -440,12 +440,12 @@ export default function AddLesson({ setEditCourse, setCourseId }) {
         </button>
       </header>
       <main
-        className="custom-box px-1 py-4 h-100 app-white "
+        className="custom-box px-1 py-4 h-100 app-white mb-5"
         style={{
           minHeight: "30rem",
         }}
       >
-        <div className="d-flex flex-column align-items-center text-center gap-5 py-1">
+        <div className="d-flex flex-column align-items-center text-center gap-3 py-1">
           <p className="fs-4 fw-lightBold">
             Start adding Chapters to your course
           </p>
@@ -454,7 +454,7 @@ export default function AddLesson({ setEditCourse, setCourseId }) {
           {!isAddChapter && chapters?.length === undefined && (
 
             <button
-              className="signup-now px-4 py-1-and-08rem fs-5 mt-5"
+              className="app-red border-0 rounded-1 app-text-white px-4 py-2 fs-5 mt-5"
               onClick={() => setIsAddChapter(true)}
             >
               <MdAddBox className="fs-1 me-2" />
@@ -488,14 +488,14 @@ export default function AddLesson({ setEditCourse, setCourseId }) {
                             />
                             <div className="d-flex justify-content-end gap-3 mb-3">
                               <button
-                                className="signup-now py-2 px-3 fw-light mb-0 h-auto"
+                                className="app-black border-0 rounded-1 app-text-white py-2 px-3 fw-light mb-0 h-auto"
                                 // style={{ background: "transparent" }}
                                 onClick={() => setEditingChapterId(null)}
                               >
                                 Cancel
                               </button>
                               <button
-                                className="signup-now py-2 px-3 fw-light mb-0 h-auto"
+                                className="app-red border-0 rounded-1 app-text-white py-2 px-3 fw-light mb-0 h-auto"
                                 onClick={() =>
                                   saveChanges(chapter.id, chapter.sequence)
                                 }
@@ -797,11 +797,11 @@ export default function AddLesson({ setEditCourse, setCourseId }) {
                             </div>
                             <div className="d-flex align-items-center justify-content-end ">
                               {editLesson ? (
-                                <div className="d-flex align-items-center gap-5">
+                                <div className="d-flex align-items-center gap-2">
                                   <button
                                     type="button"
-                                    className="signup-now py-2 px-4 mt-4"
-                                    style={{ background: "#CC3737" }}
+                                    className="app-black border-0 rounded-1 app-text-white py-2 px-4 mt-4"
+                                    // style={{ background: "#CC3737" }}
                                     onClick={() => setIsDelete(true)}
                                   >
                                     {isLoadingDeleteLesson ? (
@@ -812,7 +812,7 @@ export default function AddLesson({ setEditCourse, setCourseId }) {
                                   </button>
                                   <button
                                     type="submit"
-                                    className="signup-now py-2 px-4 mt-4"
+                                    className="app-red border-0 rounded-1 app-text-white py-2 px-2 mt-4"
                                   >
                                     {isLoadingAddLesson ? (
                                       <PulseLoader size={8} color="white" />
@@ -883,7 +883,7 @@ export default function AddLesson({ setEditCourse, setCourseId }) {
                   Cancel
                 </button>
                 <button
-                  className="app-red rounded-1 border-0 app-text-white py-2 px-3 fw-lightBold mb-0 h-auto"
+                  className="app-red rounded-1 border-0 app-text-white py-2 px-3 fw-lightBold mb-0 h-auto "
                   onClick={handleAddChapter}
                 >
                   {isLoadingAddChapter ? (
@@ -897,15 +897,15 @@ export default function AddLesson({ setEditCourse, setCourseId }) {
           )}
 
           {chapters?.length > 0 && (
-            <div className="w-100 text-start flex justify-content-between addlesson-content">
+            <div className="w-100 text-start flex justify-content-center align-items-center gap-2 addlesson-content">
+              <button onClick={handleSendApproval} className="app-black rounded-1 border-0 app-text-white py-2 px-3 fw-lightBold mb-0 h-auto">
+                Send Approval Request
+              </button>
               <button
                 className="app-red rounded-1 border-0 app-text-white py-2 px-3 fw-lightBold mb-0 h-auto"
                 onClick={() => setIsAddChapter(true)}
               >
                 Add Chapter
-              </button>
-              <button onClick={handleSendApproval} style={{border:"none", borderRadius:"0.5rem",backgroundColor:"white", boxShadow: "2px 0px 10px 2px #00000040"}} className="py-2 px-3 fw-lightBold mb-0 h-auto">
-                Send Approval Request
               </button>
             </div>
           )}

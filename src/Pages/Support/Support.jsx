@@ -57,9 +57,10 @@ const Support = () => {
   const [selectedName, setSelectedName] = useState("")
   const [searchChat, setSearchChat] = useState("");
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const inputRef = useRef(null);
+  const popupRef = useRef(null);
   // const [hearted , setHearted] = useState({})
 
-  const popupRef = useRef(null);
   const userType = localStorage.getItem("userType");
   const token = localStorage.getItem("token");
   const chatListUrl =`${BASE_URI}/api/v1/chat/supportChat${searchChat && `?search=${searchChat}`}`;
@@ -120,35 +121,35 @@ const handleOpenChat = (receiverId, receiverEmail, image, name) => {
   const handleSendMessage = (e) => {
     e.preventDefault();
     if (!selectedChat) return;
-  // Create a new message object
-  const newMessage = {
-    id: Date.now(), // Unique ID for the message
-    text: inputValue,
-    sender: "You",
-    time: new Date().toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-    }),
+    // Create a new message object
+    const newMessage = {
+      id: Date.now(),
+      text: inputValue,
+      sender: "You",
+      time: new Date().toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+    };
+
+    // Update the messages state without fetching data
+    setMessages((prevMessages) => ({
+      ...prevMessages,
+      [selectedChat]: [...(prevMessages[selectedChat] || []), newMessage],
+    }));
+
+    socket?.emit("support_message", {
+      msg: inputValue,
+      friend: selectedEmail,
+    });
+
+    setInputValue("");
+    
+    // Keep focus on the input field to prevent keyboard from closing on mobile
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
   };
-
-  // Update the messages state without fetching data
-  setMessages((prevMessages) => ({
-    ...prevMessages,
-    [selectedChat]: [...(prevMessages[selectedChat] || []), newMessage],
-  }));
-
-                  
-
-  
-socket?.emit("support_message", {
-  msg: inputValue,
-  friend: selectedEmail,
-})
-, (response) => {
-
-};
-  setInputValue("");
-};
 
 useEffect(() => {
   // Scroll to the bottom of the chat after messages update
@@ -416,15 +417,20 @@ useEffect(() => {
                 ))}
               </div>
               <div ref={chatBottomRef} />
-              <form className="sendmessagesinput d-flex position-fixed">
+              <form onSubmit={handleSendMessage} className="d-flex mt-3">
                 <input
                   type="text"
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   className="form-control me-2"
                   placeholder="Type your message"
+                  ref={inputRef}
                 />
-                <button disabled={inputValue === "" ? true : false} onClick={handleSendMessage} className="btn btn-primary">
+                <button
+                  type="submit"
+                  disabled={inputValue === ""}
+                  className="btn btn-primary"
+                >
                   Send
                 </button>
               </form>
@@ -489,16 +495,25 @@ useEffect(() => {
   ))}
 </div>
 <div ref={chatBottomRef}/>
-              <form onSubmit={handleSendMessage} style={{bottom:"1%", right:"10%"}} className="d-flex position-fixed">
+              <form 
+                className="d-flex fixed-bottom p-3 py-3 app-black"
+                style={{ borderTop: "1px solid #ddd" }}
+                onSubmit={handleSendMessage}
+              >
                 <input
                   type="text"
                   value={inputValue}
+                  placeholder="Enter your message"
                   onChange={(e) => setInputValue(e.target.value)}
-                  className="form-control me-2"
-                  placeholder="Type your message"
+                  className="modern-input form-control me-2"
+                  ref={inputRef}
                 />
-                <button disabled={inputValue === "" ? true: false} type="submit" className="btn btn-primary">
-                  Send
+                <button
+                  type="submit"
+                  disabled={inputValue === ""}
+                  className="app-red rounded-1 border-0 px-4 app-text-white"
+                >
+                  <IoIosSend className="fs-5"/>
                 </button>
               </form>
               
@@ -781,7 +796,7 @@ useEffect(() => {
       ) : (
         <div
           className="d-flex flex-column justify-content-between"
-          style={{ height: "calc(100vh - 20rem)", overflowY: "auto" }}
+          style={{ height: "calc(100vh - 20rem)", overflowY: "auto"}}
         >
           <div className="message-list">
             {messages[selectedChat]?.map((msg, index) => (
@@ -799,15 +814,20 @@ useEffect(() => {
             ))}
           </div>
           <div ref={chatBottom1Ref} />
-          <form className="d-flex mt-3">
+          <form onSubmit={handleSendMessage} className="d-flex mt-3">
             <input
               type="text"
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               className="form-control me-2"
               placeholder="Type your message"
+              ref={inputRef}
             />
-            <button disabled={inputValue === ""} onClick={handleSendMessage} className="btn btn-primary">
+            <button
+              type="submit"
+              disabled={inputValue === ""}
+              className="btn btn-primary"
+            >
               Send
             </button>
           </form>
@@ -866,7 +886,7 @@ useEffect(() => {
           <p>Select a conversation to start messaging</p>
         </div>
       ) : (
-        <div className="d-flex flex-column justify-content-between" style={{ height: "calc(100vh - 10rem)", overflowY: "auto" }}>
+        <div className="d-flex flex-column justify-content-between" style={{ height: "calc(100vh - 10rem)", overflowY: "auto" , paddingBottom:"55px"}}>
           <div className="message-list">
             {messages[selectedChat]?.map((msg, index) => (
               <div
@@ -883,16 +903,25 @@ useEffect(() => {
             ))}
           </div>
           <div ref={chatBottomRef} />
-          <form className="d-flex fixed-bottom p-3 py-3 app-black" style={{ borderTop: "1px solid #ddd" }}>
+          <form 
+            className="d-flex fixed-bottom p-3 py-3 app-black"
+            style={{ borderTop: "1px solid #ddd" }}
+            onSubmit={handleSendMessage}
+          >
             <input
               type="text"
               value={inputValue}
               placeholder="Enter your message"
               onChange={(e) => setInputValue(e.target.value)}
               className="modern-input form-control me-2"
+              ref={inputRef}
             />
-            <button disabled={inputValue === ""} onClick={handleSendMessage} className="app-red rounded-1 border-0 px-4 app-text-white">
-              <IoIosSend className="fs-5" />
+            <button
+              type="submit"
+              disabled={inputValue === ""}
+              className="app-red rounded-1 border-0 px-4 app-text-white"
+            >
+              <IoIosSend className="fs-5"/>
             </button>
           </form>
         </div>

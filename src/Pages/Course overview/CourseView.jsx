@@ -52,8 +52,7 @@ const CourseView = ({ setEditCourse, setCourseId }) => {
   const [isExpanded, setIsExpanded] = useState(false);
     const [showButton, setShowButton] = useState(false);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
-    const descriptionRef = useRef(null);
-  
+    const descriptionRef = useRef(null);  
 
   const { id } = useParams();
   const navigate = useNavigate();
@@ -66,6 +65,9 @@ const userType = localStorage.getItem("userType");
       [chapterIndex]: !prevOpenChapters[chapterIndex],
     }));
   };
+
+
+  
 
   function formatTime(seconds) {
     if (seconds < 60) {
@@ -124,7 +126,7 @@ const userType = localStorage.getItem("userType");
  
 
   const courseData = useMemo(() => data2?.data || [], [data2]);
-console.log(courseData)
+console.log(courseData[0])
   useEffect(() => {
     setVideo_url(Chapters[0]?.lessons[0]?.video_url);
     setVideo_type(Chapters[0]?.lessons[0]?.video_type);
@@ -132,6 +134,20 @@ console.log(courseData)
 
     setSelectedLesson(Chapters[0]?.lessons[0]?.lesson_id);
   }, [Chapters]);
+
+  useEffect(() => {
+    if (descriptionRef.current) {
+      // Check if content overflows beyond 4 lines
+      const lineHeight = parseFloat(
+        getComputedStyle(descriptionRef.current).lineHeight
+      );
+      const maxHeight = lineHeight * 4; // 4 lines max
+      if (descriptionRef.current.scrollHeight > maxHeight) {
+        setShowButton(true);
+      }
+    }
+  }, [courseData[0]?.description]);
+
 
   const paymentPopUpClick = contextSafe(() => {
   
@@ -874,7 +890,8 @@ console.log(courseData)
                     objectFit: "cover",
                   }}
                   className=""
-                  src={courseData?.course?.profile_picture || defaultUser}
+                  onClick={() => navigate(`/UserProfile/${courseData[0]?.expert_id}`)}
+                  src={courseData[0]?.profile_picture || defaultUser}
                   alt=""
                   onError={(e) => {
                     // console.log(e)
@@ -884,7 +901,7 @@ console.log(courseData)
                 />
                 <div>
                   <h6 className="fs-5 fw-normal app-text-black d-flex gap-2">
-                    {JSON.parse(localStorage.getItem("user"))?.name}
+                    {courseData[0]?.name}
                   </h6>
                   <p className="fs-6 fw-light app-text-black">Expert JiuJitsu</p>
                 </div>

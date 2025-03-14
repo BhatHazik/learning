@@ -27,6 +27,9 @@ input::placeholder {
   font-family: newFont;
   src: url('../src/assets/quick-starter/Quick Starter.otf');
 }
+.layout{
+  background: #FAF9F6;
+}
 .new-logo{
   font-family: newFont;
 }
@@ -151,6 +154,10 @@ padding-left: 5%;
 .app-text-white{
   color: white;
 }
+.desktop-view{
+  display: flex;
+}
+
 
 @media (max-width: 768px) {
   .w-md-50 {
@@ -161,6 +168,12 @@ padding-left: 5%;
   }
   .w-md-25 {
     width: 40%;
+  }
+  .layout{
+    background: #EBEBEB;
+  }
+  .desktop-view{
+    display: none;
   }
 }
 
