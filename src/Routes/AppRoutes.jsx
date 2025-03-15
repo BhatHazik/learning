@@ -14,6 +14,7 @@ import Support from "../Pages/Support/Support";
 import AddExpert from "../Pages/AddExpert/AddExpert";
 import { SignUpExpert } from "../Pages/SignUpExpert/SignUpExpert";
 import Categories from "../Pages/CategoriesPH/Categories";
+import FighterDetails from "../Pages/FighterDetails/FighterDetails";
 
 const AppRoutes = ({ search }) => {
   const userRole = localStorage.getItem("userType");
@@ -44,7 +45,7 @@ useEffect(() => {
       <Route path="/userWallet" element={<UserWallet/>} />
       <Route path="/categories" element={<Categories search={search}/>} />
       <Route path="/support" element={<Support/>} />
-     
+      <Route path="/fighterDetails/:id" element={<FighterDetails/>}/>
       <Route path="/AddExperts" element={<AddExpert />} />
       <Route
         path="/userCourses/userCourseView/:id"

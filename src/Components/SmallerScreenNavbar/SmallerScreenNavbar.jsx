@@ -402,7 +402,14 @@ export default function SmallerScreenNavbar({ collapsed, search, setSearch, cart
       {/* Profile Image */}
       <img
         style={{ cursor: "pointer", width: "40px", height: "40px" }}
-        onClick={() => navigate('/settings')}
+        onClick={() => {
+          if (role === "expert") {
+            navigate(`/userProfile/${user.id}`);
+          } else {
+            navigate('/settings');
+          }
+        }}
+        
         src={ profile_picture || defaultUser}
         alt="profile"
         className=" rounded-circle"

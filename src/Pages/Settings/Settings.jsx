@@ -17,6 +17,7 @@ import { BiEdit, BiPlus } from "react-icons/bi";
 import { CgDanger } from "react-icons/cg";
 import defaultUser from "../../assets/defaultUser.svg";
 import Popup from "../../Components/PopUp/PopUp";
+import ReactFlagsSelect from "react-flags-select";
 
 export default function Settings() {
   const [activeTab, setActiveTab] = useState("accountSecurity");
@@ -66,6 +67,26 @@ export default function Settings() {
     competition_date: "",
     location: ""
   });
+  const [selectedCountry, setSelectedCountry] = useState(null);
+
+  // Add fighter history state
+  const [fighterHistoryData, setFighterHistoryData] = useState({
+    result: "win", // Default to win
+    fighter_name: "",
+    event_name: "",
+    event_date: "",
+    method: "",
+    rounds: "",
+    time: "",
+    video_link: "",
+    ko: false,
+    submission: false
+  });
+
+  // Add a new state for storing fighter history data
+  const [fightHistory, setFightHistory] = useState([]);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editingFightId, setEditingFightId] = useState(null);
 
   const handlePastUpcomingMatchChange = (e) => {
     setPastUpcomingMatchData({
@@ -81,6 +102,15 @@ export default function Settings() {
     });
   };
 
+  // Add handler for fighter history data changes
+  const handleFighterHistoryChange = (e) => {
+    console.log(e.target.value)
+    setFighterHistoryData({
+      ...fighterHistoryData,
+      [e.target.name]: e.target.value
+    });
+  };
+
   const [userData, setUserData] = useState({
     users: {
       name: "",
@@ -89,6 +119,14 @@ export default function Settings() {
       twitter: "",
       website: "",
       bio: "",
+      age: "",
+      height: "",
+      country: "",
+      class: "",
+      wins: "",
+      losses: "",
+      kto_percentage: "",
+      submission_percentage: "",
     },
   });
 
@@ -122,7 +160,16 @@ export default function Settings() {
     twitter,
     website,
     bio,
+    age,
+    height,
+    country,
+    fighter_class,
+    wins,
+    losses,
+    kto_percentage,
+    submission_percentage,
   } = data?.data[0] || [];
+  // console.log(data?.data[0])
 
   useEffect(() => {
     if (data) {
@@ -134,8 +181,21 @@ export default function Settings() {
           twitter: data?.data[0]?.twitter,
           website: data?.data[0]?.website,
           bio: data?.data[0]?.bio,
+          age: data?.data[0]?.age || "",
+          height: data?.data[0]?.height || "",
+          country: data?.data[0]?.country || "",
+          class: data?.data[0]?.fighter_class || "",
+          wins: data?.data[0]?.wins || "",
+          losses: data?.data[0]?.losses || "",
+          kto_percentage: data?.data[0]?.kto_percentage || "",
+          submission_percentage: data?.data[0]?.submission_percentage || "",
         },
       });
+      
+      // Also update the country selector if country data exists
+      if (data?.data[0]?.country) {
+        setSelectedCountry(data?.data[0]?.country);
+      }
     }
   }, [data]);
 
@@ -182,6 +242,90 @@ export default function Settings() {
     } catch (error) {
       toast.error(error?.response?.data?.message);
       console.error("Error matching posts:", error);
+    }
+  }
+
+  // Add function to handle fighter history submission
+  const handleFighterHistoryPost = async () => {
+    try {
+      let response;
+      
+      if (isEditing) {
+        // Update existing record
+        response = await axios.patch(
+          `${BASE_URI}/api/v1/expert/updateFighterHistory/${editingFightId}`,
+          {
+            result: fighterHistoryData.result,
+            fighter_name: fighterHistoryData.fighter_name,
+            event_name: fighterHistoryData.event_name,
+            date: fighterHistoryData.event_date,
+            method_referee: fighterHistoryData.method,
+            rounds: fighterHistoryData.rounds,
+            time: fighterHistoryData.time,
+            fight_video_link: fighterHistoryData.video_link,
+            ko: fighterHistoryData.ko,
+            submission: fighterHistoryData.submission
+          },
+          fetchOptions
+        );
+        
+        if (response.data.status === "success") {
+          toast.success("Fighter details updated successfully");
+          
+          // Update the local state to reflect the changes
+          setFightHistory(fightHistory.map(fight => 
+            fight.id === editingFightId ? {
+              ...fight,
+              result: fighterHistoryData.result,
+              fighter_name: fighterHistoryData.fighter_name,
+              event_name: fighterHistoryData.event_name,
+              date: fighterHistoryData.event_date,
+              method_referee: fighterHistoryData.method,
+              rounds: fighterHistoryData.rounds,
+              time: fighterHistoryData.time,
+              fight_video_link: fighterHistoryData.video_link,
+              ko: fighterHistoryData.ko,
+              submission: fighterHistoryData.submission
+            } : fight
+          ));
+        } else {
+          throw new Error("Failed to update fighter details");
+        }
+      } else {
+        // Add new record
+        response = await axios.post(
+          `${BASE_URI}/api/v1/expert/addFighterHistory`,
+          fighterHistoryData,
+          fetchOptions
+        );
+        
+        toast.success("Fighter details added successfully");
+      }
+      
+      // Reset form data
+      setFighterHistoryData({
+        result: "win",
+        fighter_name: "",
+        event_name: "",
+        event_date: "",
+        method: "",
+        rounds: "",
+        time: "",
+        video_link: "",
+        ko: false,
+        submission: false
+      });
+      
+      // Reset editing state
+      setIsEditing(false);
+      setEditingFightId(null);
+
+      // Refresh the fight history
+      fetchFighterHistory();
+
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Failed to save fighter details");
+      console.error("Error saving fighter history:", error);
     }
   }
 
@@ -256,6 +400,16 @@ export default function Settings() {
     formData.append("twitter", userData?.users?.twitter || twitter);
     formData.append("website", userData?.users?.website || website);
     formData.append("bio", userData?.users?.bio || bio);
+    
+    // Append new fields
+    formData.append("age", userData?.users?.age || age || "");
+    formData.append("height", userData?.users?.height || height || "");
+    formData.append("country", selectedCountry || country || "");
+    formData.append("fighter_class", userData?.users?.class || fighter_class || "");
+    formData.append("wins", userData?.users?.wins || wins || "");
+    formData.append("losses", userData?.users?.losses || losses || "");
+    formData.append("kto_percentage", userData?.users?.kto_percentage || kto_percentage || "");
+    formData.append("submission_percentage", userData?.users?.submission_percentage || submission_percentage || "");
 
     try {
       const response = await axios.patch(
@@ -333,7 +487,8 @@ export default function Settings() {
   //   inputRef.current.focus();
   // };
   const handleEditNameClick = () => {
-    setIsReadOnly(!isReadOnly);
+    setIsReadOnly(false);
+    inputRef.current.focus();
   };
   const handleEditcompanyClick = () => {
     setIsReadOnly(false);
@@ -439,6 +594,36 @@ export default function Settings() {
     setIsReadOnly(false);
     bioRef.current.focus();
   };
+  
+  // Add handlers for new fields
+  const handleEditAgeClick = () => {
+    setIsReadOnly(false);
+  };
+  
+  const handleEditHeightClick = () => {
+    setIsReadOnly(false);
+  };
+  
+  const handleEditClassClick = () => {
+    setIsReadOnly(false);
+  };
+  
+  const handleEditWinsClick = () => {
+    setIsReadOnly(false);
+  };
+  
+  const handleEditLossesClick = () => {
+    setIsReadOnly(false);
+  };
+  
+  const handleEditKtoClick = () => {
+    setIsReadOnly(false);
+  };
+  
+  const handleEditSubmissionClick = () => {
+    setIsReadOnly(false);
+  };
+
   const handleUpdatePasswordChange = (e) => {
     const { name, value } = e.target;
     setUpdatePasswordData((prevData) => ({
@@ -583,6 +768,95 @@ export default function Settings() {
     }
   };
 
+  // Add a function to fetch fighter history data
+  const fetchFighterHistory = async () => {
+    try {
+      const response = await axios.get(
+        `${BASE_URI}/api/v1/users/getFighterHistory?id=${data?.data[0]?.id}`,
+        fetchOptions
+      );
+      
+      if (response.data.status === "success") {
+        setFightHistory(response.data.data);
+      }
+    } catch (error) {
+      console.error("Error fetching fighter history:", error);
+      toast.error("Failed to load fighter history");
+    }
+  };
+
+  // Call fetchFighterHistory when data is loaded
+  useEffect(() => {
+    if (data?.data[0]?.id) {
+      fetchFighterHistory();
+    }
+  }, [data]);
+
+  // Add function to handle editing a fight
+  const handleEditFight = (fight) => {
+    setIsEditing(true);
+    setEditingFightId(fight.id);
+    setFighterHistoryData({
+      result: fight.result || "win",
+      fighter_name: fight.fighter_name || "",
+      event_name: fight.event_name || "",
+      event_date: fight.date ? fight.date.split('T')[0] : "",
+      method: fight.method_referee || "",
+      rounds: fight.rounds || "",
+      time: fight.time ? fight.time.substring(0, 5) : "",
+      video_link: fight.fight_video_link || "",
+      ko: fight.ko || false,
+      submission: fight.submission || false
+    });
+    
+    // Scroll to the form
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  };
+
+  // Add function to handle deleting a fight
+  const handleDeleteFight = async (fightId) => {
+    if (window.confirm("Are you sure you want to delete this fight record?")) {
+      try {
+        const response = await axios.delete(
+          `${BASE_URI}/api/v1/expert/deleteFighterHistory/${fightId}`,
+          fetchOptions
+        );
+        
+        if (response.data.status === "success") {
+          toast.success("Fight record deleted successfully");
+          // Update the local state by filtering out the deleted fight
+          setFightHistory(fightHistory.filter(fight => fight.id !== fightId));
+        } else {
+          throw new Error("Failed to delete fight record");
+        }
+      } catch (error) {
+        console.error("Error deleting fight record:", error);
+        toast.error(error?.response?.data?.message || "Failed to delete fight record");
+      }
+    }
+  };
+
+  // Add function to cancel editing
+  const handleCancelEdit = () => {
+    setIsEditing(false);
+    setEditingFightId(null);
+    setFighterHistoryData({
+      result: "win",
+      fighter_name: "",
+      event_name: "",
+      event_date: "",
+      method: "",
+      rounds: "",
+      time: "",
+      video_link: "",
+      ko: false,
+      submission: false
+    });
+  }
+
   return (
     <>
       <div className="w-100 wrapper-settings">
@@ -590,7 +864,7 @@ export default function Settings() {
           className="bg-gradient-custom-div p-3 pb-0 rounded-bottom-0 custom-box"
           style={{ overflowX: "auto" }}
         >
-          <div style={{ width: "37rem" }}>
+          <div >
             <h3 className="pb-5">Settings</h3>
             <div className="d-flex gap-5 px-3">
               <h5
@@ -611,6 +885,21 @@ export default function Settings() {
               >
                 Edit Profile
               </h5>
+              {role === "expert" && (
+                <>
+                  <h5
+                    className={`text-white px-3 pb-2 fw-light cursor-pointer ${
+                      activeTab === "matchHistory"
+                        ? "border-bottom border-4"
+                        : ""
+                    }`}
+                    onClick={() => setActiveTab("matchHistory")}
+                  >
+                    Matches
+                  </h5>
+                 
+                </>
+              )}
               {role !== "admin" && (
                 <h5
                   className={`text-white px-3 pb-2 fw-light cursor-pointer ${
@@ -808,6 +1097,141 @@ export default function Settings() {
                 </Modal> */}
               </div>
             )}
+
+            {activeTab === "matchHistory" && (
+           
+              <div className="mb-2 app-white justify-content-center rounded-2">
+
+                <div className="w-100 d-flex justify-content-start">
+                  <h4
+                    style={{ width: "max-content" }}
+                    className={` rounded-2 justify-content-center  mb-2 align-self-center align-items-center fs-4 fw-bold `}
+                  >
+                    {" "}
+                    Past Competitions wins
+                  </h4>
+                </div>
+                <label htmlFor="dob" className="form-label fs-6 fw-medium">
+                Competition Name 
+                </label>
+                <input
+                  type="text"
+                  name="competition_name"
+                  value={pastMatchData.competition_name}
+                  className="form-control py-3"
+                  id="fullName"
+                  placeholder="Black Belt Asia"
+                  onChange={handlePastMatchChange}
+                />
+                <label htmlFor="dob" className="form-label mt-2 fs-6 fw-medium">
+                  Match Date
+                </label>
+                <input
+                name="competition_date"
+                  type="date"
+                  value={pastMatchData.competition_date}
+                  className="form-control py-3"
+                  id="fullName"
+                  placeholder="Black Belt Asia"
+                  onChange={handlePastMatchChange}
+                />
+                <label htmlFor="dob" className="form-label mt-2 fs-6 fw-medium">
+                Achievements
+                </label>
+                <select 
+                value={pastMatchData.acheavements}
+                onChange={handlePastMatchChange}
+                name="acheavements"
+                id="acheavements"
+                className="form-control py-3"
+                >
+                <option value="Champion">🏆 Champion</option>
+                  <option value="Runner-up">🥈 Runner-up</option>
+                  <option value="Third Place">🥉 Third Place</option>
+                  <option value="Fourth Place">🥈 Fourth Place</option>
+                  <option value="Fifth Place">🥉 Fifth Place</option>
+
+                </select>
+               
+                <label htmlFor="dob" className="form-label mt-2 fs-6 fw-medium">
+                Location
+                </label>
+                <input
+                name="location"
+                onChange={handlePastMatchChange}
+                  value={pastMatchData.location}
+                  type="text"
+                  className="form-control py-3 d-flex align-items-center"
+                  id="fullName"
+                  placeholder="US"
+                />
+                <div
+                  style={{ width: "max-content", cursor: "pointer" }}
+                  className="signup-now app-text-white mt-2 rounded-2 px-3 py-1 fs-6 fw-bold"
+                  onClick={handleMatchPost}
+                >
+                  Add
+                </div>
+
+<div className="w-100 d-flex justify-content-start mt-3">
+                  <h4
+                    style={{ width: "max-content" }}
+                    className={`rounded-2 justify-content-center  mb-2 align-self-center align-items-center fs-4 fw-bold `}
+                  >
+                    {" "}
+                    Upcoming Competition
+                  </h4>
+                </div>
+                <label htmlFor="dob" className="form-label fs-6 fw-medium">
+                Competition Name 
+                </label>
+                <input
+                  type="text"
+                  name="competition_name"
+                  value={pastUpcomingMatchData.competition_name}
+                  className="form-control py-3"
+                  id="fullName"
+                  placeholder="Black Belt Asia"
+                  onChange={handlePastUpcomingMatchChange}
+                />
+                <label htmlFor="dob" className="form-label mt-2 fs-6 fw-medium">
+                  Match Date
+                </label>
+                <input
+                name="competition_date"
+                  type="date"
+                  value={pastUpcomingMatchData.competition_date}
+                  className="form-control py-3"
+                  id="fullName"
+                  placeholder="Black Belt Asia"
+                  onChange={handlePastUpcomingMatchChange}
+                />
+                <label htmlFor="dob" className="form-label mt-2 fs-6 fw-medium">
+                Location
+                </label>
+                <input
+                name="location"
+                onChange={handlePastUpcomingMatchChange}
+                  value={pastUpcomingMatchData.location}
+                  type="text"
+                  className="form-control py-3 d-flex align-items-center"
+                  id="fullName"
+                  placeholder="US"
+                />
+
+                <div
+                  style={{ width: "max-content", cursor: "pointer" }}
+                  className="signup-now app-text-white mt-2 rounded-2 px-3 py-1 fs-6 fw-bold"
+                  onClick={handleUpcomingMatchPost}
+                >
+                  Add
+                </div>
+
+                {/* Fighter History Pro Section */}
+                
+          
+            </div>
+          )}
             {activeTab === "editProfile" && (
               <div className="tab-pane active" style={{ minHeight: "25rem" }}>
                 {role === "admin" || role === "user" ? (
@@ -915,8 +1339,10 @@ export default function Settings() {
                 ) : null}
 
                 {role === "expert" ? (
+                  <>
                   <form>
-                    <div className="form-group w-md-50 mb-4">
+                    <div className="form-group w-md-100 d-flex justify-content-between gap-2 mb-4">
+                      <div className="w-md-50">
                       <label
                         htmlFor="name"
                         className="mb-1"
@@ -953,9 +1379,33 @@ export default function Settings() {
                           </span>
                         </div>
                       </div>
+
+                      </div>
+                      <div className="w-md-50 ms-2">
+                      <label
+                        htmlFor="name"
+                        className="mb-1"
+                        style={{ fontSize: "20px" }}
+                      >
+                        Country
+                      </label>
+                      <div className="input-group">
+                      <ReactFlagsSelect
+        selected={selectedCountry}
+        onSelect={(code) => setSelectedCountry(code)}
+        searchable={true}
+        className="w-100 mt-1"
+        placeholder="Select a country"
+      />
+                        <div className="input-group-append">
+                          
+                        </div>
+                      </div>
+
+                      </div>
                     </div>
 
-                    <div className="form-group w-md-50 mb-5">
+                    <div className="form-group w-md-100 mb-5">
                       <label
                         htmlFor="image"
                         className="mb-1"
@@ -965,7 +1415,7 @@ export default function Settings() {
                       </label>
                       <div className="text-center mb-3">
                         {image ? (
-                          <div className="w-75 border rounded-3">
+                          <div className="w-50 border rounded-3">
                             <img
                               src={image}
                               alt="Preview"
@@ -974,7 +1424,7 @@ export default function Settings() {
                             />
                           </div>
                         ) : (
-                          <div className="w-75 border rounded-3">
+                          <div className="w-50 border rounded-3">
                             <img
                               src={profile_picture}
                               alt="img"
@@ -984,7 +1434,7 @@ export default function Settings() {
                           </div>
                         )}
                       </div>
-                      <div className="input-group">
+                      <div className="input-group w-md-100">
                         <input
                           type="file"
                           className="form-control py-3"
@@ -1000,24 +1450,101 @@ export default function Settings() {
                       </div>
                     </div>
 
-                    <div className="form-group w-md-50 mb-4">
+                    <div className="form-group mb-4 w-100 d-flex justify-content-between gap-2">
+                    <div className="w-md-50">
                       <label
                         htmlFor="company_name"
                         className="mb-1"
                         style={{ fontSize: "20px" }}
                       >
-                        Company Name
+                        Age
+                      </label>
+                      <div className="input-group">
+                        <input
+                          type="text"
+                          className="form-control py-3"
+                          id="age"
+                          value={
+                            isReadOnly
+                              ? userData.users.age
+                              : userData.users.age
+                          }
+                          placeholder="Enter your age"
+                          readOnly={isReadOnly}
+                          onChange={(e) =>
+                            setUserData({
+                              ...userData,
+                              users: {
+                                ...userData.users,
+                                age: e.target.value,
+                              },
+                            })
+                          }
+                        />
+                        <div className="input-group-append">
+                          <span className="input-group-text h-100 rounded-start-0 px-4 bg-light-custom cursor-pointer"
+                                onClick={handleEditAgeClick}>
+                            <FaPen />
+                          </span>
+                        </div>
+                      </div>
+                      </div>
+                      <div className="w-md-50 ms-2">
+                      <label
+                        htmlFor="company_name"
+                        className="mb-1"
+                        style={{ fontSize: "20px" }}
+                      >
+                        Height
+                      </label>
+                      <div className="input-group">
+                        <input
+                          type="text"
+                          className="form-control py-3"
+                          id="height"
+                          value={
+                            isReadOnly
+                              ? userData.users.height
+                              : userData.users.height
+                          }
+                          placeholder="Enter your height"
+                          readOnly={isReadOnly}
+                          onChange={(e) =>
+                            setUserData({
+                              ...userData,
+                              users: {
+                                ...userData.users,
+                                height: e.target.value,
+                              },
+                            })
+                          }
+                        />
+                        <div className="input-group-append">
+                          <span className="input-group-text h-100 rounded-start-0 px-4 bg-light-custom cursor-pointer"
+                                onClick={handleEditHeightClick}>
+                            <FaPen />
+                          </span>
+                        </div>
+                      </div>
+                      </div>
+                    
+                    </div>
+
+                    <div className="form-group mb-4 w-100 d-flex justify-content-between gap-2">
+                    <div className="w-md-50">
+                      <label
+                        htmlFor="company_name"
+                        className="mb-1"
+                        style={{ fontSize: "20px" }}
+                      >
+                        Association
                       </label>
                       <div className="input-group">
                         <input
                           type="text"
                           className="form-control py-3"
                           id="company_name"
-                          // value={
-                          //   isReadOnly
-                          //     ? company_name
-                          //     : userData.users.company_name
-                          // }
+                          
                           value={
                             isReadOnly
                               ? userData.users.company_name
@@ -1045,11 +1572,214 @@ export default function Settings() {
                           </span>
                         </div>
                       </div>
+                      </div>
+                      <div className="w-md-50 ms-2">
+                      <label
+                        htmlFor="company_name"
+                        className="mb-1"
+                        style={{ fontSize: "20px" }}
+                      >
+                        Class
+                      </label>
+                      <div className="input-group">
+                        <select
+                          className="form-control py-3"
+                          id="userClass"
+                          value={
+                            isReadOnly
+                              ? userData.users.class
+                              : userData.users.class
+                          }
+                          readOnly={isReadOnly}
+                          onChange={(e) =>
+                            setUserData({
+                              ...userData,
+                              users: {
+                                ...userData.users,
+                                class: e.target.value,
+                              },
+                            })
+                          }
+                        >
+                          <option value="">Select a class</option>
+                          <option value="lightWeight">Light Weight</option>
+                          <option value="middleWeight">Middle Weight</option>
+                          <option value="heavyWeight">Heavy Weight</option>
+                        </select>
+                        <div className="input-group-append">
+                          <span className="input-group-text h-100 rounded-start-0 px-4 bg-light-custom cursor-pointer"
+                        onClick={handleEditClassClick}>
+                    <FaPen />
+                  </span>
+                        </div>
+                      </div>
+                      </div>
+                    
                     </div>
+
+                    {/* <div className="form-group mb-4 w-100 d-flex justify-content-between gap-2">
+                    <div className="w-md-50">
+                      <label
+                        htmlFor="company_name"
+                        className="mb-1"
+                        style={{ fontSize: "20px" }}
+                      >
+                        Wins
+                      </label>
+                      <div className="input-group">
+                        <input
+                          type="text"
+                          className="form-control py-3"
+                          id="wins"
+                          value={
+                            isReadOnly
+                              ? userData.users.wins
+                              : userData.users.wins
+                          }
+                          placeholder="Enter wins count"
+                          readOnly={isReadOnly}
+                          onChange={(e) =>
+                            setUserData({
+                              ...userData,
+                              users: {
+                                ...userData.users,
+                                wins: e.target.value,
+                              },
+                            })
+                          }
+                        />
+                        <div className="input-group-append">
+                          <span className="input-group-text h-100 rounded-start-0 px-4 bg-light-custom cursor-pointer"
+                        onClick={handleEditWinsClick}>
+                    <FaPen />
+                  </span>
+                        </div>
+                      </div>
+                      </div>
+                      <div className="w-md-50 ms-2">
+                      <label
+                        htmlFor="company_name"
+                        className="mb-1"
+                        style={{ fontSize: "20px" }}
+                      >
+                        Losses
+                      </label>
+                      <div className="input-group">
+                        <input
+                          type="text"
+                          className="form-control py-3"
+                          id="losses"
+                          value={
+                            isReadOnly
+                              ? userData.users.losses
+                              : userData.users.losses
+                          }
+                          placeholder="Enter losses count"
+                          readOnly={isReadOnly}
+                          onChange={(e) =>
+                            setUserData({
+                              ...userData,
+                              users: {
+                                ...userData.users,
+                                losses: e.target.value,
+                              },
+                            })
+                          }
+                        />
+                        <div className="input-group-append">
+                          <span className="input-group-text h-100 rounded-start-0 px-4 bg-light-custom cursor-pointer"
+                        onClick={handleEditLossesClick}>
+                    <FaPen />
+                  </span>
+                        </div>
+                      </div>
+                      </div>
+                    
+                    </div> */}
+                    {/* <div className="form-group mb-4 w-100 d-flex justify-content-between gap-2">
+                    <div className="w-md-50">
+                      <label
+                        htmlFor="company_name"
+                        className="mb-1"
+                        style={{ fontSize: "20px" }}
+                      >
+                        KO/TKO Percentage
+                      </label>
+                      <div className="input-group">
+                        <input
+                          type="text"
+                          className="form-control py-3"
+                          id="kto_percentage"
+                          value={
+                            isReadOnly
+                              ? userData.users.kto_percentage
+                              : userData.users.kto_percentage
+                          }
+                          placeholder="Enter KO/TKO percentage"
+                          readOnly={isReadOnly}
+                          onChange={(e) =>
+                            setUserData({
+                              ...userData,
+                              users: {
+                                ...userData.users,
+                                kto_percentage: e.target.value,
+                              },
+                            })
+                          }
+                        />
+                        <div className="input-group-append">
+                          <span className="input-group-text h-100 rounded-start-0 px-4 bg-light-custom cursor-pointer"
+                        onClick={handleEditKtoClick}>
+                    <FaPen />
+                  </span>
+                        </div>
+                      </div>
+                      </div>
+                      <div className="w-md-50 ms-2">
+                      <label
+                        htmlFor="company_name"
+                        className="mb-1"
+                        style={{ fontSize: "20px" }}
+                      >
+                        Submission Percentage
+                      </label>
+                      <div className="input-group">
+                        <input
+                          type="text"
+                          className="form-control py-3"
+                          id="submission_percentage"
+                          value={
+                            isReadOnly
+                              ? userData.users.submission_percentage
+                              : userData.users.submission_percentage
+                          }
+                          placeholder="Enter submission percentage"
+                          readOnly={isReadOnly}
+                          onChange={(e) =>
+                            setUserData({
+                              ...userData,
+                              users: {
+                                ...userData.users,
+                                submission_percentage: e.target.value,
+                              },
+                            })
+                          }
+                        />
+                        <div className="input-group-append">
+                          <span className="input-group-text h-100 rounded-start-0 px-4 bg-light-custom cursor-pointer"
+                        onClick={handleEditSubmissionClick}>
+                    <FaPen />
+                  </span>
+                        </div>
+                      </div>
+                      </div>
+                    
+                    </div> */}
 
                     {/* Youtube */}
 
-                    <div className="form-group w-md-50 mb-4">
+                    <div className="form-group w-md-100 mb-0 d-flex justify-content-between gap-2">
+                      <div className="w-md-50">
                       <label
                         htmlFor="youtube"
                         className="mb-1"
@@ -1090,10 +1820,8 @@ export default function Settings() {
                           </span>
                         </div>
                       </div>
-                    </div>
-
-                    {/* twitter */}
-                    <div className="form-group w-md-50 mb-4">
+                      </div>
+                      <div className=" w-md-50 mb-4 ms-2">
                       <label
                         htmlFor="twitter"
                         className="mb-1"
@@ -1135,9 +1863,14 @@ export default function Settings() {
                         </div>
                       </div>
                     </div>
+                    </div>
+
+                    {/* twitter */}
+                    
 
                     {/*  personal website*/}
-                    <div className="form-group w-md-50 mb-4">
+                    <div className="form-group w-md-100 mb-2 d-flex justify-content-between gap-2">
+                      <div className="w-md-50">
                       <label
                         htmlFor="website"
                         className="mb-1"
@@ -1178,9 +1911,8 @@ export default function Settings() {
                           </span>
                         </div>
                       </div>
-                    </div>
-                    {/* bio */}
-                    <div className="form-group w-md-50 mb-4">
+                      </div>
+                      <div className="w-md-50 mb-4 ms-2">
                       <label
                         htmlFor="bio"
                         className="mb-1"
@@ -1214,6 +1946,9 @@ export default function Settings() {
                         </div>
                       </div>
                     </div>
+                    </div>
+                    {/* bio */}
+                    
 
                     <button
                       type="submit"
@@ -1227,6 +1962,420 @@ export default function Settings() {
                       )}
                     </button>
                   </form>
+
+                  <form className="mt-4">
+                    <div className="d-flex justify-content-between align-items-center mb-2">
+                      <h3 className="fw-bold">
+                        {isEditing ? "Edit Fighter History" : "Fighter History - Pro"}
+                      </h3>
+                      {isEditing && (
+                        <button 
+                          type="button" 
+                          className="btn btn-outline-secondary" 
+                          onClick={handleCancelEdit}
+                        >
+                          Cancel Edit
+                        </button>
+                      )}
+                    </div>
+
+                    <div className="form-group mb-4 w-100 d-flex justify-content-between gap-2">
+                    <div className="w-md-50">
+                      <label
+                        htmlFor="result"
+                        className="mb-1"
+                        style={{ fontSize: "20px" }}
+                      >
+                        Results
+                      </label>
+                      <div className="d-flex align-items-center p-3 border rounded align-items-center">
+  <div className="form-check me-3">
+    <input
+      className="form-check-input"
+      type="radio"
+      name="result"
+      id="resultWin"
+      value="win"
+      checked={fighterHistoryData.result === "win"}
+      onChange={handleFighterHistoryChange}
+    />
+    <label className="form-check-label fs-6" htmlFor="resultWin">
+      Wins
+    </label>
+  </div>
+  <div className="form-check">
+    <input
+      className="form-check-input"
+      type="radio"
+      name="result"
+      id="resultLoss"
+      value="lose"
+      checked={fighterHistoryData.result === "lose"}
+      onChange={handleFighterHistoryChange}
+    />
+    <label className="form-check-label fs-6" htmlFor="resultLoss">
+      Loses
+    </label>
+  </div>
+
+</div>
+                      </div>
+                      <div className="w-md-50 ms-2">
+                      <label
+                        htmlFor="fighter_name"
+                        className="mb-1"
+                        style={{ fontSize: "20px" }}
+                      >
+                        Fighter Name
+                      </label>
+                      <div className="input-group">
+                        <input
+                          type="text"
+                          className="form-control py-3"
+                          id="fighter_name"
+                          name="fighter_name"
+                          value={fighterHistoryData.fighter_name}
+                          placeholder="Enter opponent name"
+                          onChange={handleFighterHistoryChange}
+                        />
+                       
+                      </div>
+                      </div>
+                    
+                    </div>
+                    <div className="form-group mb-4 w-100 d-flex justify-content-between gap-2">
+                    <div className="w-md-50">
+                      <label
+                        htmlFor="event_name"
+                        className="mb-1"
+                        style={{ fontSize: "20px" }}
+                      >
+                        Event Name
+                      </label>
+                      <div className="input-group">
+                        <input
+                          type="text"
+                          className="form-control py-3"
+                          id="event_name"
+                          name="event_name"
+                          value={fighterHistoryData.event_name}
+                          placeholder="Enter event name"
+                          onChange={handleFighterHistoryChange}
+                        />
+                        
+                      </div>
+                      </div>
+                      <div className="w-md-50 ms-2">
+                      <label
+                        htmlFor="event_date"
+                        className="mb-1"
+                        style={{ fontSize: "20px" }}
+                      >
+                        Date
+                      </label>
+                      <div className="input-group">
+                        <input
+                          type="date"
+                          className="form-control py-3"
+                          id="event_date"
+                          name="event_date"
+                          value={fighterHistoryData.event_date}
+                          onChange={handleFighterHistoryChange}
+                        />
+                        
+                      </div>
+                      </div>
+                    
+                    </div>
+
+                    <div className="form-group mb-4 w-100 d-flex justify-content-between gap-2">
+                    <div className="w-md-50">
+                      <label
+                        htmlFor="method"
+                        className="mb-1"
+                        style={{ fontSize: "20px" }}
+                      >
+                        Method Referee
+                      </label>
+                      <div className="input-group">
+                        <input
+                          type="text"
+                          className="form-control py-3"
+                          id="method"
+                          name="method"
+                          value={fighterHistoryData.method}
+                          placeholder="Enter method"
+                          onChange={handleFighterHistoryChange}
+                        />
+                        
+                      </div>
+                      </div>
+                      <div className="w-md-50 ms-2">
+                      <label
+                        htmlFor="rounds"
+                        className="mb-1"
+                        style={{ fontSize: "20px" }}
+                      >
+                        Rounds
+                      </label>
+                      <div className="input-group">
+                        <input
+                          type="number"
+                          className="form-control py-3"
+                          id="rounds"
+                          name="rounds"
+                          value={fighterHistoryData.rounds}
+                          placeholder="Enter rounds"
+                          onChange={handleFighterHistoryChange}
+                        />
+                        
+                      </div>
+                      </div>
+                    
+                    </div>
+
+
+                    <div className="form-group mb-4 w-100 d-flex justify-content-between gap-2">
+                    <div className="w-md-50">
+                      <label
+                        htmlFor="time"
+                        className="mb-1"
+                        style={{ fontSize: "20px" }}
+                      >
+                        Time
+                      </label>
+                      <div className="input-group">
+                        <input
+                          type="time"
+                          className="form-control py-3"
+                          id="time"
+                          name="time"
+                          value={fighterHistoryData.time}
+                          onChange={handleFighterHistoryChange}
+                        />
+                        
+                      </div>
+                      </div>
+                      <div className="w-md-50 ms-2">
+                      <label
+                        htmlFor="video_link"
+                        className="mb-1"
+                        style={{ fontSize: "20px" }}
+                      >
+                        Fight video link
+                      </label>
+                      <div className="input-group">
+                        <input
+                          type="text"
+                          className="form-control py-3"
+                          id="video_link"
+                          name="video_link"
+                          value={fighterHistoryData.video_link}
+                          placeholder="Enter video link"
+                          onChange={handleFighterHistoryChange}
+                        />
+                        
+                      </div>
+                      </div>
+                    
+                    </div>
+
+                    {/* New Knock Out and Submission fields */}
+                    <div className="form-group mb-4 w-100 d-flex justify-content-between gap-2">
+                      <div className="w-md-50">
+                        <label
+                          htmlFor="ko"
+                          className="mb-1"
+                          style={{ fontSize: "20px" }}
+                        >
+                          Knock Out
+                        </label>
+                        <div className="d-flex align-items-center p-3 border rounded align-items-center">
+                          <div className="form-check me-3">
+                            <input
+                              className="form-check-input"
+                              type="radio"
+                              name="ko"
+                              id="koYes"
+                              value="true"
+                              checked={fighterHistoryData.ko === true}
+                              onChange={() => setFighterHistoryData({...fighterHistoryData, ko: true})}
+                            />
+                            <label className="form-check-label fs-6" htmlFor="koYes">
+                              Yes
+                            </label>
+                          </div>
+                          <div className="form-check">
+                            <input
+                              className="form-check-input"
+                              type="radio"
+                              name="ko"
+                              id="koNo"
+                              value="false"
+                              checked={fighterHistoryData.ko === false}
+                              onChange={() => setFighterHistoryData({...fighterHistoryData, ko: false})}
+                            />
+                            <label className="form-check-label fs-6" htmlFor="koNo">
+                              No
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="w-md-50 ms-2">
+                        <label
+                          htmlFor="submission"
+                          className="mb-1"
+                          style={{ fontSize: "20px" }}
+                        >
+                          Submission
+                        </label>
+                        <div className="d-flex align-items-center p-3 border rounded align-items-center">
+                          <div className="form-check me-3">
+                            <input
+                              className="form-check-input"
+                              type="radio"
+                              name="submission"
+                              id="submissionYes"
+                              value="true"
+                              checked={fighterHistoryData.submission === true}
+                              onChange={() => setFighterHistoryData({...fighterHistoryData, submission: true})}
+                            />
+                            <label className="form-check-label fs-6" htmlFor="submissionYes">
+                              Yes
+                            </label>
+                          </div>
+                          <div className="form-check">
+                            <input
+                              className="form-check-input"
+                              type="radio"
+                              name="submission"
+                              id="submissionNo"
+                              value="false"
+                              checked={fighterHistoryData.submission === false}
+                              onChange={() => setFighterHistoryData({...fighterHistoryData, submission: false})}
+                            />
+                            <label className="form-check-label fs-6" htmlFor="submissionNo">
+                              No
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <button
+                      type="button"
+                      className="signup-now py-2 px-4 fw-lightBold mb-0 h-auto"
+                      onClick={handleFighterHistoryPost}
+                    >
+                      {isLoading ? (
+                        <PulseLoader size={8} color="white" />
+                      ) : (
+                        isEditing ? "Save Changes" : "Add"
+                      )}
+                    </button>
+
+                  </form>
+
+                  {/* Fighter History Table */}
+                  <div className="mt-5">
+                    <div className="d-flex justify-content-between align-items-center mb-3">
+                      <h3 className="fw-bold">Fighter History Records</h3>
+                      <button 
+                        className="btn btn-sm btn-outline-primary" 
+                        onClick={fetchFighterHistory}
+                      >
+                        Refresh
+                      </button>
+                    </div>
+                    
+                    <div className="table-responsive">
+                      <table className="table table-bordered">
+                        <thead className="bg-dark text-white">
+                          <tr>
+                            <th>Result</th>
+                            <th>Fighter</th>
+                            <th>Event</th>
+                            <th>Method/Referee</th>
+                            <th>R</th>
+                            <th>Time</th>
+                            <th>KO</th>
+                            <th>Submission</th>
+                            <th>Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {fightHistory.length > 0 ? (
+                            [...fightHistory].reverse().map((fight) => (
+                              <tr key={fight.id} className={fight.result === "win" ? "table-success" : "table-danger"}>
+                                <td className={`fw-bold ${fight.result === "win" ? "text-success" : "text-danger"}`}>
+                                  {fight.result.charAt(0).toUpperCase() + fight.result.slice(1)}
+                                </td>
+                                <td>{fight.fighter_name}</td>
+                                <td>
+                                  {fight.event_name}
+                                  {fight.fight_video_link && (
+                                    <div className="text-center mt-2">
+                                      <a 
+                                        href={fight.fight_video_link.startsWith("http") ? fight.fight_video_link : `https://${fight.fight_video_link}`} 
+                                        target="_blank" 
+                                        rel="noopener noreferrer" 
+                                        className="btn btn-sm btn-warning"
+                                      >
+                                        View Play-by-Play
+                                      </a>
+                                    </div>
+                                  )}
+                                </td>
+                                <td>
+                                  <div className="fw-bold">{fight.method_referee?.split(" ")[0] || ""}</div>
+                                  <div className="small text-muted">
+                                    {fight.method_referee?.indexOf(" ") > -1 
+                                      ? fight.method_referee.substring(fight.method_referee.indexOf(" ") + 1) 
+                                      : ""}
+                                  </div>
+                                </td>
+                                <td>{fight.rounds}</td>
+                                <td>{fight.time?.substring(0, 5) || ""}</td>
+                                <td>
+                                  <span className={`badge ${fight.ko ? 'bg-success' : 'bg-danger'}`}>
+                                    {fight.ko ? 'Yes' : 'No'}
+                                  </span>
+                                </td>
+                                <td>
+                                  <span className={`badge ${fight.submission ? 'bg-success' : 'bg-danger'}`}>
+                                    {fight.submission ? 'Yes' : 'No'}
+                                  </span>
+                                </td>
+                                <td>
+                                  <div className="d-flex gap-2">
+                                    <button 
+                                      className="btn btn-sm btn-primary" 
+                                      onClick={() => handleEditFight(fight)}
+                                    >
+                                      <BiEdit />
+                                    </button>
+                                    <button 
+                                      className="btn btn-sm btn-danger" 
+                                      onClick={() => handleDeleteFight(fight.id)}
+                                    >
+                                      <MdDelete />
+                                    </button>
+                                  </div>
+                                </td>
+                              </tr>
+                            ))
+                          ) : (
+                            <tr>
+                              <td colSpan="9" className="text-center py-3">No fight history records found</td>
+                            </tr>
+                          )}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                  </>
+
+                  
                 ) : null}
               </div>
             )}
@@ -1524,6 +2673,7 @@ export default function Settings() {
           </h4>
           {
             role === "expert" &&
+            <>
             <h4
             style={{ cursor: "pointer" }}
             className={`p-1 px-2 text-nowrap justify-content-center align-items-center rounded-2 fs-6 border-2 ${
@@ -1535,7 +2685,23 @@ export default function Settings() {
           >
             {/* {category.category_name} */}
             Matches
-          </h4>}
+          </h4>
+          <h4
+            style={{ cursor: "pointer" }}
+            className={`p-1 px-2 text-nowrap justify-content-center align-items-center rounded-2 fs-6 border-2 ${
+              mobileActiveTab === "fighterHistory"
+                ? "app-black border-black app-text-white"
+                : "border border-1 text-secondary"
+            }`}
+            onClick={() => setMobileActiveTab("fighterHistory")}
+          >
+            {/* {category.category_name} */}
+            Fighter History
+          </h4>
+            </>
+            
+          
+          }
           <h4
             style={{ cursor: "pointer" }}
             className={`p-1 px-2 d-flex text-nowrap justify-content-center align-items-center rounded-2 fs-6 fw-regular border-2 ${
@@ -1782,173 +2948,246 @@ export default function Settings() {
                                     </div>
               </div>
             </div>
+
+            {/* New fields for expert profile */}
+            <div className="form-group col-12 mb-4">
+              <label htmlFor="age" className="mb-1 fs-5">
+                Age
+              </label>
+              <div className="input-group">
+                <input
+                  type="text"
+                  className="form-control py-3"
+                  id="age"
+                  value={userData.users.age}
+                  placeholder="Enter your age"
+                  readOnly={isReadOnly}
+                  onChange={(e) =>
+                    setUserData({
+                      ...userData,
+                      users: {
+                        ...userData.users,
+                        age: e.target.value,
+                      },
+                    })
+                  }
+                />
+                <div className="input-group-append">
+                  <span className="input-group-text h-100 rounded-start-0 px-4 bg-light-custom cursor-pointer"
+                        onClick={handleEditAgeClick}>
+                    <FaPen />
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className="form-group col-12 mb-4">
+              <label htmlFor="height" className="mb-1 fs-5">
+                Height
+              </label>
+              <div className="input-group">
+                <input
+                  type="text"
+                  className="form-control py-3"
+                  id="height"
+                  value={userData.users.height}
+                  placeholder="Enter your height"
+                  readOnly={isReadOnly}
+                  onChange={(e) =>
+                    setUserData({
+                      ...userData,
+                      users: {
+                        ...userData.users,
+                        height: e.target.value,
+                      },
+                    })
+                  }
+                />
+                <div className="input-group-append">
+                  <span className="input-group-text h-100 rounded-start-0 px-4 bg-light-custom cursor-pointer"
+                        onClick={handleEditHeightClick}>
+                    <FaPen />
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className="form-group col-12 mb-4">
+              <label htmlFor="country" className="mb-1 fs-5">
+                Country
+              </label>
+              <div className="input-group">
+                <ReactFlagsSelect
+                  selected={selectedCountry}
+                  onSelect={(code) => setSelectedCountry(code)}
+                  searchable={true}
+                  className="w-100"
+                  placeholder="Select a country"
+                />
+              </div>
+            </div>
+
+            <div className="form-group col-12 mb-4">
+              <label htmlFor="userClass" className="mb-1 fs-5">
+                Class
+              </label>
+              <div className="input-group">
+                <select
+                  className="form-control py-3"
+                  id="userClass"
+                  value={userData.users.class}
+                  readOnly={isReadOnly}
+                  onChange={(e) =>
+                    setUserData({
+                      ...userData,
+                      users: {
+                        ...userData.users,
+                        class: e.target.value,
+                      },
+                    })
+                  }
+                >
+                  <option value="">Select a class</option>
+                  <option value="lightWeight">Light Weight</option>
+                  <option value="middleWeight">Middle Weight</option>
+                  <option value="heavyWeight">Heavy Weight</option>
+                </select>
+                <div className="input-group-append">
+                  <span className="input-group-text h-100 rounded-start-0 px-4 bg-light-custom cursor-pointer"
+                        onClick={handleEditClassClick}>
+                    <FaPen />
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className="form-group col-12 mb-4">
+              <label htmlFor="wins" className="mb-1 fs-5">
+                Wins
+              </label>
+              <div className="input-group">
+                <input
+                  type="text"
+                  className="form-control py-3"
+                  id="wins"
+                  value={userData.users.wins}
+                  placeholder="Enter wins count"
+                  readOnly={isReadOnly}
+                  onChange={(e) =>
+                    setUserData({
+                      ...userData,
+                      users: {
+                        ...userData.users,
+                        wins: e.target.value,
+                      },
+                    })
+                  }
+                />
+                <div className="input-group-append">
+                  <span className="input-group-text h-100 rounded-start-0 px-4 bg-light-custom cursor-pointer"
+                        onClick={handleEditWinsClick}>
+                    <FaPen />
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className="form-group col-12 mb-4">
+              <label htmlFor="losses" className="mb-1 fs-5">
+                Losses
+              </label>
+              <div className="input-group">
+                <input
+                  type="text"
+                  className="form-control py-3"
+                  id="losses"
+                  value={userData.users.losses}
+                  placeholder="Enter losses count"
+                  readOnly={isReadOnly}
+                  onChange={(e) =>
+                    setUserData({
+                      ...userData,
+                      users: {
+                        ...userData.users,
+                        losses: e.target.value,
+                      },
+                    })
+                  }
+                />
+                <div className="input-group-append">
+                  <span className="input-group-text h-100 rounded-start-0 px-4 bg-light-custom cursor-pointer"
+                        onClick={handleEditLossesClick}>
+                    <FaPen />
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className="form-group col-12 mb-4">
+              <label htmlFor="kto_percentage" className="mb-1 fs-5">
+                KO/TKO Percentage
+              </label>
+              <div className="input-group">
+                <input
+                  type="text"
+                  className="form-control py-3"
+                  id="kto_percentage"
+                  value={userData.users.kto_percentage}
+                  placeholder="Enter KO/TKO percentage"
+                  readOnly={isReadOnly}
+                  onChange={(e) =>
+                    setUserData({
+                      ...userData,
+                      users: {
+                        ...userData.users,
+                        kto_percentage: e.target.value,
+                      },
+                    })
+                  }
+                />
+                <div className="input-group-append">
+                  <span className="input-group-text h-100 rounded-start-0 px-4 bg-light-custom cursor-pointer"
+                        onClick={handleEditKtoClick}>
+                    <FaPen />
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className="form-group col-12 mb-4">
+              <label htmlFor="submission_percentage" className="mb-1 fs-5">
+                Submission Percentage
+              </label>
+              <div className="input-group">
+                <input
+                  type="text"
+                  className="form-control py-3"
+                  id="submission_percentage"
+                  value={userData.users.submission_percentage}
+                  placeholder="Enter submission percentage"
+                  readOnly={isReadOnly}
+                  onChange={(e) =>
+                    setUserData({
+                      ...userData,
+                      users: {
+                        ...userData.users,
+                        submission_percentage: e.target.value,
+                      },
+                    })
+                  }
+                />
+                <div className="input-group-append">
+                  <span className="input-group-text h-100 rounded-start-0 px-4 bg-light-custom cursor-pointer"
+                        onClick={handleEditSubmissionClick}>
+                    <FaPen />
+                  </span>
+                </div>
+              </div>
+            </div>
             
             <div className="form-group w-md-50 mb-4">
-                                  <label
-                                    htmlFor="youtube"
-                                    className="mb-1"
-                                    style={{ fontSize: "20px" }}
-                                  >
-                                    Youtube
-                                  </label>
-                                  <div className="input-group">
-                                    <input
-                                      type="text"
-                                      className="form-control py-3"
-                                      id="youtube"
-                                      // value={isReadOnly ? youtube : userData.users.youtube}
-                                      value={
-                                        isReadOnly
-                                          ? userData.users.youtube
-                                          : userData.users.youtube
-                                      }
-                                      placeholder="Enter Youtube Url"
-                                      readOnly={isReadOnly}
-                                      ref={youtubeRef}
-                                      onChange={(e) =>
-                                        setUserData({
-                                          ...userData,
-                                          users: {
-                                            ...userData.users,
-                                            youtube: e.target.value,
-                                          },
-                                        })
-                                      }
-                                    />
-                                    <div className="input-group-append">
-                                      <span
-                                        className="input-group-text h-100 rounded-start-0 px-4 bg-light-custom cursor-pointer"
-                                        onClick={handleEditYoutubeClick}
-                                      >
-                                        <FaPen />
-                                      </span>
-                                    </div>
-                                  </div>
-                                </div>
-            
-                                {/* twitter */}
-                                <div className="form-group w-md-50 mb-4">
-                                  <label
-                                    htmlFor="twitter"
-                                    className="mb-1"
-                                    style={{ fontSize: "20px" }}
-                                  >
-                                    Twitter
-                                  </label>
-                                  <div className="input-group">
-                                    <input
-                                      type="text"
-                                      className="form-control py-3"
-                                      id="twitter"
-                                      // value={isReadOnly ? twitter : userData.users.twitter}
-                                      value={
-                                        isReadOnly
-                                          ? userData.users.twitter
-                                          : userData.users.twitter
-                                      }
-                                      placeholder="Enter twitter Url"
-                                      readOnly={isReadOnly}
-                                      ref={twitterRef}
-                                      onChange={(e) =>
-                                        setUserData({
-                                          ...userData,
-                                          users: {
-                                            ...userData.users,
-                                            twitter: e.target.value,
-                                          },
-                                        })
-                                      }
-                                    />
-                                    <div className="input-group-append">
-                                      <span
-                                        className="input-group-text h-100 rounded-start-0 px-4 bg-light-custom cursor-pointer"
-                                        onClick={handleEditTwitterClick}
-                                      >
-                                        <FaPen />
-                                      </span>
-                                    </div>
-                                  </div>
-                                </div>
-            
-                                {/*  personal website*/}
-                                <div className="form-group w-md-50 mb-4">
-                                  <label
-                                    htmlFor="website"
-                                    className="mb-1"
-                                    style={{ fontSize: "20px" }}
-                                  >
-                                    Personal Website
-                                  </label>
-                                  <div className="input-group">
-                                    <input
-                                      type="text"
-                                      className="form-control py-3"
-                                      id="website"
-                                      // value={isReadOnly ? website : userData.users.website}
-                                      value={
-                                        isReadOnly
-                                          ? userData.users.website
-                                          : userData.users.website
-                                      }
-                                      placeholder="Enter website Url"
-                                      readOnly={isReadOnly}
-                                      ref={websiteRef}
-                                      onChange={(e) =>
-                                        setUserData({
-                                          ...userData,
-                                          users: {
-                                            ...userData.users,
-                                            website: e.target.value,
-                                          },
-                                        })
-                                      }
-                                    />
-                                    <div className="input-group-append">
-                                      <span
-                                        className="input-group-text h-100 rounded-start-0 px-4 bg-light-custom cursor-pointer"
-                                        onClick={handleEditWebsiteClick}
-                                      >
-                                        <FaPen />
-                                      </span>
-                                    </div>
-                                  </div>
-                                </div>
-                                {/* bio */}
-                                <div className="form-group w-md-50 mb-4">
-                                  <label
-                                    htmlFor="bio"
-                                    className="mb-1"
-                                    style={{ fontSize: "20px" }}
-                                  >
-                                    Add your bio
-                                  </label>
-                                  <div className="input-group">
-                                    <input
-                                      type="text"
-                                      className="form-control py-3"
-                                      id="bio"
-                                      // value={isReadOnly ? bio : userData.users.bio} // Corrected value attribute
-                                      value={isReadOnly ? userData.users.bio : userData.bio}
-                                      placeholder="Add your bio"
-                                      ref={bioRef}
-                                      onChange={(e) =>
-                                        setUserData({
-                                          ...userData,
-                                          users: { ...userData.users, bio: e.target.value }, // Fixed key from bio to website
-                                        })
-                                      }
-                                    />
-                                    <div className="input-group-append">
-                                      <span
-                                        className="input-group-text h-100 rounded-start-0 px-4 bg-light-custom cursor-pointer"
-                                        onClick={handleEditBioClick}
-                                      >
-                                        <FaPen />
-                                      </span>
-                                    </div>
-                                  </div>
-                                </div>
-                                </>
+</div>
+            </>
               }
 
 
@@ -2099,7 +3338,145 @@ export default function Settings() {
           </Popup>
         </div>
       )}
-
+      {mobileActiveTab === "fighterHistory" && (
+        <>
+        <div className="app-white p-2">
+        <div className="w-100 app-white rounded-2">
+                  <h4
+                    style={{ width: "max-content" }}
+                    className={`p-1 px-2 rounded-2 bg-dark-subtle justify-content-start mb-2 align-self-center align-items-center fs-6 border-2 ${" border-black app-text-black"}`}
+                  >
+                    Fighter History - Pro
+                  </h4>
+                </div>
+                
+                <label htmlFor="result" className="form-label fs-6 fw-medium">
+                  Results
+                </label>
+                <div className="d-flex align-items-center p-3 border rounded align-items-center mb-2">
+                  <div className="form-check me-3">
+                    <input
+                      className="form-check-input"
+                      type="radio"
+                      name="result"
+                      id="mobileResultWin"
+                      value="win"
+                      checked={fighterHistoryData.result === "win"}
+                      onChange={handleFighterHistoryChange}
+                    />
+                    <label className="form-check-label fs-6" htmlFor="mobileResultWin">
+                      Wins
+                    </label>
+                  </div>
+                  <div className="form-check">
+                    <input
+                      className="form-check-input"
+                      type="radio"
+                      name="result"
+                      id="mobileResultLoss"
+                      value="loss"
+                      checked={fighterHistoryData.result === "loss"}
+                      onChange={handleFighterHistoryChange}
+                    />
+                    <label className="form-check-label fs-6" htmlFor="mobileResultLoss">
+                      Loses
+                    </label>
+                  </div>
+                </div>
+                
+                <label htmlFor="fighter_name" className="form-label fs-6 fw-medium">
+                  Fighter Name
+                </label>
+                <input
+                  type="text"
+                  name="fighter_name"
+                  value={fighterHistoryData.fighter_name}
+                  className="form-control"
+                  placeholder="Enter opponent name"
+                  onChange={handleFighterHistoryChange}
+                />
+                
+                <label htmlFor="event_name" className="form-label mt-2 fs-6 fw-medium">
+                  Event Name
+                </label>
+                <input
+                  type="text"
+                  name="event_name"
+                  value={fighterHistoryData.event_name}
+                  className="form-control"
+                  placeholder="Enter event name"
+                  onChange={handleFighterHistoryChange}
+                />
+                
+                <label htmlFor="event_date" className="form-label mt-2 fs-6 fw-medium">
+                  Date
+                </label>
+                <input
+                  type="date"
+                  name="event_date"
+                  value={fighterHistoryData.event_date}
+                  className="form-control"
+                  onChange={handleFighterHistoryChange}
+                />
+                
+                <label htmlFor="method" className="form-label mt-2 fs-6 fw-medium">
+                  Method Referee
+                </label>
+                <input
+                  type="text"
+                  name="method"
+                  value={fighterHistoryData.method}
+                  className="form-control"
+                  placeholder="Enter method"
+                  onChange={handleFighterHistoryChange}
+                />
+                
+                <label htmlFor="rounds" className="form-label mt-2 fs-6 fw-medium">
+                  Rounds
+                </label>
+                <input
+                  type="number"
+                  name="rounds"
+                  value={fighterHistoryData.rounds}
+                  className="form-control"
+                  placeholder="Enter rounds"
+                  onChange={handleFighterHistoryChange}
+                />
+                
+                <label htmlFor="time" className="form-label mt-2 fs-6 fw-medium">
+                  Time
+                </label>
+                <input
+                  type="time"
+                  name="time"
+                  value={fighterHistoryData.time}
+                  className="form-control"
+                  onChange={handleFighterHistoryChange}
+                />
+                
+                <label htmlFor="video_link" className="form-label mt-2 fs-6 fw-medium">
+                  Fight Video Link
+                </label>
+                <input
+                  type="text"
+                  name="video_link"
+                  value={fighterHistoryData.video_link}
+                  className="form-control"
+                  placeholder="Enter video link"
+                  onChange={handleFighterHistoryChange}
+                />
+                
+                <div
+                  style={{ width: "max-content", cursor: "pointer" }}
+                  className="app-red app-text-white mt-2 rounded-2 px-3 py-1 fs-6 fw-bold"
+                  onClick={handleFighterHistoryPost}
+                >
+                  Add
+                </div>
+        </div>
+        
+        </>
+      )}
           {mobileActiveTab === "matchHistory" && (
            
               <div className="mb-2 app-white justify-content-center border border-1 p-2 rounded-2">
@@ -2140,15 +3517,20 @@ export default function Settings() {
                 <label htmlFor="dob" className="form-label mt-2 fs-6 fw-medium">
                 Achievements
                 </label>
-                <input
-                  type="text"
-                  value={pastMatchData.acheavements}
-                  name="acheavements"
-                  className="form-control d-flex align-items-center"
-                  id="fullName"
-                  placeholder="🏆 Champion"
-                  onChange={handlePastMatchChange}
-                />
+                <select 
+                value={pastMatchData.acheavements}
+                onChange={handlePastMatchChange}
+                name="acheavements"
+                id="acheavements"
+                className="form-control"
+                >
+                <option value="Champion">🏆 Champion</option>
+                  <option value="Runner-up">🥈 Runner-up</option>
+                  <option value="Third Place">🥉 Third Place</option>
+                  <option value="Fourth Place">🥈 Fourth Place</option>
+                  <option value="Fifth Place">🥉 Fifth Place</option>
+
+                </select>
                 <label htmlFor="dob" className="form-label mt-2 fs-6 fw-medium">
                 Location
                 </label>
@@ -2202,15 +3584,6 @@ export default function Settings() {
                   placeholder="Black Belt Asia"
                   onChange={handlePastUpcomingMatchChange}
                 />
-                {/* <label htmlFor="dob" className="form-label mt-2 fs-6 fw-medium">
-                Achievements
-                </label>
-                <input
-                  type="text"
-                  className="form-control d-flex align-items-center"
-                  id="fullName"
-                  placeholder="🏆 Champion"
-                /> */}
                 <label htmlFor="dob" className="form-label mt-2 fs-6 fw-medium">
                 Location
                 </label>
@@ -2232,38 +3605,8 @@ export default function Settings() {
                   Add
                 </div>
 
-                {/* <div className="w-100 app-black rounded-1 pt-2 mt-2">
-                  <span
-                    style={{ borderBottom: "1px solid white" }}
-                    className="app-text-white pb-2 d-flex align-items-center justify-content-evenly"
-                  >
-                    <h5 className="fs-6 fw-normal">Black Belt Asia</h5>
-                    <h5 className="fs-6 fw-normal">2022</h5>
-                    <span className="d-flex gap-2">
-                      <MdDelete /> <BiEdit />
-                    </span>
-                  </span>
-                  <span
-                    style={{ borderBottom: "1px solid white" }}
-                    className="app-text-white pt-2 pb-2 d-flex align-items-center justify-content-evenly"
-                  >
-                    <h5 className="fs-6 fw-normal">Black Belt Asia</h5>
-                    <h5 className="fs-6 fw-normal">2022</h5>
-                    <span className="d-flex gap-2">
-                      <MdDelete /> <BiEdit />
-                    </span>
-                  </span>
-                  <span
-                    style={{ borderBottom: "1px solid white" }}
-                    className="app-text-white pb-2 pt-2 d-flex align-items-center justify-content-evenly"
-                  >
-                    <h5 className="fs-6 fw-normal">Black Belt Asia</h5>
-                    <h5 className="fs-6 fw-normal">2022</h5>
-                    <span className="d-flex gap-2">
-                      <MdDelete /> <BiEdit />
-                    </span>
-                  </span>
-                </div> */}
+                {/* Fighter History Pro Section */}
+                
           
             </div>
           )}

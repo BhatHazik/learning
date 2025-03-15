@@ -468,8 +468,8 @@ console.log(orders)
         sessionId: session.data.session.id,
       });
     } catch (e) {
-      console.log(e);
-      toast.error(e?.response?.data?.message);
+      console.log(e?.response);
+      // toast.error(e?.response?.data?.message);
     }
   };
 

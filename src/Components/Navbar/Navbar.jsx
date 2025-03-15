@@ -313,7 +313,15 @@ export const Navbar = ({ collapsed, search, setSearch, cartItemNumber }) => {
         
       )}
       {token && (
-        <div onClick={handleProfileClick} style={{ cursor: "pointer" }}>
+        <div 
+        onClick={() => {
+          if (role === "expert") {
+            navigate(`/userProfile/${user.id}`);
+          } else {
+            navigate('/settings');
+          }
+        }}
+         style={{ cursor: "pointer" }}>
           <div className="profile-picture-container">
             {profile_picture ? (
               <>

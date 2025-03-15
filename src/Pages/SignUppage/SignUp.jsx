@@ -44,7 +44,8 @@ export const SignUp = () => {
 
       (err) => {
         setIsLoading(false);
-        toast.error(err?.message ? err.message : "Something went wrong");
+        console.log(err?.response);
+        toast.error(err?.response?.data?.message ? err?.response?.data?.message : "Something went wrong");
       }
     );
   };

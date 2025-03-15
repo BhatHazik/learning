@@ -9,6 +9,8 @@ import defaultUser from "../../assets/defaultUser.svg";
 import formatDate1 from "../../utils/formatDate";
 import LikeButton from "../../Components/Like/LikeButton";
 import defaultCourse from "../../assets/defaultCourse.svg";
+import Popup from "../../Components/PopUp/PopUp";
+import seminar from "../../assets/seminar.svg";
 
 const getSocialLinks = (profile) => [
   {
@@ -37,6 +39,8 @@ export default function UserProfile() {
   const [loading , setLoading] = useState(false);
   const [pastMatches, setPastMatches] = useState([]);
   const [upcomingMatches, setUpcomingMatches] = useState([]);
+  const [seminarClicked, setSeminarClicked] = useState(false);
+  const [seminarData, setSeminarData] = useState(null);
   // const token = localStorage.getItem("token");
 
 
@@ -99,6 +103,11 @@ export default function UserProfile() {
     }
   };
 
+  const handleSeminarClick = (data) => {
+    setSeminarClicked(true);
+    setSeminarData(data);
+  };
+
 
 
   useEffect(() => {
@@ -137,6 +146,90 @@ export default function UserProfile() {
 
   return (
     <>
+    <Popup isOpen={seminarClicked} onClose={() => setSeminarClicked(false)}>
+    <div className="" style={{
+    // position: 'relative',
+    backgroundColor: '#f8f9fa',
+    borderRadius: '8px',
+    overflow: 'hidden',
+    // maxWidth: '350px',
+    boxShadow: '0 4px 8px rgba(0,0,0,0.1)'
+  }}>
+    {/* Image and content layout */}
+    <div style={{ display: 'flex', flexDirection: 'column' }}>
+      {/* Image section */}
+      <div style={{ height: '210px', overflow: 'hidden' }}>
+        <img 
+          src={seminar}
+          alt="Karate practice" 
+          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+        />
+      </div>
+      
+      {/* Text content */}
+      <div 
+      style={{ 
+        padding: '15px', 
+        // backgroundColor: '#000', 
+        color: 'white',
+        textAlign: 'center'
+      }}
+      className="app-black"
+      >
+        <h3 style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '10px' }}>
+          Your next battle is near! 🏆
+        </h3>
+        <p style={{ fontSize: '14px', marginBottom: '15px' }}>
+          World Karate Championship in 3 Days
+        </p>
+        
+        {/* Support and contact button */}
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'space-between',
+          alignItems: 'center'
+        }}>
+          <span style={{ fontSize: '14px' }}>Need support?</span>
+          <button 
+            style={{ 
+              backgroundColor: '#fff', 
+              color: 'black', 
+              border: 'none', 
+              borderRadius: '4px', 
+              padding: '6px 12px',
+              fontSize: '14px',
+              cursor: 'pointer'
+            }}
+            onClick={() => {
+              // Handle opening the nested popup here
+              // You might want to set another state like setNestedPopupOpen(true)
+            }}
+          >
+            Contact
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    {/* Close button */}
+    <button 
+      style={{ 
+        position: 'absolute', 
+        top: '10px', 
+        right: '10px',
+        backgroundColor: 'transparent',
+        border: 'none',
+        color: 'white',
+        fontSize: '20px',
+        cursor: 'pointer',
+        zIndex: 10
+      }}
+      onClick={() => setSeminarClicked(false)}
+    >
+      ×
+    </button>
+  </div>
+    </Popup>
     <div
       className="wrapper-userCourseview position-relative"
       style={{ backgroundColor: "white" }}
@@ -178,6 +271,7 @@ export default function UserProfile() {
     </div>
   )}
   <h6 className="expert-name">Juijitsu Expert</h6>
+  
 </div>
 
 
@@ -203,12 +297,70 @@ export default function UserProfile() {
                 </div>
               </div>
 
-              <div className="about">
+              
+            </div>
+            
+          </div>
+          <div
+          onClick={() => navigate(`/fighterDetails/${expertId}`)}
+          style={{cursor:"pointer", width:"max-content"}} className="bg-gradient-custom-div d-flex justify-content-between py-1 px-2 mt-2 rounded-1">
+            <p>See Fighter Details</p>
+           
+          </div>
+          <div className="mt-3">
                 <h6>About me</h6>
                 <p className="para-profile">{profile?.bio}</p>
               </div>
-            </div>
-          </div>
+
+              <div className="mt-3">
+          <h6 style={{width:"max-content"}} className="mb-2 fs-5 fw-bold">Past Competitions</h6>
+          {pastMatches.length && pastMatches.length > 0 ? (
+            <ul className="list-group mt-1">
+              {pastMatches?.map((comp, index) => (
+                <li 
+                
+                key={index} 
+                className="list-group-item d-flex justify-content-between align-items-center">
+                  <div>
+                    <strong>{comp.competition_name}</strong> <br />
+                    <small className="text-muted">
+                       {formatDate1(comp.competition_date)} | {comp.location}
+                    </small>
+                  </div>
+                  <span className="badge bg-success text-white">Attended</span>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-muted">No past competitions available.</p>
+          )}
+        </div>
+
+        {/* Upcoming Competitions */}
+        <div className="mt-3">
+          <h6 style={{width:"max-content"}} className="mb-2 fs-5 fw-bold">Upcoming Competitions</h6>
+          {upcomingMatches.length && pastMatches.length > 0 ? (
+            <ul className="list-group mt-1">
+              {upcomingMatches?.map((comp, index) => (
+                <li 
+                onClick={() => handleSeminarClick(comp)}
+                key={index} 
+                className="list-group-item d-flex justify-content-between align-items-center">
+                  <div>
+                    <strong>{comp.competition_name}</strong> <br />
+                    <small className="text-muted">
+                       {formatDate1(comp.competition_date)} | {comp.location}
+                    </small>
+                  </div>
+                  <span className="badge bg-warning text-dark">Upcoming</span>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-muted">No upcoming competitions available.</p>
+          )}
+        </div>
+          
         </div>
         <div className="bottom-userCourseview ">
           <h3>My courses</h3>
