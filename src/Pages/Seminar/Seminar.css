@@ -1,0 +1,290 @@
+/* Seminar.css */
+
+.seminar-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+/* Hero Section Styles */
+.hero-section {
+  padding: 80px 0;
+  color: white;
+  overflow: hidden;
+}
+
+.hero-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+.hero-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.hero-placeholder {
+  width: 100%;
+  height: 100%;
+  background-color: #2C3E50;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.z-index-1 {
+  z-index: 1;
+}
+
+.hero-content {
+  padding: 30px 0;
+}
+
+/* Expert Profile Styles */
+.expert-profile-container {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 4px solid white;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Mobile Expert Profile */
+.expert-profile-container-mobile {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 4px solid white;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  margin-bottom: 1rem;
+}
+
+.expert-profile-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.expert-profile-placeholder {
+  width: 100%;
+  height: 100%;
+  color: white;
+}
+
+.expert-initial {
+  font-size: 80px;
+  font-weight: bold;
+}
+
+/* Form Section Styles */
+.form-section {
+  background-color: #f8f9fa;
+  flex: 1;
+  padding: 3rem 0;
+}
+
+.card {
+  border: none;
+  border-radius: 10px;
+  transition: transform 0.3s ease;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+}
+
+.card-title {
+  color: #333;
+  font-weight: 600;
+  font-size: 1.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.seminar-form {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.form-label {
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
+.form-control, .form-select {
+  padding: 0.75rem;
+  border-radius: 5px;
+  border: 1px solid #ced4da;
+  transition: all 0.2s ease;
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: #dc3545;
+  box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
+}
+
+/* Larger touch targets for mobile */
+.form-control-lg, .form-select-lg {
+  font-size: 1rem;
+  min-height: 48px; /* Minimum touch target size */
+}
+
+.btn-danger {
+  background-color: #dc3545;
+  border-color: #dc3545;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.btn-danger:hover {
+  background-color: #c82333;
+  border-color: #bd2130;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
+}
+
+.btn-danger:active {
+  transform: translateY(0);
+}
+
+.btn-lg {
+  min-height: 48px;
+}
+
+/* Desktop Specific Styles */
+@media (min-width: 992px) {
+  .form-section {
+    padding: 4rem 0;
+  }
+  
+  .card-body {
+    padding: 3rem 4rem;
+  }
+  
+  .form-control-lg, .form-select-lg {
+    font-size: 1.1rem;
+  }
+  
+  .form-label {
+    font-size: 1.1rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .btn-lg {
+    font-size: 1.1rem;
+    padding: 0.75rem 1.5rem;
+  }
+  
+  .row.g-3 {
+    row-gap: 1.5rem !important;
+  }
+  
+  textarea.form-control-lg {
+    min-height: 120px;
+  }
+  
+  .seminar-form .col-12 {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 991.98px) {
+  .card-body {
+    padding: 2rem 2.5rem;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .hero-section {
+    padding: 50px 0;
+  }
+  
+  .hero-content {
+    padding: 20px 0;
+    text-align: center;
+  }
+  
+  .display-5 {
+    font-size: 2.5rem;
+  }
+  
+  .display-6 {
+    font-size: 2rem;
+  }
+  
+  .lead {
+    font-size: 1rem;
+  }
+  
+  .card-body {
+    padding: 1.5rem;
+  }
+  
+  .expert-initial {
+    font-size: 60px;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .hero-section {
+    padding: 30px 0;
+  }
+  
+  .display-5 {
+    font-size: 2rem;
+  }
+  
+  .display-6 {
+    font-size: 1.5rem;
+  }
+  
+  .h4 {
+    font-size: 1.25rem;
+  }
+  
+  .expert-profile-container-mobile {
+    width: 120px;
+    height: 120px;
+  }
+  
+  .expert-initial {
+    font-size: 50px;
+  }
+  
+  .form-section {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+  
+  .card {
+    border-radius: 8px;
+  }
+  
+  .card-body {
+    padding: 1.25rem;
+  }
+  
+  .form-label {
+    font-size: 0.9rem;
+  }
+} 

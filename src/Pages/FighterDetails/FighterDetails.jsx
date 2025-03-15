@@ -36,7 +36,8 @@ const FighterDetails = () => {
         
         if (profileData.status === "success" && historyData.status === "success") {
           setFighter(profileData.data.expert);
-          setFightHistory(historyData.data);
+          setFightHistory(historyData);
+          console.log(historyData);
         } else {
           throw new Error("Failed to fetch data");
         }
@@ -86,134 +87,184 @@ const FighterDetails = () => {
 
       {/* Profile Image */}
       <div className="w-100 d-flex justify-content-center">
-        <img src={fighter.profile_picture} alt={fighter.name} style={{ objectFit: "cover", width: "30rem"}} />
+        <img 
+          src={fighter.profile_picture} 
+          alt={fighter.name} 
+          // className="img-fluid" 
+          style={{ 
+            objectFit: "cover", 
+            maxWidth: "100%", 
+            maxHeight: "400px",
+            width: "auto"
+          }} 
+          
+        />
       </div>
 
       {/* Stats Section */}
       <div className="container-fluid bg-dark text-white p-4">
-  <div className="row">
-    {/* Left Side - Personal Info */}
-    <div className="col-md-6">
-      <div className="d-flex align-items-center mb-3">
-        <span className="fw-bold me-4">AGE</span>
-        <span>{fighter.age} <span className="text-danger">/</span> Aug 27,1998</span>
-      </div>
-      
-      <div className="d-flex align-items-center mb-3">
-        <span className="fw-bold me-4">HEIGHT</span>
-        <span>{fighter.height}</span>
-      </div>
-      
-      <hr className="my-4" />
-      
-      <div className="mb-3">
-        <div className="fw-bold fs-4 mb-2">Associations</div>
-        <div className="text-danger">{fighter.company_name}</div>
-      </div>
-      
-      <div className="mb-3">
-        <div className="fw-bold fs-4 mb-2">Class</div>
-        <div className="text-danger">{fighter.fighter_class}</div>
-      </div>
-    </div>
-    
-    {/* Right Side - Stats */}
-    <div className="col-md-6">
-      <div className="row mb-4 justify-content-end">
-        {/* Wins */}
-        <div className="col-4">
-        <div className="d-flex align-items-center mb-2 mt-3">
-  <span className="bg-success text-white px-3 py-1 position-relative">Wins</span>
-  <span className="text-success px-3 py-1 fw-bold position-relative" style={{ 
-      boxShadow: 'inset 0 0 0 2px #198754', 
-      // borderRadius: '0 5px 5px 0' 
-    }}>{fighter.wins}</span>
-</div>
-
-
-          
-          <div className="mb-2">
-            <div className="d-flex align-items-center mb-1">
-              <span className="bg-danger text-white px-2 py-1 me-2">1</span>
-              <span>KO / KTO</span>
-              <span className="ms-auto">{fighter.kto_percentage}%</span>
+        <div className="row">
+          {/* Left Side - Personal Info */}
+          <div className="col-md-6 mb-4 mb-md-0">
+            <div className="d-flex align-items-center mb-3">
+              <span className="fw-bold me-4">AGE</span>
+              <span>{fighter.age} <span className="text-danger">/</span> Aug 27,1998</span>
             </div>
-            <div className="progress mb-2" style={{ height: "8px" }}>
-              <div className="progress-bar bg-danger" role="progressbar" style={{ width: "80%" }}></div>
+            
+            <div className="d-flex align-items-center mb-3">
+              <span className="fw-bold me-4">HEIGHT</span>
+              <span>{fighter.height}</span>
+            </div>
+            
+            <hr className="my-4" />
+            
+            <div className="mb-3">
+              <div className="fw-bold fs-4 mb-2">Associations</div>
+              <div className="text-danger">{fighter.company_name}</div>
+            </div>
+            
+            <div className="mb-3">
+              <div className="fw-bold fs-4 mb-2">Class</div>
+              <div className="text-danger">{fighter.fighter_class}</div>
             </div>
           </div>
           
-          <div className="mb-2">
-            <div className="d-flex align-items-center mb-1">
-              <span className="bg-danger text-white px-2 py-1 me-2">2</span>
-              <span>Submission</span>
-              <span className="ms-auto">{fighter.submission_percentage}%</span>
-            </div>
-            <div className="progress mb-2" style={{ height: "8px" }}>
-              <div className="progress-bar bg-danger" role="progressbar" style={{ width: "60%" }}></div>
-            </div>
-          </div>
-          
-          <div className="mb-2">
-            <div className="d-flex align-items-center mb-1">
-              <span className="bg-danger text-white px-2 py-1 me-2">3</span>
-              <span>Decisions</span>
-              <span className="ms-auto">50%</span>
-            </div>
-            <div className="progress mb-2" style={{ height: "8px" }}>
-              <div className="progress-bar bg-danger" role="progressbar" style={{ width: "50%" }}></div>
+          {/* Right Side - Stats */}
+          <div className="col-md-6">
+            <div className="row mb-4">
+              {/* Overall Record - Mobile Only */}
+              <div className="col-12 d-md-none mb-4">
+                <div className="d-flex justify-content-between align-items-center">
+                  <div className="text-center">
+                    <div className="bg-success text-white px-3 py-1">Wins</div>
+                    <div className="text-success fw-bold fs-4">{fightHistory.statistics.win.count}</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="bg-danger text-white px-3 py-1">Losses</div>
+                    <div className="text-danger fw-bold fs-4">{fightHistory.statistics.lose.count}</div>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Wins */}
+              <div className="col-sm-6 col-md-6 col-lg-5 mb-4">
+                <div className="d-none d-md-flex align-items-center mb-2 mt-3">
+                  <span className="bg-success text-white px-3 py-1 position-relative">Wins</span>
+                  <span className="text-success px-3 py-1 fw-bold position-relative" style={{ 
+                      boxShadow: 'inset 0 0 0 2px #198754'
+                    }}>{fightHistory.statistics.win.count}</span>
+                </div>
+                
+                <div className="mb-2">
+                  <div className="d-flex align-items-center mb-1">
+                    <span className="bg-danger text-white px-2 py-1 me-2">1</span>
+                    <span>KO / KTO</span>
+                    <span className="ms-auto">{fightHistory.statistics.win.ko_percentage || 0}%</span>
+                  </div>
+                  <div className="progress mb-2" style={{ height: "10px", backgroundColor: "#e9ecef" }}>
+                    <div className="progress-bar bg-danger" role="progressbar" 
+                         style={{ width: `${fightHistory.statistics.win.ko_percentage || 0}%` }} 
+                         aria-valuenow={fightHistory.statistics.win.ko_percentage || 0} 
+                         aria-valuemin="0" 
+                         aria-valuemax="100">
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="mb-2">
+                  <div className="d-flex align-items-center mb-1">
+                    <span className="bg-danger text-white px-2 py-1 me-2">2</span>
+                    <span>Submission</span>
+                    <span className="ms-auto">{fightHistory.statistics.win.submission_percentage || 0}%</span>
+                  </div>
+                  <div className="progress mb-2" style={{ height: "10px", backgroundColor: "#e9ecef" }}>
+                    <div className="progress-bar bg-danger" role="progressbar" 
+                         style={{ width: `${fightHistory.statistics.win.submission_percentage || 0}%` }} 
+                         aria-valuenow={fightHistory.statistics.win.submission_percentage || 0} 
+                         aria-valuemin="0" 
+                         aria-valuemax="100">
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="mb-2">
+                  <div className="d-flex align-items-center mb-1">
+                    <span className="bg-danger text-white px-2 py-1 me-2">3</span>
+                    <span>Decisions</span>
+                    <span className="ms-auto">{fightHistory.statistics.win.decision_percentage || 0}%</span>
+                  </div>
+                  <div className="progress mb-2" style={{ height: "10px", backgroundColor: "#e9ecef" }}>
+                    <div className="progress-bar bg-danger" role="progressbar" 
+                         style={{ width: `${fightHistory.statistics.win.decision_percentage || 0}%` }} 
+                         aria-valuenow={fightHistory.statistics.win.decision_percentage || 0} 
+                         aria-valuemin="0" 
+                         aria-valuemax="100">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Losses */}
+              <div className="col-sm-6 col-md-6 col-lg-5 mb-4">
+                <div className="d-none d-md-flex align-items-center mb-2 mt-3">
+                  <span className="bg-danger text-white px-3 py-1 position-relative">Losses</span>
+                  <span className="text-danger px-3 py-1 fw-bold position-relative" style={{ 
+                      boxShadow: 'inset 0 0 0 2px #dc3545'
+                    }}>{fightHistory.statistics.lose.count}</span>
+                </div>
+                
+                <div className="mb-2">
+                  <div className="d-flex align-items-center mb-1">
+                    <span className="bg-danger text-white px-2 py-1 me-2">1</span>
+                    <span>KO / KTO</span>
+                    <span className="ms-auto">{fightHistory.statistics.lose.ko_percentage || 0}%</span>
+                  </div>
+                  <div className="progress mb-2" style={{ height: "10px", backgroundColor: "#e9ecef" }}>
+                    <div className="progress-bar bg-danger" role="progressbar" 
+                         style={{ width: `${fightHistory.statistics.lose.ko_percentage || 0}%` }} 
+                         aria-valuenow={fightHistory.statistics.lose.ko_percentage || 0} 
+                         aria-valuemin="0" 
+                         aria-valuemax="100">
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="mb-2">
+                  <div className="d-flex align-items-center mb-1">
+                    <span className="bg-danger text-white px-2 py-1 me-2">2</span>
+                    <span>Submission</span>
+                    <span className="ms-auto">{fightHistory.statistics.lose.submission_percentage || 0}%</span>
+                  </div>
+                  <div className="progress mb-2" style={{ height: "10px", backgroundColor: "#e9ecef" }}>
+                    <div className="progress-bar bg-danger" role="progressbar" 
+                         style={{ width: `${fightHistory.statistics.lose.submission_percentage || 0}%` }} 
+                         aria-valuenow={fightHistory.statistics.lose.submission_percentage || 0} 
+                         aria-valuemin="0" 
+                         aria-valuemax="100">
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="mb-2">
+                  <div className="d-flex align-items-center mb-1">
+                    <span className="bg-danger text-white px-2 py-1 me-2">3</span>
+                    <span>Decisions</span>
+                    <span className="ms-auto">{fightHistory.statistics.lose.decision_percentage || 0}%</span>
+                  </div>
+                  <div className="progress mb-2" style={{ height: "10px", backgroundColor: "#e9ecef" }}>
+                    <div className="progress-bar bg-danger" role="progressbar" 
+                         style={{ width: `${fightHistory.statistics.lose.decision_percentage || 0}%` }} 
+                         aria-valuenow={fightHistory.statistics.lose.decision_percentage || 0} 
+                         aria-valuemin="0" 
+                         aria-valuemax="100">
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-        
-        {/* Losses */}
-        <div className="col-4">
-        <div className="d-flex align-items-center mb-2 mt-3">
-  <span className="bg-danger text-white px-3 py-1 position-relative">Losses</span>
-  <span className="text-danger px-3 py-1 fw-bold position-relative" style={{ 
-      boxShadow: 'inset 0 0 0 2px #dc3545', 
-      // borderRadius: '0 5px 5px 0' 
-    }}>{fighter.losses}</span>
-</div>
-
-          
-          <div className="mb-2">
-            <div className="d-flex align-items-center mb-1">
-              <span className="bg-danger text-white px-2 py-1 me-2">1</span>
-              <span>KO / KTO</span>
-              <span className="ms-auto">{fighter.kto_percentage}%</span>
-            </div>
-            <div className="progress mb-2" style={{ height: "8px" }}>
-              <div className="progress-bar bg-danger" role="progressbar" style={{ width: "55%" }}></div>
-            </div>
-          </div>
-          
-          <div className="mb-2">
-            <div className="d-flex align-items-center mb-1">
-              <span className="bg-danger text-white px-2 py-1 me-2">2</span>
-              <span>Submission</span>
-              <span className="ms-auto">{fighter.submission_percentage}%</span>
-            </div>
-            <div className="progress mb-2" style={{ height: "8px" }}>
-              <div className="progress-bar bg-danger" role="progressbar" style={{ width: "60%" }}></div>
-            </div>
-          </div>
-          
-          <div className="mb-2">
-            <div className="d-flex align-items-center mb-1">
-              <span className="bg-danger text-white px-2 py-1 me-2">3</span>
-              <span>Decisions</span>
-              <span className="ms-auto">50%</span>
-            </div>
-            <div className="progress mb-2" style={{ height: "8px" }}>
-              <div className="progress-bar bg-danger" role="progressbar" style={{ width: "50%" }}></div>
-            </div>
-          </div>
-        </div>
       </div>
-    </div>
-  </div>
-</div>
 
       {/* Fight History Section */}
       <div className="fight-history mt-3">
@@ -221,51 +272,91 @@ const FighterDetails = () => {
           <h5 className="mb-0">Fight History - Pro</h5>
         </div>
 
-        <div className="table-responsive">
-          <table className="table table-bordered">
-            <thead className="bg-dark text-white">
-              <tr>
-                <th>Result</th>
-                <th>Fighter</th>
-                <th>Event</th>
-                <th>Method/Referee</th>
-                <th>R</th>
-                <th>Time</th>
-              </tr>
-            </thead>
-            <tbody>
-              {fightHistory.map((fight) => (
-                <tr key={fight.id} className={fight.result === "win" ? "table-success" : "table-danger"}>
-                  <td className={`fw-bold ${fight.result === "win" ? "text-success" : "text-danger"}`}>
-                    {fight.result.charAt(0).toUpperCase() + fight.result.slice(1)}
-                  </td>
-                  <td>{fight.fighter_name}</td>
-                  <td>{fight.event_name}
-
-                  <div className="text-center mt-2">
-                  <a 
-  href={fight.fight_video_link.startsWith("http") ? fight.fight_video_link : `https://${fight.fight_video_link}`} 
-  target="_blank" 
-  rel="noopener noreferrer" 
-  className="btn btn-warning"
->
-  View Play-by-Play
-</a>
-          </div>
-                  </td>
-                  <td>
-                    <div className="fw-bold">{fight.method_referee.split(" ")[0]}</div>
-                    <div className="small text-muted">{fight.method_referee.substring(fight.method_referee.indexOf(" ") + 1)}</div>
-                  </td>
-                  <td>{fight.rounds}</td>
-                  <td>{fight.time.substring(0, 5)}</td>
+        {/* Desktop Table - Hidden on small screens */}
+        <div className="d-none d-md-block">
+          <div className="table-responsive">
+            <table className="table table-bordered">
+              <thead className="bg-dark text-white">
+                <tr>
+                  <th>Result</th>
+                  <th>Fighter</th>
+                  <th>Event</th>
+                  <th>Method/Referee</th>
+                  <th>R</th>
+                  <th>Time</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {fightHistory.data.map((fight) => (
+                  <tr key={fight.id} className={fight.result === "win" ? "table-success" : "table-danger"}>
+                    <td className={`fw-bold ${fight.result === "win" ? "text-success" : "text-danger"}`}>
+                      {fight.result.charAt(0).toUpperCase() + fight.result.slice(1)}
+                    </td>
+                    <td>{fight.fighter_name}</td>
+                    <td>{fight.event_name}
+                      <div className="text-center mt-2">
+                        <a 
+                          href={fight.fight_video_link.startsWith("http") ? fight.fight_video_link : `https://${fight.fight_video_link}`} 
+                          target="_blank" 
+                          rel="noopener noreferrer" 
+                          className="btn btn-warning"
+                        >
+                          View Play-by-Play
+                        </a>
+                      </div>
+                    </td>
+                    <td>
+                      <div className="fw-bold">{fight.method_referee.split(" ")[0]}</div>
+                      <div className="small text-muted">{fight.method_referee.substring(fight.method_referee.indexOf(" ") + 1)}</div>
+                    </td>
+                    <td>{fight.rounds}</td>
+                    <td>{fight.time.substring(0, 5)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
 
-       
+        {/* Mobile Fight Cards - Visible only on small screens */}
+        <div className="d-md-none mb-5">
+          {fightHistory.data.map((fight) => (
+            <div key={fight.id} className={`card w-100 mb-2 ${fight.result === "win" ? "border-success" : "border-danger"}`}>
+              <div className={`card-header ${fight.result === "win" ? "bg-success" : "bg-danger"} text-white d-flex justify-content-between`}>
+                <span className="fw-bold">{fight.result.charAt(0).toUpperCase() + fight.result.slice(1)}</span>
+                <span>Round {fight.rounds} / {fight.time.substring(0, 5)}</span>
+              </div>
+              <div className="card-body border rounded-bottom">
+                <h5 className="card-title">{fight.fighter_name}</h5>
+                <h6 className="card-subtitle mb-2 text-muted">{fight.event_name}</h6>
+                
+                <div className="d-flex justify-content-between align-items-center mb-2">
+                  <div>
+                    <strong>Method:</strong> {fight.method_referee.split(" ")[0]}
+                  </div>
+                  <div className="small text-muted">
+                    {fight.method_referee.indexOf(" ") > -1 
+                      ? fight.method_referee.substring(fight.method_referee.indexOf(" ") + 1) 
+                      : ""}
+                  </div>
+                </div>
+                
+                {fight.fight_video_link && (
+                  <div className="text-center mt-2">
+                    <a 
+                      href={fight.fight_video_link.startsWith("http") ? fight.fight_video_link : `https://${fight.fight_video_link}`} 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="btn btn-warning btn-sm w-100"
+                    >
+                      View Play-by-Play
+                    </a>
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

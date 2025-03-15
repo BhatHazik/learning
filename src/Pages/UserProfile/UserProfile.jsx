@@ -146,90 +146,7 @@ export default function UserProfile() {
 
   return (
     <>
-    <Popup isOpen={seminarClicked} onClose={() => setSeminarClicked(false)}>
-    <div className="" style={{
-    // position: 'relative',
-    backgroundColor: '#f8f9fa',
-    borderRadius: '8px',
-    overflow: 'hidden',
-    // maxWidth: '350px',
-    boxShadow: '0 4px 8px rgba(0,0,0,0.1)'
-  }}>
-    {/* Image and content layout */}
-    <div style={{ display: 'flex', flexDirection: 'column' }}>
-      {/* Image section */}
-      <div style={{ height: '210px', overflow: 'hidden' }}>
-        <img 
-          src={seminar}
-          alt="Karate practice" 
-          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-        />
-      </div>
-      
-      {/* Text content */}
-      <div 
-      style={{ 
-        padding: '15px', 
-        // backgroundColor: '#000', 
-        color: 'white',
-        textAlign: 'center'
-      }}
-      className="app-black"
-      >
-        <h3 style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '10px' }}>
-          Your next battle is near! 🏆
-        </h3>
-        <p style={{ fontSize: '14px', marginBottom: '15px' }}>
-          World Karate Championship in 3 Days
-        </p>
-        
-        {/* Support and contact button */}
-        <div style={{ 
-          display: 'flex', 
-          justifyContent: 'space-between',
-          alignItems: 'center'
-        }}>
-          <span style={{ fontSize: '14px' }}>Need support?</span>
-          <button 
-            style={{ 
-              backgroundColor: '#fff', 
-              color: 'black', 
-              border: 'none', 
-              borderRadius: '4px', 
-              padding: '6px 12px',
-              fontSize: '14px',
-              cursor: 'pointer'
-            }}
-            onClick={() => {
-              // Handle opening the nested popup here
-              // You might want to set another state like setNestedPopupOpen(true)
-            }}
-          >
-            Contact
-          </button>
-        </div>
-      </div>
-    </div>
     
-    {/* Close button */}
-    <button 
-      style={{ 
-        position: 'absolute', 
-        top: '10px', 
-        right: '10px',
-        backgroundColor: 'transparent',
-        border: 'none',
-        color: 'white',
-        fontSize: '20px',
-        cursor: 'pointer',
-        zIndex: 10
-      }}
-      onClick={() => setSeminarClicked(false)}
-    >
-      ×
-    </button>
-  </div>
-    </Popup>
     <div
       className="wrapper-userCourseview position-relative"
       style={{ backgroundColor: "white" }}
@@ -301,11 +218,21 @@ export default function UserProfile() {
             </div>
             
           </div>
+
+          <div className="d-flex justify-content-start gap-2">
           <div
           onClick={() => navigate(`/fighterDetails/${expertId}`)}
           style={{cursor:"pointer", width:"max-content"}} className="bg-gradient-custom-div d-flex justify-content-between py-1 px-2 mt-2 rounded-1">
             <p>See Fighter Details</p>
            
+                </div>
+
+              <div
+          onClick={() => navigate(`/seminar/${expertId}`)}
+          style={{cursor:"pointer", width:"max-content"}} className="bg-gradient-custom-div d-flex justify-content-between py-1 px-2 mt-2 rounded-1">
+                  <p>Seminar</p>
+           
+              </div>
           </div>
           <div className="mt-3">
                 <h6>About me</h6>
@@ -327,7 +254,13 @@ export default function UserProfile() {
                        {formatDate1(comp.competition_date)} | {comp.location}
                     </small>
                   </div>
-                  <span className="badge bg-success text-white">Attended</span>
+                  {comp.match_link ? (
+                    <a href={comp.match_link} target="_blank" rel="noopener noreferrer">
+                      <span className="badge bg-success text-white py-2">View Match</span>
+                    </a>
+                  ) : (
+                    <span className="badge bg-success text-white py-2">No Match Link</span>
+                  )}
                 </li>
               ))}
             </ul>
@@ -352,7 +285,11 @@ export default function UserProfile() {
                        {formatDate1(comp.competition_date)} | {comp.location}
                     </small>
                   </div>
-                  <span className="badge bg-warning text-dark">Upcoming</span>
+                  {comp.match_link && (
+                    <a href={comp.match_link} target="_blank" rel="noopener noreferrer">
+                      <span className="badge bg-warning text-dark py-2">View Match</span>
+                    </a>
+                  )}
                 </li>
               ))}
             </ul>
@@ -503,17 +440,27 @@ export default function UserProfile() {
           </div>
         )}
 
+        <div className="d-flex justify-content-start gap-2">
+          <div className="mt-3" style={{cursor:"pointer", width:"max-content"}} onClick={() => navigate(`/fighterDetails/${expertId}`)}>
+            <p className="app-black p-1 app-text-white border-0 rounded-1 px-2 ">Fighter Details</p>
+          </div>
+
+          <div className="mt-3" style={{cursor:"pointer", width:"max-content"}} onClick={() => navigate(`/seminar/${expertId}`)}>
+            <p className="app-black p-1 app-text-white border-0 rounded-1 px-2">Seminar</p>
+          </div>
+        </div>
+
         {/* About Section */}
         {profile?.bio && (
-          <div className="mt-3">
-            <h6>About Me</h6>
+          <div className="mt-2 ">
+            <h6 className=" fs-6 fw-bold">About Me</h6>
             <p className="text-muted">{profile.bio}</p>
           </div>
         )}
 
         {/* Past Competitions */}
         <div className="mt-3">
-          <h6 style={{width:"max-content"}} className="app-black p-1 app-text-white border-0 rounded-1 px-2 mb-2">Past Competitions</h6>
+          <h6 style={{width:"max-content"}} className="mb-2 fs-6 fw-bold">Past Competitions</h6>
           {pastMatches.length && pastMatches.length > 0 ? (
             <ul className="list-group mt-1">
               {pastMatches?.map((comp, index) => (
@@ -524,7 +471,13 @@ export default function UserProfile() {
                        {formatDate1(comp.competition_date)} | {comp.location}
                     </small>
                   </div>
-                  <span className="badge bg-success text-white">Attended</span>
+                  {comp.match_link ? (
+                    <a href={comp.match_link} target="_blank" rel="noopener noreferrer">
+                      <span className="badge bg-success text-white">View Match</span>
+                    </a>
+                  ) : (
+                    <span className="badge bg-success text-white">Attended</span>
+                  )}
                 </li>
               ))}
             </ul>
@@ -535,18 +488,24 @@ export default function UserProfile() {
 
         {/* Upcoming Competitions */}
         <div className="mt-3">
-          <h6 style={{width:"max-content"}} className="app-black p-1 app-text-white border-0 rounded-1 px-2 mb-2">Upcoming Competitions</h6>
+          <h6 style={{width:"max-content"}} className="mb-2 fs-6 fw-bold">Upcoming Competitions</h6>
           {upcomingMatches.length && pastMatches.length > 0 ? (
-            <ul className="list-group mt-1">
+            <ul  className="list-group mt-1">
               {upcomingMatches?.map((comp, index) => (
-                <li key={index} className="list-group-item d-flex justify-content-between align-items-center">
+                <li onClick={() => handleSeminarClick(comp)} key={index} className="cursor-pointer list-group-item d-flex justify-content-between align-items-center">
                   <div>
                     <strong>{comp.competition_name}</strong> <br />
                     <small className="text-muted">
                        {formatDate1(comp.competition_date)} | {comp.location}
                     </small>
                   </div>
-                  <span className="badge bg-warning text-dark">Upcoming</span>
+                  {comp.match_link ? (
+                    <a href={comp.match_link} target="_blank" rel="noopener noreferrer">
+                      <span className="badge bg-warning text-dark">View Match</span>
+                    </a>
+                  ) : (
+                    <span className="badge bg-warning text-dark">Upcoming</span>
+                  )}
                 </li>
               ))}
             </ul>
@@ -554,7 +513,7 @@ export default function UserProfile() {
             <p className="text-muted">No upcoming competitions available.</p>
           )}
         </div>
-        <h6 style={{width:"max-content"}} className="app-black p-1 app-text-white border-0 rounded-1 px-2 mt-3 mb-0">More Courses by {profile?.name}</h6>
+        <h6 style={{width:"max-content"}} className="mt-3 mb-0 fs-6 ms-2 fw-bold">More Courses by {profile?.name}</h6>
         {
           courseData?.map((course, index) =>
             <div
@@ -689,6 +648,90 @@ export default function UserProfile() {
         
       </div>
     </div>
+    <Popup isOpen={seminarClicked} onClose={() => setSeminarClicked(false)}>
+    <div className="" style={{
+    // position: 'relative',
+    backgroundColor: '#f8f9fa',
+    borderRadius: '8px',
+    overflow: 'hidden',
+    // maxWidth: '350px',
+    boxShadow: '0 4px 8px rgba(0,0,0,0.1)'
+  }}>
+    {/* Image and content layout */}
+    <div style={{ display: 'flex', flexDirection: 'column' }}>
+      {/* Image section */}
+      <div style={{ height: '210px', overflow: 'hidden' }}>
+        <img 
+          src={seminar}
+          alt="Karate practice" 
+          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+        />
+      </div>
+      
+      {/* Text content */}
+      <div 
+      style={{ 
+        padding: '15px', 
+        // backgroundColor: '#000', 
+        color: 'white',
+        textAlign: 'center'
+      }}
+      className="app-black"
+      >
+        <h3 style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '10px' }}>
+          Your next battle is near! 🏆
+        </h3>
+        <p style={{ fontSize: '14px', marginBottom: '15px' }}>
+          World Karate Championship in 3 Days
+        </p>
+        
+        {/* Support and contact button */}
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'space-between',
+          alignItems: 'center'
+        }}>
+          <span style={{ fontSize: '14px' }}>Need support?</span>
+          <button 
+            style={{ 
+              backgroundColor: '#fff', 
+              color: 'black', 
+              border: 'none', 
+              borderRadius: '4px', 
+              padding: '6px 12px',
+              fontSize: '14px',
+              cursor: 'pointer'
+            }}
+            onClick={() => {
+              // Handle opening the nested popup here
+              // You might want to set another state like setNestedPopupOpen(true)
+            }}
+          >
+            Contact
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    {/* Close button */}
+    <button 
+      style={{ 
+        position: 'absolute', 
+        top: '10px', 
+        right: '10px',
+        backgroundColor: 'transparent',
+        border: 'none',
+        color: 'white',
+        fontSize: '20px',
+        cursor: 'pointer',
+        zIndex: 10
+      }}
+      onClick={() => setSeminarClicked(false)}
+    >
+      ×
+    </button>
+  </div>
+    </Popup>
     </>
   );
 }

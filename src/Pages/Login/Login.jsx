@@ -61,7 +61,7 @@ export default function Login() {
         }
       } catch (error) {
         console.error("Failed to parse response", error);
-        toast.error("Failed to process login response.");
+        // toast.error("Failed to process login response.");
       }
     }
   }, [location, navigate]);

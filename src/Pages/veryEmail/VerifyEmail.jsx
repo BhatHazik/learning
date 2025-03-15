@@ -12,7 +12,7 @@ export const VerifyEmail = () => {
         {/* Left Side - Image & Text (Hidden on ≤ 768px) */}
         <div className="col-lg-6 d-none d-md-block text-center p-4">
           <img src={learnImg} alt="Image" className="img-fluid w-100 rounded" />
-          <div className="verify-text mt-4">
+          <div className=" app-text-black mt-4">
             <h3 className="expertise mb-0">Share Your Expertise.</h3>
             <h3 className="expertise mb-3">Inspire Athletes. Transform Lives.</h3>
             <p className="w-75 mx-auto">

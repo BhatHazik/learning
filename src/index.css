@@ -157,9 +157,15 @@ padding-left: 5%;
 .desktop-view{
   display: flex;
 }
+.mobile-PurchasedCourse{
+  display: none;
+}
 
 
 @media (max-width: 768px) {
+  .mobile-PurchasedCourse{
+    display: block;
+  }
   .w-md-50 {
     width: 100%;
   }
