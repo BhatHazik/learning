@@ -61,6 +61,9 @@ const UserPurchasedCourse = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [showButton, setShowButton] = useState(false);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [completedLessons, setCompletedLessons] = useState({});
+  const [videoProgress, setVideoProgress] = useState({});
+  const [currentVideoRef, setCurrentVideoRef] = useState(null);
   const descriptionRef = useRef(null);
  
 
@@ -172,7 +175,7 @@ const UserPurchasedCourse = () => {
   });
 
   const courseData = useMemo(() => data?.data || [], [data]);
-  console.log(courseData)
+  // console.log(courseData)
 
   useEffect(() => {
       if (descriptionRef.current) {
@@ -335,20 +338,77 @@ const UserPurchasedCourse = () => {
     }
 };
 
-  const checkedLesson = async ({ chapter_id, lesson_id }) => {
-    const checkResponse = await axios({
-      method: "PATCH",
-      url: `${BASE_URI}/api/v1/lessons/markLessonAsRead`,
-      headers: {
-        Authorization: "Bearer " + token,
-      },
-      data: {
-        course_id: id,
-        lesson_id: lesson_id,
-      },
-    });
+  const handleVideoProgress = (progress, duration) => {
+    if (!selectedLesson) return;
+    
+    // Calculate percentage watched
+    const percentageWatched = (progress / duration) * 100;
+    
+    // Update progress state
+    setVideoProgress(prev => ({
+      ...prev,
+      [selectedLesson]: percentageWatched
+    }));
+    
+    // If video is watched more than 90%, mark as completed
+    if (percentageWatched >= 90 && !completedLessons[selectedLesson]) {
+      checkedLesson(selectedLesson);
+    }
+  };
 
-    // window.location.reload();
+  const handleVideoEnd = () => {
+    if (selectedLesson && !completedLessons[selectedLesson]) {
+      checkedLesson(selectedLesson);
+    }
+  };
+
+  const setVideoRef = (ref) => {
+    setCurrentVideoRef(ref);
+  };
+
+  const checkedLesson = async (lesson_id) => {
+    if (!lesson_id || !id || !token) {
+      console.error("Missing required data for marking lesson as read");
+      return;
+    }
+    // console.log(lesson_id)
+
+    // Don't make API call if lesson is already marked as completed
+    if (completedLessons[lesson_id]) {
+      return;
+    }
+
+    try {
+      const response = await axios({
+        method: "PATCH",
+        url: `${BASE_URI}/api/v1/lessons/markLessonAsRead`,
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+        data: {
+          course_id: id,
+          lesson_id: lesson_id,
+        },
+      });
+
+      if (response.data.status === "success") {
+        // Update local state to reflect completed lesson
+        setCompletedLessons(prev => ({
+          ...prev,
+          [lesson_id]: true
+        }));
+        
+        console.log(`Lesson ${lesson_id} marked as completed`);
+        
+        // Optionally refetch data to get updated completion percentage
+        if (response.data.data?.completion_percentage) {
+          refetch();
+        }
+      }
+    } catch (error) {
+      console.error("Error marking lesson as read:", error);
+      // toast.error("Failed to update lesson progress");
+    }
   };
 
   const updateRating = async () => {
@@ -808,15 +868,13 @@ const UserPurchasedCourse = () => {
           </div>
           <div className="mid-userCourseview">
             <div className="right-mid-userCourseview p-3">
-              {/* <VideoPlayer
-                videoUrl={video_url}
-                videoType={viseo_type}
-                className="tumbnail-userCourseview"
-              /> */}
               <VideoPlayer
                 videoUrl={video_url}
                 videoType={viseo_type}
                 className="tumbnail-userCourseview"
+                onProgress={handleVideoProgress}
+                onEnded={handleVideoEnd}
+                setVideoRef={setVideoRef}
               />
 
 <div className="left-bottom-mid-userCourseview second-leftuserCourse">
@@ -1084,6 +1142,9 @@ const UserPurchasedCourse = () => {
                 videoUrl={video_url}
                 videoType={viseo_type}
                 className="w-100 rounded-3"
+                onProgress={handleVideoProgress}
+                onEnded={handleVideoEnd}
+                setVideoRef={setVideoRef}
               />
         
         <div style={{marginBottom:"65px"}} className="app-white mx-2 p-2 px-2 rounded-3 d-flex flex-column gap-2">

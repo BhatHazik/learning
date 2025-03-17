@@ -74,7 +74,7 @@ const Support = () => {
 
   const { data,refetch } = useFetch(chatListUrl, fetchOptions);
   const chatList = useMemo(() => data?.data || [], [data]);
-  console.log(chatList);
+  // console.log(chatList);
 
 const handleOpenChat = (receiverId, receiverEmail, image, name) => {
   setselectedImage(image);
@@ -84,7 +84,7 @@ const handleOpenChat = (receiverId, receiverEmail, image, name) => {
   setSelectedChat(receiverId);
   setIsChatOpen(true);
 
-  console.log(receiverId, receiverEmail, image, name)
+  // console.log(receiverId, receiverEmail, image, name)
   axios
     .get(`${BASE_URI}/api/v1/chat/supportChat/${receiverId}`, fetchOptions)
     .then((resp) => {

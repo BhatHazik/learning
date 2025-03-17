@@ -39,7 +39,7 @@ const UserManagement = () => {
       });
     
       setExperts(response.data?.data?.experts || []);
-      console.log(response.data?.data?.experts);
+      // console.log(response.data?.data?.experts);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -57,7 +57,7 @@ const UserManagement = () => {
           },
         });
         setExperts(response.data?.data?.experts || []);
-        console.log(response.data?.data?.experts);
+        // console.log(response.data?.data?.experts);
       } catch (err) {
         setError(err?.response?.data?.message);
       } finally {

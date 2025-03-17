@@ -206,7 +206,7 @@ const MyLearning = () => {
   });
 
   const coursesData = useMemo(() => data?.data || [], [data]);
-  console.log(coursesData);
+  // console.log(coursesData);
 
 
   useEffect(() => {

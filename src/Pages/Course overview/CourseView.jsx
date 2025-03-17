@@ -98,7 +98,7 @@ const userType = localStorage.getItem("userType");
   });
 
   const ratings = useMemo(() => ratingsdata?.data || [], [ratingsdata]);
-  console.log(ratings);
+  // console.log(ratings);
 
   const url = `${BASE_URI}/api/v1/courses/courseOverview/${id}`;
 
@@ -110,7 +110,7 @@ const userType = localStorage.getItem("userType");
   //  setData(data.data[0]);
  
   const Chapters = useMemo(() => data?.data?.chapters || [], [data]);
- console.log(Chapters)
+//  console.log(Chapters)
   const url2 = `${BASE_URI}/api/v1/courses/${id}`;
   // const token2 = localStorage.getItem("token");
   const {
@@ -126,7 +126,7 @@ const userType = localStorage.getItem("userType");
  
 
   const courseData = useMemo(() => data2?.data || [], [data2]);
-console.log(courseData[0])
+// console.log(courseData[0])
   useEffect(() => {
     setVideo_url(Chapters[0]?.lessons[0]?.video_url);
     setVideo_type(Chapters[0]?.lessons[0]?.video_type);

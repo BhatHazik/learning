@@ -231,7 +231,7 @@ const UserCourses = ({ search }) => {
     const fetchedCategories = data2?.data || [];
     return [{ subcategory_name: "All", subcategory_id: "all" }, ...fetchedCategories];
   }, [data2]);
-  console.log(categories);
+  // console.log(categories);
 
 
   useEffect(() => {
@@ -243,7 +243,7 @@ const UserCourses = ({ search }) => {
 
 
 
-  console.log(categories);
+  // console.log(categories);
 
 
 
@@ -274,7 +274,7 @@ const UserCourses = ({ search }) => {
   });
 
   const coursesData = useMemo(() => data?.data || [], [data]);
-  console.log(coursesData);
+  // console.log(coursesData);
 
   const handleNavigate = (id, status) => {
     if (!status) {

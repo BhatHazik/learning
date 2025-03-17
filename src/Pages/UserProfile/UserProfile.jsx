@@ -39,8 +39,10 @@ export default function UserProfile() {
   const [loading , setLoading] = useState(false);
   const [pastMatches, setPastMatches] = useState([]);
   const [upcomingMatches, setUpcomingMatches] = useState([]);
-  const [seminarClicked, setSeminarClicked] = useState(false);
-  const [seminarData, setSeminarData] = useState(null);
+  // const [seminarClicked, setSeminarClicked] = useState(false);
+  // const [seminarData, setSeminarData] = useState(null);
+  const role = localStorage.getItem("userType");
+  // console.log(role)
   // const token = localStorage.getItem("token");
 
 
@@ -54,7 +56,7 @@ export default function UserProfile() {
         );
         setProfile(response?.data?.data.expert); // Set profile data
         setCourse(response?.data?.data?.courses || []);
-        console.log(response?.data?.data);
+        // console.log(response?.data?.data);
       } catch (err) {
         console.error("Error fetching profile data:", err);
       }
@@ -79,7 +81,7 @@ export default function UserProfile() {
         }
       );
       setPastMatches(response?.data?.data); // Set past matches data
-      console.log(response?.data?.data)
+      // console.log(response?.data?.data)
     } catch (err) {
       console.error("Error fetching past matches data:", err);
     }
@@ -97,16 +99,16 @@ export default function UserProfile() {
         }
       );
       setUpcomingMatches(response?.data?.data); // Set past matches data
-      console.log(response?.data?.data);
+      // console.log(response?.data?.data);
     } catch (err) {
       console.error("Error fetching past matches data:", err);
     }
   };
 
-  const handleSeminarClick = (data) => {
-    setSeminarClicked(true);
-    setSeminarData(data);
-  };
+  // const handleSeminarClick = (data) => {
+  //   setSeminarClicked(true);
+  //   setSeminarData(data);
+  // };
 
 
 
@@ -228,9 +230,9 @@ export default function UserProfile() {
                 </div>
 
               <div
-          onClick={() => navigate(`/seminar/${expertId}`)}
+          onClick={() => navigate(role === "expert" ? `/bookings` : `/seminar/${expertId}`)}
           style={{cursor:"pointer", width:"max-content"}} className="bg-gradient-custom-div d-flex justify-content-between py-1 px-2 mt-2 rounded-1">
-                  <p>Seminar</p>
+                  <p>{role === "expert" ? "Bookings" : "Seminar"}</p>
            
               </div>
           </div>
@@ -276,7 +278,7 @@ export default function UserProfile() {
             <ul className="list-group mt-1">
               {upcomingMatches?.map((comp, index) => (
                 <li 
-                onClick={() => handleSeminarClick(comp)}
+                // onClick={() => handleSeminarClick(comp)}
                 key={index} 
                 className="list-group-item d-flex justify-content-between align-items-center">
                   <div>
@@ -445,8 +447,8 @@ export default function UserProfile() {
             <p className="app-black p-1 app-text-white border-0 rounded-1 px-2 ">Fighter Details</p>
           </div>
 
-          <div className="mt-3" style={{cursor:"pointer", width:"max-content"}} onClick={() => navigate(`/seminar/${expertId}`)}>
-            <p className="app-black p-1 app-text-white border-0 rounded-1 px-2">Seminar</p>
+          <div className="mt-3" style={{cursor:"pointer", width:"max-content"}} onClick={() => navigate(role === "expert" ? `/bookings` : `/seminar/${expertId}`)}>
+            <p className="app-black p-1 app-text-white border-0 rounded-1 px-2">{role === "expert" ? "Bookings" : "Seminar"}</p>
           </div>
         </div>
 
@@ -648,18 +650,16 @@ export default function UserProfile() {
         
       </div>
     </div>
-    <Popup isOpen={seminarClicked} onClose={() => setSeminarClicked(false)}>
+
+    {/* <Popup isOpen={seminarClicked} onClose={() => setSeminarClicked(false)}>
     <div className="" style={{
-    // position: 'relative',
     backgroundColor: '#f8f9fa',
     borderRadius: '8px',
     overflow: 'hidden',
-    // maxWidth: '350px',
     boxShadow: '0 4px 8px rgba(0,0,0,0.1)'
   }}>
-    {/* Image and content layout */}
     <div style={{ display: 'flex', flexDirection: 'column' }}>
-      {/* Image section */}
+
       <div style={{ height: '210px', overflow: 'hidden' }}>
         <img 
           src={seminar}
@@ -668,11 +668,10 @@ export default function UserProfile() {
         />
       </div>
       
-      {/* Text content */}
       <div 
       style={{ 
         padding: '15px', 
-        // backgroundColor: '#000', 
+   
         color: 'white',
         textAlign: 'center'
       }}
@@ -684,8 +683,7 @@ export default function UserProfile() {
         <p style={{ fontSize: '14px', marginBottom: '15px' }}>
           World Karate Championship in 3 Days
         </p>
-        
-        {/* Support and contact button */}
+     
         <div style={{ 
           display: 'flex', 
           justifyContent: 'space-between',
@@ -703,8 +701,7 @@ export default function UserProfile() {
               cursor: 'pointer'
             }}
             onClick={() => {
-              // Handle opening the nested popup here
-              // You might want to set another state like setNestedPopupOpen(true)
+   
             }}
           >
             Contact
@@ -713,7 +710,6 @@ export default function UserProfile() {
       </div>
     </div>
     
-    {/* Close button */}
     <button 
       style={{ 
         position: 'absolute', 
@@ -731,7 +727,7 @@ export default function UserProfile() {
       ×
     </button>
   </div>
-    </Popup>
+    </Popup> */}
     </>
   );
 }

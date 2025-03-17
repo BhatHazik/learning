@@ -122,7 +122,7 @@ function AdminDashboard() {
       completed: adminData?.data?.data?.total_users?.certified_users,
       incomplete: adminData?.data?.data?.total_users?.uncertified_users,
     });
-    console.log(adminData?.data?.data?.total_users?.certified_users)
+    // console.log(adminData?.data?.data?.total_users?.certified_users)
     // console.log(adminData?.data?.data?.total_users)
 
     const colors = ["#82CA9D", "#00AEEF", "#88929D", "#A4A7AD"];
@@ -149,7 +149,7 @@ function AdminDashboard() {
     
   
     if (type === "week") {
-      console.log(adminGraphData?.data?.data?.Enrolled)
+      // console.log(adminGraphData?.data?.data?.Enrolled)
       // Handling weekly data
       setEnrollments([
         { day: "Mon", value: adminGraphData?.data?.data?.Enrolled[0]?.daily_enrolled },
@@ -483,11 +483,18 @@ const revenueData = {
       {/* Header Section */}
       <div className="row mb-3">
         <div className="col-12 w-100 app-white py-2">
-          <h3 className="text-capitalize fs-5 d-flex gap-2">
-            Good Morning
-            <h6 className="app-text-white app-black p-1 px-2 rounded-1" style={{ width: "max-content" }}>
-              {user?.name}
-            </h6>
+        <h3 className="text-capitalize fs-5 d-flex gap-2">
+            {(() => {
+              const hour = new Date().getHours();
+              if (hour >= 5 && hour < 12) return "Good Morning";
+              else if (hour >= 12 && hour < 17) return "Good Afternoon";
+              else if (hour >= 17 && hour < 22) return "Good Evening";
+              else return "Good Night";
+            })()}
+            <h6 className="align-self-center fs-5 fw-bold" style={{ width: "max-content" }}>
+  {JSON.parse(localStorage.getItem('user'))?.name || "Guest"}
+</h6>
+
           </h3>
         </div>
       </div>

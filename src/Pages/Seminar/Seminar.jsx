@@ -35,9 +35,9 @@ const Seminar = () => {
           `${BASE_URI}/api/v1/expert/profile/${id}`
         );
         setProfile(response?.data?.data.expert);
-        console.log(response?.data?.data);
+        // console.log(response?.data?.data);
       } catch (err) {
-        console.error("Error fetching profile data:", err);
+        // console.error("Error fetching profile data:", err);
         toast.error("Failed to load expert profile");
       } finally {
         setLoading(false);
@@ -109,7 +109,7 @@ const Seminar = () => {
         throw new Error(response.data.message || "Failed to submit request");
       }
     } catch (error) {
-      console.error("Error submitting seminar request:", error);
+    //   console.error("Error submitting seminar request:", error);
       toast.error(error.response?.data?.message || "Failed to submit seminar request");
     } finally {
       setFormSubmitting(false);

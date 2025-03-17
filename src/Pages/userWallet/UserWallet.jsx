@@ -232,7 +232,7 @@ export default function UserWallet() {
 
   const { data } = useFetch(historyUrl, fetchOptions);
   const orders = useMemo(() => data?.data?.orders || [], [data]);
-console.log(orders)
+// console.log(orders)
   // if (loading) {
   //   return (
   //     <div className="w-100">
@@ -468,7 +468,7 @@ console.log(orders)
         sessionId: session.data.session.id,
       });
     } catch (e) {
-      console.log(e?.response);
+      // console.log(e?.response);
       // toast.error(e?.response?.data?.message);
     }
   };
@@ -485,7 +485,7 @@ console.log(orders)
         }
       );
       setWithdrawalHistory(response?.data?.data?.coins);
-      console.log(response?.data?.data?.coins);
+      // console.log(response?.data?.data?.coins);
     } catch (err) {
       // toast.error(err?.response?.data?.message);
     }

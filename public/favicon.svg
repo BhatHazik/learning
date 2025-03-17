@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <style>
+    .background {
+      fill: #F90815;
+    }
+    
+    .letter {
+      fill: white;
+      font-family: newFont, sans-serif;
+      font-weight: 700;
+      font-size: 40px;
+      text-anchor: middle;
+      dominant-baseline: central;
+    }
+    
+    @font-face {
+      font-family: newFont;
+      src: url('../src/assets/quick-starter/Quick Starter.otf');
+    }
+  </style>
+  
+  <circle class="background" cx="32" cy="32" r="30" />
+  <text class="letter new-logo" x="32" y="34">J</text>
+</svg> 

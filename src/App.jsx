@@ -32,6 +32,7 @@ const App = () => {
   //   },
   // });
 
+
   useEffect(() => {
     socketConnect(token)
   //   axios({
@@ -55,7 +56,7 @@ const App = () => {
       },
     })
     .then((res) => {
-      console.log(res)
+      // console.log(res)
       dispatch(payoutActions.setNotifications(res?.data?.data?.length));
     }).catch((err)=>{
       console.log(err.response.data.message)

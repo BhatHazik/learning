@@ -25,8 +25,8 @@ const Categories = ({search}) => {
     try{
     setLoading(true);
     const categories = await axios.get(`${BASE_URI}/api/v1/category/?search=${search}`);
-    console.log(`${BASE_URI}/api/v1/category/?search=${search}`)
-    console.log(categories.data.data);
+    // console.log(`${BASE_URI}/api/v1/category/?search=${search}`)
+    // console.log(categories.data.data);
     setCategories(categories.data.data);
     }catch(error){
       setCategories([]);

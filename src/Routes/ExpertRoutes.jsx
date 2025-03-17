@@ -12,6 +12,7 @@ import NotFound from "../Pages/NotFound/NotFound";
 import Messages from "../Pages/UserModule/Messages/Messages";
 import CourseEdit from "../Pages/CourseEdit/CourseEdit";
 // import AddExpert from "../Pages/AddExpert/AddExpert";
+import Bookings from "../Pages/Bookings/Bookings";
 
 const ExpertRoutes = ({ search }) => {
   const [editCourse, setEditCourse] = useState(false);
@@ -64,6 +65,7 @@ const ExpertRoutes = ({ search }) => {
       {/* <Route path="/AddExperts" element={<AddExpert />} /> */}
       <Route path="/dashboard" element={<ExpertAnalytics />} />
       <Route path="/settings" element={<Settings />} />
+      <Route path="/bookings" element={<Bookings />} />
       <Route path="/logout" element={<Logout />} />
       <Route path="*" element={<NotFound />} />
     </Routes>

@@ -47,7 +47,7 @@ const CourseDropdown = ({
 
   // Updated: Do not close dropdown on option click.
   const handleOptionClick = (option) => {
-    console.log(option.video_url)
+    // console.log(option.video_url)
     setSelected(option);
     onSelect({ courseTitle: course.chapterTitle, ...option });
 

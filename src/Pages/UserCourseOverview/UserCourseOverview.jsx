@@ -181,7 +181,7 @@ const UserCourseOverview = () => {
   });
 
   const courseData = useMemo(() => data?.data || [], [data]);
-  console.log(courseData);
+  // console.log(courseData);
 
   useEffect(() => {
     if (descriptionRef.current) {

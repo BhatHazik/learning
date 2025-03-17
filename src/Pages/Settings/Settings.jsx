@@ -137,7 +137,7 @@ export default function Settings() {
 
   // Add handler for fighter history data changes
   const handleFighterHistoryChange = (e) => {
-    console.log(e.target.value)
+    // console.log(e.target.value)
     setFighterHistoryData({
       ...fighterHistoryData,
       [e.target.name]: e.target.value
@@ -267,13 +267,13 @@ export default function Settings() {
         setEditingMatchId(null);
       } else {
         // Add new upcoming match
-        const response = await axios.post(
-          `${BASE_URI}/api/v1/expert/addUpcomingMatch`,
-          pastUpcomingMatchData,
-          fetchOptions
-        );
-        
-        toast.success(response.data.message);
+      const response = await axios.post(
+        `${BASE_URI}/api/v1/expert/addUpcomingMatch`,
+        pastUpcomingMatchData,
+        fetchOptions
+      );
+      
+      toast.success(response.data.message);
         // Refresh the list of upcoming matches
         fetchUpcomingMatches();
       }
@@ -327,13 +327,13 @@ export default function Settings() {
         setEditingMatchId(null);
       } else {
         // Add new past match
-        const response = await axios.post(
-          `${BASE_URI}/api/v1/expert/addPastMatch`,
-          pastMatchData,
-          fetchOptions
-        );
-        
-        toast.success(response.data.message);
+      const response = await axios.post(
+        `${BASE_URI}/api/v1/expert/addPastMatch`,
+        pastMatchData,
+        fetchOptions
+      );
+      
+      toast.success(response.data.message);
         // Refresh the list of past matches
         fetchPastMatches();
       }
@@ -644,7 +644,7 @@ export default function Settings() {
     if (editingSub) {
       // Update existing subcategory
       try {
-        console.log(`${BASE_URI}/api/v1/category/${editingSub.subcategory_id}/subcategories`);
+        // console.log(`${BASE_URI}/api/v1/category/${editingSub.subcategory_id}/subcategories`);
         await axios.patch(`${BASE_URI}/api/v1/category/${editingSub.subcategory_id}/subcategories`, {
           name: newSubName,
         },
@@ -747,14 +747,14 @@ export default function Settings() {
   };
    // Open the subcategory popup and fetch subcategories via API
    const openSubPopup = async (category) => {
-    console.log(category);
+    // console.log(category);
     setActiveCategory(category);
     try {
       const response = await axios.get(
         `${BASE_URI}/api/v1/category/${category.category_id}/subcategories`
       );
       setSubcategories(response.data.data);
-      console.log(response.data.data)
+      // console.log(response.data.data)
       setIsSubPopupVisible(true);
     } catch (error) {
       setIsSubPopupVisible(true);
@@ -832,7 +832,7 @@ export default function Settings() {
       });
 
       setCategories(response.data.data);
-      console.log(response.data.data);
+      // console.log(response.data.data);
     } catch (err) {
       console.error("Error fetching categories:", err);
       // setError("Failed to load categories"); // Set error state
@@ -978,7 +978,7 @@ export default function Settings() {
       }
     } catch (error) {
       console.error("Error fetching past matches:", error);
-      toast.error("Failed to load past matches");
+      // toast.error("Failed to load past matches");
     }
   };
 
@@ -994,7 +994,7 @@ export default function Settings() {
       }
     } catch (error) {
       console.error("Error fetching upcoming matches:", error);
-      toast.error("Failed to load upcoming matches");
+      // toast.error("Failed to load upcoming matches");
     }
   };
 
@@ -1379,68 +1379,68 @@ export default function Settings() {
 
                 {matchesActiveTab === "past" ? (
                   <>
-                    <div className="w-100 d-flex justify-content-start">
-                      <h4
-                        style={{ width: "max-content" }}
+                <div className="w-100 d-flex justify-content-start">
+                  <h4
+                    style={{ width: "max-content" }}
                         className={`rounded-2 justify-content-center mb-2 align-self-center align-items-center fs-4 fw-bold`}
-                      >
+                  >
                         Add Past Competition
-                      </h4>
-                    </div>
-                    <label htmlFor="dob" className="form-label fs-6 fw-medium">
-                      Competition Name 
-                    </label>
-                    <input
-                      type="text"
-                      name="competition_name"
-                      value={pastMatchData.competition_name}
-                      className="form-control py-3"
-                      id="fullName"
-                      placeholder="Black Belt Asia"
-                      onChange={handlePastMatchChange}
-                    />
-                    <label htmlFor="dob" className="form-label mt-2 fs-6 fw-medium">
-                      Match Date
-                    </label>
-                    <input
-                      name="competition_date"
-                      type="date"
-                      value={pastMatchData.competition_date}
-                      className="form-control py-3"
-                      id="fullName"
-                      placeholder="Black Belt Asia"
-                      onChange={handlePastMatchChange}
+                  </h4>
+                </div>
+                <label htmlFor="dob" className="form-label fs-6 fw-medium">
+                Competition Name 
+                </label>
+                <input
+                  type="text"
+                  name="competition_name"
+                  value={pastMatchData.competition_name}
+                  className="form-control py-3"
+                  id="fullName"
+                  placeholder="Black Belt Asia"
+                  onChange={handlePastMatchChange}
+                />
+                <label htmlFor="dob" className="form-label mt-2 fs-6 fw-medium">
+                  Match Date
+                </label>
+                <input
+                name="competition_date"
+                  type="date"
+                  value={pastMatchData.competition_date}
+                  className="form-control py-3"
+                  id="fullName"
+                  placeholder="Black Belt Asia"
+                  onChange={handlePastMatchChange}
                       max={new Date().toISOString().split('T')[0]} // Set max date to today
-                    />
-                    <label htmlFor="dob" className="form-label mt-2 fs-6 fw-medium">
-                      Achievements
-                    </label>
-                    <select 
-                      value={pastMatchData.acheavements}
-                      onChange={handlePastMatchChange}
-                      name="acheavements"
-                      id="acheavements"
-                      className="form-control py-3"
-                    >
-                      <option value="Champion">🏆 Champion</option>
-                      <option value="Runner-up">🥈 Runner-up</option>
-                      <option value="Third Place">🥉 Third Place</option>
-                      <option value="Fourth Place">🥈 Fourth Place</option>
-                      <option value="Fifth Place">🥉 Fifth Place</option>
-                    </select>
-                    
-                    <label htmlFor="dob" className="form-label mt-2 fs-6 fw-medium">
-                      Location
-                    </label>
-                    <input
-                      name="location"
-                      onChange={handlePastMatchChange}
-                      value={pastMatchData.location}
-                      type="text"
-                      className="form-control py-3 d-flex align-items-center"
-                      id="fullName"
-                      placeholder="US"
-                    />
+                />
+                <label htmlFor="dob" className="form-label mt-2 fs-6 fw-medium">
+                Achievements
+                </label>
+                <select 
+                value={pastMatchData.acheavements}
+                onChange={handlePastMatchChange}
+                name="acheavements"
+                id="acheavements"
+                className="form-control py-3"
+                >
+                <option value="Champion">🏆 Champion</option>
+                  <option value="Runner-up">🥈 Runner-up</option>
+                  <option value="Third Place">🥉 Third Place</option>
+                  <option value="Fourth Place">🥈 Fourth Place</option>
+                  <option value="Fifth Place">🥉 Fifth Place</option>
+                </select>
+               
+                <label htmlFor="dob" className="form-label mt-2 fs-6 fw-medium">
+                Location
+                </label>
+                <input
+                name="location"
+                onChange={handlePastMatchChange}
+                  value={pastMatchData.location}
+                  type="text"
+                  className="form-control py-3 d-flex align-items-center"
+                  id="fullName"
+                  placeholder="US"
+                />
                     <label htmlFor="match_link" className="form-label mt-2 fs-6 fw-medium">
                       Match Link
                     </label>
@@ -1454,14 +1454,14 @@ export default function Settings() {
                       placeholder="https://example.com/match-video"
                     />
                     <div className="d-flex mt-3">
-                      <div
-                        style={{ width: "max-content", cursor: "pointer" }}
+                <div
+                  style={{ width: "max-content", cursor: "pointer" }}
                         className="signup-now app-text-white mt-2 rounded-2 px-3 py-1 fs-6 fw-bold me-2"
-                        onClick={handleMatchPost}
-                      >
+                  onClick={handleMatchPost}
+                >
                         {isEditingMatch ? "Update" : "Add"}
-                      </div>
-                      
+                </div>
+
                       {isEditingMatch && (
                         <div
                           style={{ width: "max-content", cursor: "pointer" , height: "fit-content"}}
@@ -1550,50 +1550,50 @@ export default function Settings() {
                 ) : (
                   <>
                     <div className="w-100 d-flex justify-content-start">
-                      <h4
-                        style={{ width: "max-content" }}
+                  <h4
+                    style={{ width: "max-content" }}
                         className={`rounded-2 justify-content-center mb-2 align-self-center align-items-center fs-4 fw-bold`}
-                      >
+                  >
                         Add Upcoming Competition
-                      </h4>
-                    </div>
-                    <label htmlFor="dob" className="form-label fs-6 fw-medium">
-                      Competition Name 
-                    </label>
-                    <input
-                      type="text"
-                      name="competition_name"
-                      value={pastUpcomingMatchData.competition_name}
-                      className="form-control py-3"
-                      id="fullName"
-                      placeholder="Black Belt Asia"
-                      onChange={handlePastUpcomingMatchChange}
-                    />
-                    <label htmlFor="dob" className="form-label mt-2 fs-6 fw-medium">
-                      Match Date
-                    </label>
-                    <input
-                      name="competition_date"
-                      type="date"
-                      value={pastUpcomingMatchData.competition_date}
-                      className="form-control py-3"
-                      id="fullName"
-                      placeholder="Black Belt Asia"
-                      onChange={handlePastUpcomingMatchChange}
+                  </h4>
+                </div>
+                <label htmlFor="dob" className="form-label fs-6 fw-medium">
+                Competition Name 
+                </label>
+                <input
+                  type="text"
+                  name="competition_name"
+                  value={pastUpcomingMatchData.competition_name}
+                  className="form-control py-3"
+                  id="fullName"
+                  placeholder="Black Belt Asia"
+                  onChange={handlePastUpcomingMatchChange}
+                />
+                <label htmlFor="dob" className="form-label mt-2 fs-6 fw-medium">
+                  Match Date
+                </label>
+                <input
+                name="competition_date"
+                  type="date"
+                  value={pastUpcomingMatchData.competition_date}
+                  className="form-control py-3"
+                  id="fullName"
+                  placeholder="Black Belt Asia"
+                  onChange={handlePastUpcomingMatchChange}
                       min={new Date().toISOString().split('T')[0]} // Set min date to today
-                    />
-                    <label htmlFor="dob" className="form-label mt-2 fs-6 fw-medium">
-                      Location
-                    </label>
-                    <input
-                      name="location"
-                      onChange={handlePastUpcomingMatchChange}
-                      value={pastUpcomingMatchData.location}
-                      type="text"
-                      className="form-control py-3 d-flex align-items-center"
-                      id="fullName"
-                      placeholder="US"
-                    />
+                />
+                <label htmlFor="dob" className="form-label mt-2 fs-6 fw-medium">
+                Location
+                </label>
+                <input
+                name="location"
+                onChange={handlePastUpcomingMatchChange}
+                  value={pastUpcomingMatchData.location}
+                  type="text"
+                  className="form-control py-3 d-flex align-items-center"
+                  id="fullName"
+                  placeholder="US"
+                />
                     <label htmlFor="match_link" className="form-label mt-2 fs-6 fw-medium">
                       Match Link
                     </label>
@@ -1608,14 +1608,14 @@ export default function Settings() {
                     />
 
                     <div className="d-flex mt-3">
-                      <div
-                        style={{ width: "max-content", cursor: "pointer" }}
+                <div
+                  style={{ width: "max-content", cursor: "pointer" }}
                         className="signup-now app-text-white mt-2 rounded-2 px-3 py-1 fs-6 fw-bold me-2"
-                        onClick={handleUpcomingMatchPost}
-                      >
+                  onClick={handleUpcomingMatchPost}
+                >
                         {isEditingMatch ? "Update" : "Add"}
-                      </div>
-                      
+                </div>
+
                       {isEditingMatch && (
                         <div
                           style={{ width: "max-content", cursor: "pointer" , height: "fit-content"}}
@@ -1701,8 +1701,8 @@ export default function Settings() {
                     </div>
                   </>
                 )}
-              </div>
-            )}
+            </div>
+          )}
             {activeTab === "editProfile" && (
               <div className="tab-pane active" style={{ minHeight: "25rem" }}>
                 {role === "admin" || role === "user" ? (
@@ -4060,7 +4060,7 @@ export default function Settings() {
         </>
       )}
           {mobileActiveTab === "matchHistory" && (
-            <div className="mb-2 app-white justify-content-center border border-1 p-2 rounded-2">
+              <div className="mb-2 app-white justify-content-center border border-1 p-2 rounded-2">
               <div className="d-flex mb-2">
                 <div 
                   className={`me-2 py-1 px-2 rounded-2 ${matchesActiveTab === "past" ? "app-black app-text-white" : "border"}`}
@@ -4081,60 +4081,60 @@ export default function Settings() {
               {matchesActiveTab === "past" ? (
                 <>
                   
-                  <label htmlFor="dob" className="form-label fs-6 fw-medium">
-                    Competition Name 
-                  </label>
-                  <input
-                    type="text"
-                    name="competition_name"
-                    value={pastMatchData.competition_name}
-                    className="form-control"
-                    id="fullName"
-                    placeholder="Black Belt Asia"
-                    onChange={handlePastMatchChange}
+                <label htmlFor="dob" className="form-label fs-6 fw-medium">
+                Competition Name 
+                </label>
+                <input
+                  type="text"
+                  name="competition_name"
+                  value={pastMatchData.competition_name}
+                  className="form-control"
+                  id="fullName"
+                  placeholder="Black Belt Asia"
+                  onChange={handlePastMatchChange}
                     max={new Date().toISOString().split('T')[0]} // Set max date to today
-                  />
-                  <label htmlFor="dob" className="form-label mt-2 fs-6 fw-medium">
-                    Match Date
-                  </label>
-                  <input
-                    name="competition_date"
-                    type="date"
-                    value={pastMatchData.competition_date}
-                    className="form-control"
-                    id="fullName"
-                    placeholder="Black Belt Asia"
-                    onChange={handlePastMatchChange}
+                />
+                <label htmlFor="dob" className="form-label mt-2 fs-6 fw-medium">
+                  Match Date
+                </label>
+                <input
+                name="competition_date"
+                  type="date"
+                  value={pastMatchData.competition_date}
+                  className="form-control"
+                  id="fullName"
+                  placeholder="Black Belt Asia"
+                  onChange={handlePastMatchChange}
                     max={new Date().toISOString().split('T')[0]} // Set max date to today
-                  />
-                  <label htmlFor="dob" className="form-label mt-2 fs-6 fw-medium">
-                    Achievements
-                  </label>
-                  <select 
-                    value={pastMatchData.acheavements}
-                    onChange={handlePastMatchChange}
-                    name="acheavements"
-                    id="acheavements"
-                    className="form-control"
-                  >
-                    <option value="Champion">🏆 Champion</option>
-                    <option value="Runner-up">🥈 Runner-up</option>
-                    <option value="Third Place">🥉 Third Place</option>
-                    <option value="Fourth Place">🥈 Fourth Place</option>
-                    <option value="Fifth Place">🥉 Fifth Place</option>
-                  </select>
-                  <label htmlFor="dob" className="form-label mt-2 fs-6 fw-medium">
-                    Location
-                  </label>
-                  <input
-                    name="location"
-                    onChange={handlePastMatchChange}
-                    value={pastMatchData.location}
-                    type="text"
-                    className="form-control d-flex align-items-center"
-                    id="fullName"
-                    placeholder="US"
-                  />
+                />
+                <label htmlFor="dob" className="form-label mt-2 fs-6 fw-medium">
+                Achievements
+                </label>
+                <select 
+                value={pastMatchData.acheavements}
+                onChange={handlePastMatchChange}
+                name="acheavements"
+                id="acheavements"
+                className="form-control"
+                >
+                <option value="Champion">🏆 Champion</option>
+                  <option value="Runner-up">🥈 Runner-up</option>
+                  <option value="Third Place">🥉 Third Place</option>
+                  <option value="Fourth Place">🥈 Fourth Place</option>
+                  <option value="Fifth Place">🥉 Fifth Place</option>
+                </select>
+                <label htmlFor="dob" className="form-label mt-2 fs-6 fw-medium">
+                Location
+                </label>
+                <input
+                name="location"
+                onChange={handlePastMatchChange}
+                  value={pastMatchData.location}
+                  type="text"
+                  className="form-control d-flex align-items-center"
+                  id="fullName"
+                  placeholder="US"
+                />
                   <label htmlFor="match_link" className="form-label mt-2 fs-6 fw-medium">
                     Match Link
                   </label>
@@ -4148,14 +4148,14 @@ export default function Settings() {
                     placeholder="https://example.com/match-video"
                   />
                   <div className="d-flex mt-3">
-                    <div
-                      style={{ width: "max-content", cursor: "pointer" }}
+                <div
+                  style={{ width: "max-content", cursor: "pointer" }}
                       className="app-red app-text-white mt-2 rounded-2 px-3 py-1 fs-6 fw-bold me-2"
-                      onClick={handleMatchPost}
-                    >
+                  onClick={handleMatchPost}
+                >
                       {isEditingMatch ? "Update" : "Add"}
-                    </div>
-                    
+                </div>
+
                     {isEditingMatch && (
                       <div
                         style={{ width: "max-content", cursor: "pointer" }}
@@ -4163,7 +4163,7 @@ export default function Settings() {
                         onClick={handleCancelMatchEdit}
                       >
                         Cancel
-                      </div>
+                </div>
                     )}
                   </div>
 
@@ -4232,44 +4232,44 @@ export default function Settings() {
               ) : (
                 <>
                   
-                  <label htmlFor="dob" className="form-label fs-6 fw-medium">
-                    Competition Name 
-                  </label>
-                  <input
-                    type="text"
-                    name="competition_name"
-                    value={pastUpcomingMatchData.competition_name}
-                    className="form-control"
-                    id="fullName"
-                    placeholder="Black Belt Asia"
-                    onChange={handlePastUpcomingMatchChange}
+                <label htmlFor="dob" className="form-label fs-6 fw-medium">
+                Competition Name 
+                </label>
+                <input
+                  type="text"
+                  name="competition_name"
+                  value={pastUpcomingMatchData.competition_name}
+                  className="form-control"
+                  id="fullName"
+                  placeholder="Black Belt Asia"
+                  onChange={handlePastUpcomingMatchChange}
                     min={new Date().toISOString().split('T')[0]} // Set min date to today
-                  />
-                  <label htmlFor="dob" className="form-label mt-2 fs-6 fw-medium">
-                    Match Date
-                  </label>
-                  <input
-                    name="competition_date"
-                    type="date"
-                    value={pastUpcomingMatchData.competition_date}
-                    className="form-control"
-                    id="fullName"
-                    placeholder="Black Belt Asia"
-                    onChange={handlePastUpcomingMatchChange}
+                />
+                <label htmlFor="dob" className="form-label mt-2 fs-6 fw-medium">
+                  Match Date
+                </label>
+                <input
+                name="competition_date"
+                  type="date"
+                  value={pastUpcomingMatchData.competition_date}
+                  className="form-control"
+                  id="fullName"
+                  placeholder="Black Belt Asia"
+                  onChange={handlePastUpcomingMatchChange}
                     min={new Date().toISOString().split('T')[0]} // Set min date to today
-                  />
-                  <label htmlFor="dob" className="form-label mt-2 fs-6 fw-medium">
-                    Location
-                  </label>
-                  <input
-                    name="location"
-                    onChange={handlePastUpcomingMatchChange}
-                    value={pastUpcomingMatchData.location}
-                    type="text"
-                    className="form-control d-flex align-items-center"
-                    id="fullName"
-                    placeholder="US"
-                  />
+                />
+                <label htmlFor="dob" className="form-label mt-2 fs-6 fw-medium">
+                Location
+                </label>
+                <input
+                name="location"
+                onChange={handlePastUpcomingMatchChange}
+                  value={pastUpcomingMatchData.location}
+                  type="text"
+                  className="form-control d-flex align-items-center"
+                  id="fullName"
+                  placeholder="US"
+                />
                   <label htmlFor="match_link" className="form-label mt-2 fs-6 fw-medium">
                     Match Link
                   </label>
@@ -4284,14 +4284,14 @@ export default function Settings() {
                   />
 
                   <div className="d-flex mt-3">
-                    <div
-                      style={{ width: "max-content", cursor: "pointer" }}
+                <div
+                  style={{ width: "max-content", cursor: "pointer" }}
                       className="app-red app-text-white mt-2 rounded-2 px-3 py-1 fs-6 fw-bold me-2"
-                      onClick={handleUpcomingMatchPost}
-                    >
+                  onClick={handleUpcomingMatchPost}
+                >
                       {isEditingMatch ? "Update" : "Add"}
-                    </div>
-                    
+                </div>
+
                     {isEditingMatch && (
                       <div
                         style={{ width: "max-content", cursor: "pointer" }}
@@ -4299,8 +4299,8 @@ export default function Settings() {
                         onClick={handleCancelMatchEdit}
                       >
                         Cancel
-                      </div>
-                    )}
+            </div>
+          )}
                   </div>
 
                   {/* Upcoming Matches Table */}

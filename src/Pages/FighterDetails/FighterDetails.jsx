@@ -37,7 +37,7 @@ const FighterDetails = () => {
         if (profileData.status === "success" && historyData.status === "success") {
           setFighter(profileData.data.expert);
           setFightHistory(historyData);
-          console.log(historyData);
+          // console.log(historyData);
         } else {
           throw new Error("Failed to fetch data");
         }
@@ -53,7 +53,7 @@ const FighterDetails = () => {
   }, [id, BASE_URI]);
 
   useEffect(() => {
-    console.log(fighter);
+    // console.log(fighter);
   }, [fighter]);
 
   if (loading) {

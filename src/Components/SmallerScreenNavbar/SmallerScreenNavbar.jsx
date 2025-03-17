@@ -193,7 +193,7 @@ export default function SmallerScreenNavbar({ collapsed, search, setSearch, cart
         },
       });
       
-        console.log(response.data.data[0].total_points)
+        // console.log(response.data.data[0].total_points)
         setBallance(response.data.data[0].total_points);
       
       
@@ -203,14 +203,14 @@ export default function SmallerScreenNavbar({ collapsed, search, setSearch, cart
   };
 
   const profileData = async () => {
-    console.log("hii")
+    // console.log("hii")
     try {
       const response = await axios.get(`${BASE_URI}/api/v1/users/profile`, {
         headers: {
           Authorization: "Bearer " + token,
         },
       });
-      console.log(response)
+      // console.log(response)
       setName(response.data.data[0].name);
       setProfilePicture(response.data.data[0].profile_picture);
     }
@@ -357,7 +357,7 @@ export default function SmallerScreenNavbar({ collapsed, search, setSearch, cart
    
     <nav
     style={{borderBottom:"1px solid grey"}}
-      className={`navbar app-white rounded-bottom-4 navbar-expand-lg mb-0 pt-0 pb-3 d-flex align-items-center h-100  ${(userType === "user" || !token) && "user-navbar"}  ${
+      className={`navbar  app-white rounded-bottom-4 navbar-expand-lg mb-0 pt-0 pb-3 d-flex align-items-center h-100  ${(userType === "user" || !token) && "user-navbar"}  ${
         token ? "justify-content-between" : "justify-content-center"
       } ${collapsed ? "collapsed" : ""}`}
     >
@@ -879,7 +879,7 @@ export default function SmallerScreenNavbar({ collapsed, search, setSearch, cart
                   }
                   
                   {links.map(({ href, label, Icon}) => {
-                    console.log(Icon);
+                    // console.log(Icon);
                     return(
                     <motion.div key={href} variants={navItem}>
                       <div style={{cursor:"pointer"}} onClick={()=> navigate(href)}>
@@ -954,7 +954,7 @@ export default function SmallerScreenNavbar({ collapsed, search, setSearch, cart
                   }
 
                   {!token && notLoglinks.map(({ href, label, Icon}) => {
-                    console.log(Icon);
+                    // console.log(Icon);
                     return(
                     <motion.div key={href} variants={navItem}>
                       <div style={{cursor:"pointer"}} onClick={()=> navigate(href)}>

@@ -68,7 +68,7 @@ const UserManagement = () => {
         },
       });
       setPayoutRequests(response?.data?.data || []);
-      console.log(response?.data?.data);
+      // console.log(response?.data?.data);
       // setTotalPages(Math.ceil(response?.data?.total / limit));
     } catch (err) {
       setError(err?.response?.data?.message);
@@ -106,7 +106,7 @@ const UserManagement = () => {
         },
       });
       setTransactions(response.data.data.history || []);
-      console.log(response.data.data.history);
+      // console.log(response.data.data.history);
       setTotalPages(2);
     } catch (err) {
       setError(err?.response?.data?.message);

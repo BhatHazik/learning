@@ -12,6 +12,7 @@ import NotFound from "../Pages/NotFound/NotFound";
 import UserWallet from "../Pages/userWallet/UserWallet";
 import Categories from "../Pages/CategoriesPH/Categories";
 // import UserCourses from "../Pages/UserCourses/UserCourses";
+import Seminar from "../Pages/Seminar/Seminar";
 
 const UserRoutes = () => {
   return (
@@ -29,8 +30,10 @@ const UserRoutes = () => {
         path="/userPurchasedCourses/:id"
         element={<UserPurchasedCourse />}
       />
+      <Route path="/seminar/:id" element={<Seminar />} />
       <Route path="/logout" element={<Logout />} />
       <Route path="*" element={<NotFound />} />
+      
     </Routes>
   );
 };

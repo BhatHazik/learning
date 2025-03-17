@@ -5,7 +5,7 @@ const MobileVideoPlayer = ({ videoUrl, videoType, className = "" }) => {
       );
       return videoIdMatch ? videoIdMatch[1] : url;
     };
-    console.log(className)
+    // console.log(className)
   
     let content;
   

@@ -144,7 +144,7 @@ export default function Login() {
         localStorage.setItem("user", JSON.stringify(resp.data.Data));
         localStorage.setItem("userType", resp.data.Data.user_type);
         if (resp.data.Data.user_type === "expert") {
-          console.log("mere saat gadrari huvi he!")
+         
           localStorage.setItem("hybridUser", "hybrid");
          
         }

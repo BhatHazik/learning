@@ -44,7 +44,7 @@ export default function ExpertWallet() {
         );
 
         setWalletData(response.data.data);
-        console.log(response.data.data)
+        // console.log(response.data.data)
       } catch (error) {
         console.error("Error fetching wallet data:", error);
       } finally {
@@ -907,7 +907,7 @@ export default function ExpertWallet() {
 <div className="app-white px-2 p-2 rounded-2">
   <h5
     style={{ width: "max-content" }}
-    className="fs-6 fw-regular app-text-white rounded-1 app-black p-1 px-2"
+    className="fs-5 fw-bold "
   >
     Purchase History
   </h5>

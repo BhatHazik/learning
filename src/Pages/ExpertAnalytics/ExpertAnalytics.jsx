@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from "react";
 import { BASE_URI } from "../../Config/url";
 import { LuUsers2 } from "react-icons/lu";
@@ -55,7 +54,7 @@ const Dashboard = () => {
         }
       );
       setDashboardData(response.data.data);
-      console.log(response.data.data);
+      // console.log(response.data.data);
     }
     catch(error){
       console.error("Error fetching dashboard data:", error);
@@ -495,89 +494,56 @@ const chartData = [
   parseFloat(reviewData["2_stars"] || "0"),
   parseFloat(reviewData["1_stars"] || "0")
 ];
-  // Static Ratings Chart
-  useEffect(() => {
+
+// Update this useEffect to depend on dashboardData instead of just loading
+useEffect(() => {
+  // Only proceed if we have dashboard data and the chart ref exists
+  if (dashboardData?.reviews && dashboardData.reviews[0] && ratingsChartRef.current) {
+    // Destroy any previous instance
     if (ratingsChartInstance.current) {
       ratingsChartInstance.current.destroy();
     }
     
-    if (ratingsChartRef.current) {
-      ratingsChartInstance.current = new Chart(ratingsChartRef.current, {
-        type: "doughnut",
-        data: {
-          labels: ["5 Stars", "4 Stars", "3 Stars", "2 Stars", "1 Star"],
-          datasets: [{
-            data: [
-              parseFloat(staticData?.ratings?.["5_stars"]) || 0,
-              parseFloat(staticData?.ratings?.["4_stars"]) || 0,
-              parseFloat(staticData?.ratings?.["3_stars"]) || 0,
-              parseFloat(staticData?.ratings?.["2_stars"]) || 0,
-              parseFloat(staticData?.ratings?.["1_stars"]) || 0
-            ],
-            backgroundColor: ["#000000", "#F90815", "#8B0000", "#FF4500", "#FFA500"],
-            borderWidth: 0,
-            hoverOffset: 8,
-          }],
-        },
-        options: {
-          cutout: "80%",
-          plugins: {
-            legend: {
-              position: "top",
-              labels: { color: "#666", font: { size: 12 }, usePointStyle: true }
-            }
-          }
-        }
-      });
-    }
+    // Get the review data
+    const reviewData = dashboardData.reviews[0];
     
-
-    return () => {
-      if (ratingsChartInstance.current) {
-        ratingsChartInstance.current.destroy();
-        ratingsChartInstance.current = null;
-      }
-    };
-  }, []);
-
-
-  useEffect(() => {
-    if (!loading && ratingsChartRef.current) {
-      // Destroy any previous instance
-      if (ratingsChartInstance.current) {
-        ratingsChartInstance.current.destroy();
-      }
-      ratingsChartInstance.current = new Chart(ratingsChartRef.current, {
-        type: "doughnut",
-        data: {
-          labels: ["5 Stars", "4 Stars", "3 Stars", "2 Stars", "1 Star"],
-          datasets: [{
-            data: chartData,
-            backgroundColor: ["#000000", "#F90815", "#8B0000", "#FF4500", "#FFA500"],
-            borderWidth: 0,
-            hoverOffset: 8,
-          }],
-        },
-        options: {
-          cutout: "70%",
-          plugins: {
-            legend: {
-              position: "top",
-              labels: { color: "#666", font: { size: 12 }, usePointStyle: true }
-            }
+    // Create the chart with the latest data
+    ratingsChartInstance.current = new Chart(ratingsChartRef.current, {
+      type: "doughnut",
+      data: {
+        labels: ["5 Stars", "4 Stars", "3 Stars", "2 Stars", "1 Star"],
+        datasets: [{
+          data: [
+            parseFloat(reviewData["5_stars"] || "0"),
+            parseFloat(reviewData["4_stars"] || "0"),
+            parseFloat(reviewData["3_stars"] || "0"),
+            parseFloat(reviewData["2_stars"] || "0"),
+            parseFloat(reviewData["1_stars"] || "0")
+          ],
+          backgroundColor: ["#000000", "#F90815", "#8B0000", "#FF4500", "#FFA500"],
+          borderWidth: 0,
+          hoverOffset: 8,
+        }],
+      },
+      options: {
+        cutout: "70%",
+        plugins: {
+          legend: {
+            position: "top",
+            labels: { color: "#666", font: { size: 12 }, usePointStyle: true }
           }
         }
-      });
-      
-    }
-    return () => {
-      if (ratingsChartInstance.current) {
-        ratingsChartInstance.current.destroy();
-        ratingsChartInstance.current = null;
       }
-    };
-  }, [loading]);
+    });
+  }
   
+  return () => {
+    if (ratingsChartInstance.current) {
+      ratingsChartInstance.current.destroy();
+      ratingsChartInstance.current = null;
+    }
+  };
+}, [dashboardData]); // Add dashboardData as a dependency
 
   return (
     <div className="container-fluid p-3">
@@ -603,8 +569,14 @@ const chartData = [
         <div className="row mb-3">
         <div className="col-12 w-100 app-white py-2">
           <h3 className="text-capitalize fs-5 d-flex gap-2">
-            Good Morning
-            <h6 className="app-text-white app-black p-1 px-2 rounded-1" style={{ width: "max-content" }}>
+            {(() => {
+              const hour = new Date().getHours();
+              if (hour >= 5 && hour < 12) return "Good Morning";
+              else if (hour >= 12 && hour < 17) return "Good Afternoon";
+              else if (hour >= 17 && hour < 22) return "Good Evening";
+              else return "Good Night";
+            })()}
+            <h6 className="align-self-center fs-5 fw-bold" style={{ width: "max-content" }}>
   {JSON.parse(localStorage.getItem('user'))?.name || "Guest"}
 </h6>
 

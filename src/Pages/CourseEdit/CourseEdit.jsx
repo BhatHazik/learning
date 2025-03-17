@@ -21,7 +21,7 @@ export default function CourseEdit() {
   const { courseId } = useParams();
   const isEditMode = !!courseId;
   
-  console.log("Course ID from URL:", courseId, "Edit mode:", isEditMode);
+  // console.log("Course ID from URL:", courseId, "Edit mode:", isEditMode);
   
   const [courseData, setCourseData] = useState({
     title: "",
@@ -68,7 +68,7 @@ export default function CourseEdit() {
   // Load course data when in edit mode
   useEffect(() => {
     if (isEditMode) {
-      console.log("Fetching course data for editing...");
+      // console.log("Fetching course data for editing...");
       axios
         .get(`${BASE_URI}/api/v1/courses/${courseId}`, {
           headers: {
@@ -77,7 +77,7 @@ export default function CourseEdit() {
         })
         .then((response) => {
           const courseDetails = response?.data?.data[0];
-          console.log("Fetched course details:", courseDetails);
+          // console.log("Fetched course details:", courseDetails);
           
           if (courseDetails?.tag_ids && gettags.length > 0) {
             const sortedTags = courseDetails.tag_ids
@@ -127,7 +127,7 @@ export default function CourseEdit() {
   }, [isEditMode, courseId, token, gettags]);
 
   useEffect(()=>{
-    console.log(courseData?.category_id)
+    // console.log(courseData?.category_id)
   },[courseData?.category_id])
 
   // Function to fetch tags based on search

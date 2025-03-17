@@ -107,7 +107,7 @@ const Courses = ({ search, setEditCourse, setCourseId }) => {
 
 
   const coursesData = useMemo(() => data?.data || [], [data]);
-console.log(coursesData)
+// console.log(coursesData)
   const handleCardClick = (id) => {
     navigate(`/courses/courseView/${id}`);
   };
