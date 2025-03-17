@@ -14,6 +14,8 @@ const CourseDropdown = ({
   style = {},
   isFirst = false,
   setVideoUrl,
+  handleVideoChange,
+  checkedLesson,
 }) => {
 
   const [isOpen, setIsOpen] = useState(isFirst);
@@ -42,20 +44,22 @@ const CourseDropdown = ({
 
   const toggleDropdown = () => setIsOpen((prev) => !prev);
 
-
-
-
-  // Updated: Do not close dropdown on option click.
   const handleOptionClick = (option) => {
-    // console.log(option.video_url)
     setSelected(option);
     onSelect({ courseTitle: course.chapterTitle, ...option });
 
-     // Set the video URL when a lesson is clicked
-     if (setVideoUrl && option.video_url) {
-      setVideoUrl(option.video_url); // ✅ Update videoUrl in parent component
-    }else{
-      toast.error("Unlock to watch locked videos!")
+    // Set the video URL and handle lesson checking when a lesson is clicked
+    if (option.video_url) {
+      handleVideoChange(
+        option.video_url,
+        option.thumbnail,
+        option.lesson_id
+      );
+      checkedLesson({
+        lesson_id: option.lesson_id
+      });
+    } else {
+      toast.error("Unlock to watch locked videos!");
     }
   };
 

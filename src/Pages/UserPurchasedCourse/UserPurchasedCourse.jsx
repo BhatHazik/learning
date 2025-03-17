@@ -61,9 +61,6 @@ const UserPurchasedCourse = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [showButton, setShowButton] = useState(false);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const [completedLessons, setCompletedLessons] = useState({});
-  const [videoProgress, setVideoProgress] = useState({});
-  const [currentVideoRef, setCurrentVideoRef] = useState(null);
   const descriptionRef = useRef(null);
  
 
@@ -338,77 +335,21 @@ const UserPurchasedCourse = () => {
     }
 };
 
-  const handleVideoProgress = (progress, duration) => {
-    if (!selectedLesson) return;
-    
-    // Calculate percentage watched
-    const percentageWatched = (progress / duration) * 100;
-    
-    // Update progress state
-    setVideoProgress(prev => ({
-      ...prev,
-      [selectedLesson]: percentageWatched
-    }));
-    
-    // If video is watched more than 90%, mark as completed
-    if (percentageWatched >= 90 && !completedLessons[selectedLesson]) {
-      checkedLesson(selectedLesson);
-    }
-  };
+  const checkedLesson = async ({ chapter_id, lesson_id }) => {
+    console.log(lesson_id)
+    const checkResponse = await axios({
+      method: "PATCH",
+      url: `${BASE_URI}/api/v1/lessons/markLessonAsRead`,
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+      data: {
+        course_id: id,
+        lesson_id: lesson_id,
+      },
+    });
 
-  const handleVideoEnd = () => {
-    if (selectedLesson && !completedLessons[selectedLesson]) {
-      checkedLesson(selectedLesson);
-    }
-  };
-
-  const setVideoRef = (ref) => {
-    setCurrentVideoRef(ref);
-  };
-
-  const checkedLesson = async (lesson_id) => {
-    if (!lesson_id || !id || !token) {
-      console.error("Missing required data for marking lesson as read");
-      return;
-    }
-    // console.log(lesson_id)
-
-    // Don't make API call if lesson is already marked as completed
-    if (completedLessons[lesson_id]) {
-      return;
-    }
-
-    try {
-      const response = await axios({
-        method: "PATCH",
-        url: `${BASE_URI}/api/v1/lessons/markLessonAsRead`,
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-        data: {
-          course_id: id,
-          lesson_id: lesson_id,
-        },
-      });
-
-      if (response.data.status === "success") {
-        // Update local state to reflect completed lesson
-        setCompletedLessons(prev => ({
-          ...prev,
-          [lesson_id]: true
-        }));
-        
-        console.log(`Lesson ${lesson_id} marked as completed`);
-        
-        // Optionally refetch data to get updated completion percentage
-        if (response.data.data?.completion_percentage) {
-          refetch();
-        }
-      }
-    } catch (error) {
-      console.error("Error marking lesson as read:", error);
-      // toast.error("Failed to update lesson progress");
-    }
+    // window.location.reload();
   };
 
   const updateRating = async () => {
@@ -493,63 +434,190 @@ const UserPurchasedCourse = () => {
           Authorization: "Bearer " + token,
         },
       });
-      setcertificate(response?.data?.data);
+      const certificateData = response?.data?.data;
+      setcertificate(certificateData); // Still update state for other uses
+      
+      const printWindow = window.open("", "_blank");
+    
+      if (!printWindow) {
+        alert("Pop-up blocked! Please allow pop-ups to print the certificate.");
+        return;
+      }
+    
+      // Get styles from index.css
+      const styles = Array.from(document.styleSheets)
+        .map((styleSheet) => {
+          try {
+            return Array.from(styleSheet.cssRules).map((rule) => rule.cssText).join("\n");
+          } catch (e) {
+            return "";
+          }
+        })
+        .join("\n");
+    
+      printWindow.document.write(`
+        <html>
+          <head>
+            <title>Course Certificate</title>
+            <style>${styles}</style>
+            <style>
+              .receipt-container {
+                width: 80%;
+                max-width: 450px;
+                margin: auto;
+                padding: 20px;
+                border: 2px solid #ddd;
+                border-radius: 8px;
+                background: white;
+                font-family: 'Inter', sans-serif;
+              }
+              .logo {
+                font-size: 20px;
+                font-weight: bold;
+                text-align: left;
+                display: flex;
+                flex-direction: column;
+                font-family: 'newFont', sans-serif;
+                align-items: start;
+              }
+              .logo h4 {
+                font-size: 22px;
+                color: #d32f2f;
+                margin-bottom: 0;
+              }
+              .certificate-details {
+                text-align: center;
+                margin-top: 15px;
+              }
+              .certificate-details p {
+                margin: 6px 0;
+                font-size: 16px;
+              }
+              .certificate-details strong {
+                color: #333;
+              }
+              .divider {
+                border-top: 1px solid #ddd;
+                margin: 15px 0;
+              }
+              .footer {
+                font-size: 14px;
+                color: #777;
+                margin-top: 15px;
+                text-align: center;
+              }
+              .certificate-number {
+                font-size: 14px;
+                color: #666;
+                margin-bottom: 20px;
+              }
+              .header {
+                font-size: 24px;
+                font-weight: bold;
+                margin: 20px 0;
+                color: #333;
+              }
+              .title {
+                font-size: 20px;
+                font-weight: bold;
+                margin: 15px 0;
+                color: #444;
+              }
+              .instructors {
+                font-size: 16px;
+                margin: 10px 0;
+              }
+              .description {
+                font-size: 14px;
+                line-height: 1.6;
+                margin: 15px 0;
+                text-align: justify;
+              }
+              .signature {
+                font-size: 16px;
+                margin-top: 30px;
+                text-align: right;
+              }
+              .date, .length {
+                font-size: 14px;
+                margin: 5px 0;
+                color: #666;
+              }
+              .watermark {
+                position: absolute;
+                bottom: 20px;
+                right: 20px;
+                font-size: 12px;
+                color: #ddd;
+                transform: rotate(-45deg);
+              }
+            </style>
+          </head>
+          <body>
+            <div class="receipt-container">
+              <div class="logo">
+                MY <h4>JIU JITSU</h4>
+              </div>
+    
+              <div class="divider"></div>
+    
+              <div class="certificate-number">
+                Certificate no: <strong>${certificateData?.certificate_id}</strong>
+              </div>
+              
+              <div class="header">Certificate of Completion</div>
+              
+              <div class="title">${certificateData?.title}</div>
+              
+              <div class="instructors">
+                Instructors: <strong>${certificateData?.expert_name}</strong>
+              </div>
+              
+              <div class="description">
+                This certificate above verifies that <strong>${certificateData?.user}</strong> successfully completed the course ${certificateData?.title} on 11/09/2024 as taught by <strong>${certificateData?.expert_name}</strong> on Juijitsux. The certificate indicates the entire course was completed as validated by the student. The course duration represents the total video hours of the course at time of most recent completion.
+              </div>
+              
+              <div class="signature">
+                <strong>${certificateData?.expert_name}</strong>
+              </div>
+              
+              <div class="date">
+                Date: <strong>${new Date(certificateData?.created_at).toLocaleDateString("en-GB")}</strong>
+              </div>
+              
+              <div class="length">
+                Length: <strong>
+                  ${Math.floor(certificateData?.total_duration / 3600)} hours 
+                  ${Math.floor((certificateData?.total_duration % 3600) / 60)} minutes
+                </strong>
+              </div>
+              
+              <div class="divider"></div>
+              
+              <div class="footer">
+                Thank you for completing the course! <br> 
+                For verification, please contact support.
+              </div>
+              
+              <div class="watermark">Jiujitsux</div>
+            </div>
+    
+            <script>
+              window.onload = function() {
+                window.print();
+                setTimeout(() => window.close(), 500);
+              };
+            </script>
+          </body>
+        </html>
+      `);
+    
+      printWindow.document.close();
     } catch (error) {
       toast.error(
         "Certificate cant be generated as the course is not completed yet!."
       );
-      // alert("No certificate found for the provided ID.");
     }
-    
-    const printContent = `
-    <html>
-    <head>
-   <link rel="stylesheet" type="text/css" href="/src/Pages/UserPurchasedCourse/UserPurchasedCourse.css">
-    </head>
-    <body>
-    <div class="certificate">
-      <div class="certificate-container">
-        <div>
-          <div class="certificate-number">Certificate no: <strong> ${
-            certificate.certificate_id
-          }</strong></div>
-          <div class="firstHeader" >jiujitsux</div>
-        </div>
-        <div class="header">Certificate of Completion</div>
-        <div class="title">${certificate.title}</div>
-        <div class="instructors">Instructors: <strong>${
-          certificate.expert_name
-        }</strong></div>
-        <div class="description">
-          This certificate above verifies that <strong>${
-            certificate.user
-          }</strong> successfully completed the course ${
-      certificate.title
-    } on 11/09/2024 as taught by <strong>${
-      certificate.expert_name
-    }</strong> on Juijitsux. The certificate indicates the entire course was completed as validated by the student. The course duration represents the total video hours of the course at time of most recent completion.
-        </div>
-        <div class="signature"><strong>${certificate.expert_name}</strong></div>
-        <div class="date"> Date: <strong>${new Date(
-          certificate.created_at
-        ).toLocaleDateString("en-GB")}</strong></div>
-        <div class="length">Length: <strong>
-          ${Math.floor(certificate.total_duration / 3600)} hours 
-          ${Math.floor((certificate.total_duration % 3600) / 60)} minutes
-        </strong></div>
-        <div class="watermark">Jiujitsux</div>
-      </div>
-    </div>
-    </body>
-    </html>
-  `;
-
-    const newWindow = window.open("", "_blank", "width=600,height=400");
-    newWindow.document.open();
-    newWindow.document.write(printContent);
-    newWindow.document.close();
-    newWindow.focus(); // Ensure the new window is focused before printing
-    newWindow.print();
   };
 
   const socialMediaLinks = courseData?.course?.social_media_links || "";
@@ -868,13 +936,15 @@ const UserPurchasedCourse = () => {
           </div>
           <div className="mid-userCourseview">
             <div className="right-mid-userCourseview p-3">
+              {/* <VideoPlayer
+                videoUrl={video_url}
+                videoType={viseo_type}
+                className="tumbnail-userCourseview"
+              /> */}
               <VideoPlayer
                 videoUrl={video_url}
                 videoType={viseo_type}
                 className="tumbnail-userCourseview"
-                onProgress={handleVideoProgress}
-                onEnded={handleVideoEnd}
-                setVideoRef={setVideoRef}
               />
 
 <div className="left-bottom-mid-userCourseview second-leftuserCourse">
@@ -1142,9 +1212,6 @@ const UserPurchasedCourse = () => {
                 videoUrl={video_url}
                 videoType={viseo_type}
                 className="w-100 rounded-3"
-                onProgress={handleVideoProgress}
-                onEnded={handleVideoEnd}
-                setVideoRef={setVideoRef}
               />
         
         <div style={{marginBottom:"65px"}} className="app-white mx-2 p-2 px-2 rounded-3 d-flex flex-column gap-2">
@@ -1152,8 +1219,19 @@ const UserPurchasedCourse = () => {
 
           <h3 className="fs-3 fw-medium ">Half Guard</h3>
           <div className="p-1 px-2 app-black rounded-1 d-flex justify-content-between align-items-center">
-            <h6 className="fs-6 fw-medium app-text-white d-flex gap-2">{Math.floor(courseData?.course?.completion_percentage) || 0}% <RiProgress7Line className="fs-5 fw-medium app-text-white"/></h6>
-          
+            {Math.floor(courseData?.course?.completion_percentage) === 100 ? (
+              <h6 
+                onClick={() => handlePrint(courseData?.course?.id)}
+                className="fs-6 fw-medium app-text-white d-flex gap-2 cursor-pointer"
+              >
+                Get Certificate
+              </h6>
+            ) : (
+              <h6 className="fs-6 fw-medium app-text-white d-flex gap-2">
+                {Math.floor(courseData?.course?.completion_percentage) || 0}% 
+                <RiProgress7Line className="fs-5 fw-medium app-text-white"/>
+              </h6>
+            )}
           </div>
           </div>
           {courseData?.courseChapters?.chapters?.map((course, index) => (
@@ -1163,7 +1241,8 @@ const UserPurchasedCourse = () => {
               placeholder="Select a course option"
               isFirst={index === 0}
               setVideoUrl={setVideo_url}
-              // onSelect={handleSelection}
+              handleVideoChange={handleVideoChange}
+              checkedLesson={checkedLesson}
             />
           ))}
 
