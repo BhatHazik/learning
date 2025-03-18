@@ -854,7 +854,7 @@ export default function UserWallet() {
                     {withdrawalHistory?.data?.coins?.length === 0 ? (
                       <div>No data avalable!</div>
                     ) : (
-                      withdrawalHistory?.data?.coins?.map((order, index) => (
+                      withdrawalHistory?.map((order, index) => (
                         <tr key={index}>
                           <td className="text-center align-middle fs-small">
                             {formatDate(order?.payment_date)}

@@ -76,7 +76,7 @@ const Support = () => {
   const chatList = useMemo(() => data?.data || [], [data]);
   // console.log(chatList);
 
-const handleOpenChat = (receiverId, receiverEmail, image, name) => {
+const handleOpenChat = async (receiverId, receiverEmail, image, name) => {
   setselectedImage(image);
   setSelectedName(name);
   setAllExpertsPopUp(false);
@@ -84,11 +84,9 @@ const handleOpenChat = (receiverId, receiverEmail, image, name) => {
   setSelectedChat(receiverId);
   setIsChatOpen(true);
 
-  // console.log(receiverId, receiverEmail, image, name)
-  axios
+  await axios
     .get(`${BASE_URI}/api/v1/chat/supportChat/${receiverId}`, fetchOptions)
     .then((resp) => {
-      // Map the response data to the desired format
       const chatMessages = resp?.data?.data?.map((msg) => ({
         id: msg.id,
         text: msg.message,
@@ -98,19 +96,23 @@ const handleOpenChat = (receiverId, receiverEmail, image, name) => {
           hour: "2-digit",
           minute: "2-digit",
         }),
-        timestamp: new Date(msg.created_at).getTime(), // Add a timestamp for sorting
+        timestamp: new Date(msg.created_at).getTime(),
       }));
 
-      // Sort messages based on the timestamp
       const sortedMessages = chatMessages.sort((a, b) => a.timestamp - b.timestamp);
 
-      // Update the messages state with sorted messages
       setMessages((prevMessages) => ({
         ...prevMessages,
-        [receiverId]: sortedMessages, // Save the sorted messages for the selected chat
+        [receiverId]: sortedMessages,
       }));
+
+      // setTimeout(() => {
+      //   chatBottomRef?.current?.scrollIntoView({ behavior: "smooth" });
+      //   chatBottom1Ref?.current?.scrollIntoView({ behavior: "smooth" });
+      // }, 100);
     })
     .catch((err) => {
+      console.error("Error fetching chat messages:", err);
     });
 };
   
@@ -151,12 +153,13 @@ const handleOpenChat = (receiverId, receiverEmail, image, name) => {
     }
   };
 
-useEffect(() => {
-  // Scroll to the bottom of the chat after messages update
-  chatBottomRef?.current?.scrollIntoView({ behavior: "smooth" });
-  chatBottom1Ref.current?.scrollIntoView({ behavior: "smooth" });
-
-}, [messages]);
+  useEffect(() => {
+    
+        chatBottomRef.current?.scrollIntoView({ behavior: "smooth" });
+        chatBottom1Ref.current?.scrollIntoView({ behavior: "smooth" });
+      // }, 100); // Delay to allow DOM to update
+    // }
+  }, [messages, selectedChat]);
 
 
 
@@ -211,7 +214,7 @@ useEffect(() => {
   
     const messageListener = (message) => {
       const newMessage = {
-        id: Date.now(), // Unique ID for the message
+        id: Date.now(),
         text: message.message,
         sender: "Receiver",
         time: new Date(message.date).toLocaleTimeString([], {
@@ -223,6 +226,11 @@ useEffect(() => {
         ...prev,
         [selectedChat]: [...(prev[selectedChat] || []), newMessage],
       }));
+
+      setTimeout(() => {
+        chatBottomRef?.current?.scrollIntoView({ behavior: "smooth" });
+        chatBottom1Ref?.current?.scrollIntoView({ behavior: "smooth" });
+      }, 100);
     };
   
     socket.on('supportMessage', messageListener);
@@ -324,7 +332,7 @@ useEffect(() => {
                 }`}
 
 
-                onClick={() => userType !== "admin" ? userType === "expert" ? handleOpenChat(chat?.user_id, chat?.email, logo, "Support") : handleOpenChat(chat?.user_id, chat?.email, logo, "Support") :  handleOpenChat(chat?.user_id,chat?.email, chat?.profile_picture, chat?.name)}
+                onClick={() => userType !== "admin" ? userType === "expert" ? handleOpenChat(chat?.user_id, chat?.email, chat?.profile_picture, chat?.name) : handleOpenChat(chat?.user_id, chat?.email, chat?.profile_picture, chat?.name) :  handleOpenChat(chat?.user_id,chat?.email, chat?.profile_picture, chat?.name)}
               >
                 <div className="d-flex gap-2 align-items-center">
                   <img
@@ -334,7 +342,7 @@ useEffect(() => {
                     style={{ width: "50px", height: "50px" , objectFit:"cover"}}
                   />
                   <div>
-                    <h6 className="mb-0">{userType !== "admin" ? "Support": chat.name}</h6>
+                    <h6 className="mb-0">{userType !== "admin" ? chat.name : chat.name}</h6>
                     <p style={{fontWeight:chat?.is_read ? "600":"normal"}} className={`text-muted mb-0 `}>{chat?.message ? chat?.message?.slice(0, 15) + "...": ""}</p>
                   </div>
                 </div>
@@ -361,44 +369,40 @@ useEffect(() => {
             ))}
           </div>
         </section>
-        <section className={`responsive-support-full position-absolute bg-white px-4 py-2 w-100 flex-grow-1 ${isChatOpen ? 'slide-in' : 'slide-out'}`} style={{}}>
-          <div style={{ height: "3rem", display: "flex", alignItems: "center", gap: "1rem" }}>
-<FontAwesomeIcon onClick={()=>setIsChatOpen(false)} icon={faArrowLeft}/>
-            {
-
-              selectedImage ? (
-                <img
-                  src={selectedImage}
-                  alt={selectedName}
-                  className="rounded-circle"
-                  style={{ width: "40px", height: "40px", objectFit: "cover" }}
-                />
-              ) : (
-                (selectedImage !== "" && selectedName !== "") ?
-                  <div
-                    style={{
-                      width: "30px",
-                      height: "30px",
-                      borderRadius: "50%",
-                      backgroundColor: getRandomColor(), // Function to get a random color
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <span
-                      style={{ color: "#fff", fontWeight: "bold" }}
-                    >
-                      {selectedName.charAt(0).toUpperCase()}{" "}
-                      {/* Display first letter */}
-                    </span>
-                  </div> : <></>
-              )}
+        <section className={`responsive-support-full position-absolute bg-white px-4 py-2 w-100 flex-grow-1 ${isChatOpen ? 'slide-in' : 'slide-out'}`}>
+          <div className="d-flex align-items-center" style={{ height: "3rem", gap: "1rem" }}>
+            <FontAwesomeIcon onClick={() => setIsChatOpen(false)} icon={faArrowLeft} />
+            {selectedImage ? (
+              <img
+                src={selectedImage}
+                alt={selectedName}
+                className="rounded-circle"
+                style={{ width: "40px", height: "40px", objectFit: "cover" }}
+              />
+            ) : (
+              (selectedImage !== "" && selectedName !== "") ? (
+                <div
+                  style={{
+                    width: "30px",
+                    height: "30px",
+                    borderRadius: "50%",
+                    backgroundColor: getRandomColor(),
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <span style={{ color: "#fff", fontWeight: "bold" }}>
+                    {selectedName.charAt(0).toUpperCase()}
+                  </span>
+                </div>
+              ) : <></>
+            )}
             <p>{selectedName}</p>
           </div>
           {selectedChat === null ? (
             <div className="d-flex justify-content-center align-items-center h-100">
-              <p>Select a conversation to start yoyo</p>
+              <p>Select a conversation to start</p>
             </div>
           ) : (
             <div className="messages-long-messages d-flex flex-column justify-content-between" style={{ overflowY: "auto" }}>
@@ -406,8 +410,7 @@ useEffect(() => {
                 {messages[selectedChat]?.map((msg, index) => (
                   <div
                     key={index}
-                    className={`d-flex ${msg?.sender === "You" ? "justify-content-end" : "justify-content-start"
-                      }`}
+                    className={`d-flex ${msg?.sender === "You" ? "justify-content-end" : "justify-content-start"}`}
                   >
                     <div className="message-container">
                       <p className="mb-0">{msg.text}</p>
@@ -416,96 +419,14 @@ useEffect(() => {
                   </div>
                 ))}
               </div>
-              <div ref={chatBottomRef} />
+              <div ref={chatBottom1Ref} />
               <form onSubmit={handleSendMessage} className="d-flex mt-3">
                 <input
                   type="text"
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
-                  className="form-control me-2"
-                  placeholder="Type your message"
-                  ref={inputRef}
-                />
-                <button
-                  type="submit"
-                  disabled={inputValue === ""}
-                  className="btn btn-primary"
-                >
-                  Send
-                </button>
-              </form>
-            </div>
-          )}
-        </section>
-        <section className="responsive-messages-short px-4 py-2 w-60 flex-grow-1" style={{height:"80%"}}>
-          <div style={{height:"3rem", display:"flex", alignItems:"center",paddingLeft:"1rem", gap:"1rem"}}>
-         
-                  {
-                  
-                  selectedImage ? (
-                            <img
-                            src={selectedImage}
-                            alt={selectedName}
-                            className="rounded-circle"
-                            style={{ width: "40px", height: "40px", objectFit:"cover" }}
-                          />
-                          ) : (
-                           (selectedImage !== "" && selectedName !== "") ?
-                            <div
-                              style={{
-                                width: "30px",
-                                height: "30px",
-                                borderRadius: "50%",
-                                backgroundColor: getRandomColor(), // Function to get a random color
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                              }}
-                            >
-                              <span
-                                style={{ color: "#fff", fontWeight: "bold" }}
-                              >
-                                {selectedName?.charAt(0)?.toUpperCase()}{" "}
-                                {/* Display first letter */}
-                              </span>
-                            </div> : <></>
-                          )}
-                  <p>{selectedName}</p>
-          </div>
-          {selectedChat === null ? (
-            <div className="d-flex justify-content-center align-items-center h-100">
-              <p>Select a conversation to start messaging</p>
-            </div>
-          ) : (
-            <div className="d-flex flex-column justify-content-between" style={{height:"55vh", overflowY:"auto"}}>
-              <div className="d-flex flex-column">
-  {messages[selectedChat]?.map((msg, index) => (
-    <div
-    key={index}
-    className={`d-flex ${
-      msg?.sender === "You" ? "justify-content-end" : "justify-content-start"
-    }`}
-  >
-    <div className="message-container">
-      <p className="mb-0">{msg.text}</p>
-      <small className="text-muted">{msg.time}</small>
-    </div>
-  </div>
-  
-  ))}
-</div>
-<div ref={chatBottomRef}/>
-              <form 
-                className="d-flex fixed-bottom p-3 py-3 app-black"
-                style={{ borderTop: "1px solid #ddd" }}
-                onSubmit={handleSendMessage}
-              >
-                <input
-                  type="text"
-                  value={inputValue}
-                  placeholder="Enter your message"
-                  onChange={(e) => setInputValue(e.target.value)}
                   className="modern-input form-control me-2"
+                  placeholder="Type your message"
                   ref={inputRef}
                 />
                 <button
@@ -513,12 +434,78 @@ useEffect(() => {
                   disabled={inputValue === ""}
                   className="app-red rounded-1 border-0 px-4 app-text-white"
                 >
-                  <IoIosSend className="fs-5"/>
+                  <IoIosSend className="fs-5" />
                 </button>
               </form>
-              
-            
             </div>
+          )}
+        </section>
+        <section className="responsive-messages-short px-4 py-2 w-60 flex-grow-1" style={{ height: "80%" }}>
+          <div className="d-flex align-items-center" style={{ height: "3rem", paddingLeft: "1rem", gap: "1rem" }}>
+            {selectedImage ? (
+              <img
+                src={selectedImage}
+                alt={selectedName}
+                className="rounded-circle"
+                style={{ width: "40px", height: "40px", objectFit: "cover" }}
+              />
+            ) : (
+              (selectedImage !== "" && selectedName !== "") ? (
+                <div
+                  style={{
+                    width: "30px",
+                    height: "30px",
+                    borderRadius: "50%",
+                    backgroundColor: getRandomColor(),
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <span style={{ color: "#fff", fontWeight: "bold" }}>
+                    {selectedName?.charAt(0)?.toUpperCase()}
+                  </span>
+                </div>
+              ) : <></>
+            )}
+            <p>{selectedName}</p>
+          </div>
+          {selectedChat === null ? (
+            <div className="d-flex justify-content-center align-items-center h-100">
+              <p>Select a conversation to start messaging</p>
+            </div>
+          ) : (
+            <div className="d-flex flex-column justify-content-between" style={{ height: "60vh", overflowY: "auto" }}>
+              <div className="d-flex flex-column" >
+                {messages[selectedChat]?.map((msg, index) => (
+                  <div
+                    key={index}
+                    className={`d-flex ${msg?.sender === "You" ? "justify-content-end" : "justify-content-start"}`}
+                  >
+                    <div className="message-container">
+                      <p className="mb-0">{msg.text}</p>
+                      <small className="text-muted">{msg.time}</small>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div ref={chatBottom1Ref || chatBottomRef} />
+            </div>
+          )}
+          {selectedChat !== null && (
+            <form className="d-flex mt-3" onSubmit={handleSendMessage}>
+              <input
+                type="text"
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                className="form-control me-2"
+                placeholder="Type your message"
+               
+              />
+              <button type="submit" disabled={!inputValue} className="btn btn-primary">
+                Send
+              </button>
+            </form>
           )}
         </section>
       </main>

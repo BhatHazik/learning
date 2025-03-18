@@ -608,7 +608,7 @@ useEffect(() => {
       </div>
 
       {/* Time Period Selector */}
-      <div className="w-100 mb-2 gap-3 ps-3 p-2 px-2 justify-content-start mt-2 rounded-1 app-white d-flex gap-2">
+      <div className="mobile-view w-100 mb-2 gap-3 ps-3 p-2 px-2 justify-content-start mt-2 rounded-1 app-white gap-2">
         {["week", "month", "year", "all time"].map((btnType) => (
           <h4
             key={btnType}
@@ -623,12 +623,30 @@ useEffect(() => {
         ))}
       </div>
 
+      <div className="desktop-view w-100 mb-2 gap-3 ps-3 p-2 px-2 justify-content-start mt-2 rounded-1 app-white gap-2">
+        {["week", "month", "year", "all time"].map((btnType) => (
+          <h4
+            key={btnType}
+            style={{ cursor: "pointer" }}
+            className={`p-1 px-2 rounded-2 fs-6 fw-regular border-2 ${
+              type === btnType ? "bg-gradient-custom-div app-text-white border-black" : "border border-1 text-secondary"
+            }`}
+            onClick={() => setType(btnType)}
+          >
+            {btnType.charAt(0).toUpperCase() + btnType.slice(1)}
+          </h4>
+        ))}
+      </div>
+
       {/* Charts Section */}
       <div className="row">
         <div className="col-md-6 mb-3">
           <div className="card p-0 w-100 custom-box">
             <div className="card-body" style={{ maxHeight: "300px", paddingBottom: "50px" }}>
-              <h5 className="p-1 rounded-1 fs-6 fw-normal app-black app-text-white" style={{ width: "max-content" }}>
+              <h5 className="mobile-view p-1 rounded-1 fs-6 fw-normal app-black app-text-white" style={{ width: "max-content" }}>
+                Revenue
+              </h5>
+              <h5 className="desktop-view p-1 rounded-1 fs-6 fw-normal bg-gradient-custom-div app-text-white" style={{ width: "max-content" }}>
                 Revenue
               </h5>
               <canvas ref={revenueChartRef} height="200"></canvas>
@@ -638,7 +656,10 @@ useEffect(() => {
         <div className="col-md-6 mb-3">
           <div className="card p-0 w-100 custom-box">
             <div className="card-body" style={{ maxHeight: "300px", paddingBottom: "50px" }}>
-              <h5 className="p-1 rounded-1 fs-6 fw-normal app-black app-text-white" style={{ width: "max-content" }}>
+              <h5 className="mobile-view p-1 rounded-1 fs-6 fw-normal app-black app-text-white" style={{ width: "max-content" }}>
+                New Enrollments
+              </h5>
+              <h5 className="desktop-view p-1 rounded-1 fs-6 fw-normal bg-gradient-custom-div app-text-white" style={{ width: "max-content" }}>
                 New Enrollments
               </h5>
               <canvas ref={enrollmentsChartRef} height="200"></canvas>
@@ -652,7 +673,10 @@ useEffect(() => {
         <div className="col-md-6 mb-3">
           <div className="card p-0 w-100 custom-box">
             <div className="card-body" style={{ maxHeight: "300px" }}>
-              <h5 className="p-1 rounded-1 fs-6 fw-normal app-black app-text-white" style={{ width: "max-content" }}>
+              <h5 className="mobile-view p-1 rounded-1 fs-6 fw-normal app-black app-text-white" style={{ width: "max-content" }}>
+                Courses in Demand
+              </h5>
+              <h5 className="desktop-view p-1 rounded-1 fs-6 fw-normal bg-gradient-custom-div app-text-white" style={{ width: "max-content" }}>
                 Courses in Demand
               </h5>
               <ul className="list-group mt-1">
@@ -668,7 +692,10 @@ useEffect(() => {
         <div className="col-md-6 mb-3">
           <div className="card p-0 w-100 custom-box">
             <div className="card-body" style={{ maxHeight: "300px", paddingBottom: "50px" }}>
-              <h5 className="p-1 rounded-1 fs-6 fw-normal app-black app-text-white" style={{ width: "max-content" }}>
+              <h5 className="mobile-view p-1 rounded-1 fs-6 fw-normal app-black app-text-white" style={{ width: "max-content" }}>
+                Ratings Overview
+              </h5>
+              <h5 className="desktop-view p-1 rounded-1 fs-6 fw-normal bg-gradient-custom-div app-text-white" style={{ width: "max-content" }}>
                 Ratings Overview
               </h5>
               <div className="d-flex justify-content-center" style={{ height: "200px" }}>

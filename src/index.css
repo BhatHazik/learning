@@ -160,7 +160,9 @@ padding-left: 5%;
 .mobile-PurchasedCourse{
   display: none;
 }
-
+.mobile-view{
+  display: none;
+}
 
 @media (max-width: 768px) {
   .mobile-PurchasedCourse{
@@ -180,6 +182,9 @@ padding-left: 5%;
   }
   .desktop-view{
     display: none;
+  }
+  .mobile-view{
+    display: flex;
   }
 }
 

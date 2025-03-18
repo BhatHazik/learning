@@ -266,7 +266,7 @@ const UserPurchasedCourse = () => {
       toast.success(`${response?.data?.message}`);
     } catch (err) {
       setVerificationPopUp(false);
-      toast.error(`Error: ${err?.response?.data?.message}`);
+      toast.error(`${err?.response?.data?.message}`);
     }
   };
 
@@ -897,13 +897,14 @@ const UserPurchasedCourse = () => {
                   id="unHeart-PurchasedCourses"
                 />
               )} */}
-              <span
-                          // className="signup-now  fw-lightBold fs-small mb-0 h-auto"
-                          style={{display:"flex", gap:"0.5rem", alignItems:"center" , background:"white", color:"black", padding:"0.2rem 0.5rem", borderRadius:"0.5rem", cursor:"pointer"}}
-                          onClick={() => handlePrint(courseData?.course?.id)}
-                        >
-                          Certificate
-                        </span>
+              {Math.floor(courseData?.course?.completion_percentage) === 100 ? (
+                <span
+                  style={{display:"flex", gap:"0.5rem", alignItems:"center" , background:"white", color:"black", padding:"0.2rem 0.5rem", borderRadius:"0.5rem", cursor:"pointer"}}
+                  onClick={() => handlePrint(courseData?.course?.id)}
+                >
+                  Certificate
+                </span>
+              ) : null}
               {is_rated ? (
 
                 <span onClick={handleEditClick} style={{display:"flex", gap:"0.5rem", alignItems:"center" , background:"white", color:"black", padding:"0.2rem 0.5rem", borderRadius:"0.5rem", cursor:"pointer"}}>

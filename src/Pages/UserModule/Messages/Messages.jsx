@@ -122,6 +122,7 @@ const Messages = () => {
   // )
 
   const handleOpenChat = (receiverId, receiverEmail, image, name) => {
+    // console.log(receiverId, receiverEmail, image, name);
     setselectedImage(image);
     setSelectedName(name);
     setAllExpertsPopUp(false);
@@ -201,7 +202,7 @@ const Messages = () => {
   };
 
   useEffect(() => {
-
+    // console.log(chatBottomRef.current);
         chatBottomRef.current?.scrollIntoView({ behavior: "smooth" });
         chatBottom1Ref.current?.scrollIntoView({ behavior: "smooth" });
       // }, 100); // Delay to allow DOM to update
@@ -620,44 +621,38 @@ const Messages = () => {
                 ))}
           </div>
         </section>
-        <section className="responsive-messages-short px-4 py-2 w-60 flex-grow-1" style={{ height: "80%"}}>
+        <section className="responsive-messages-short px-4 py-2 w-60 flex-grow-1" style={{ height: "80%" }}>
           <div style={{ height: "3rem", display: "flex", alignItems: "center", paddingLeft: "1rem", gap: "1rem" }}>
-
-            {
-
-              selectedImage ? (
-                <img
-                  src={selectedImage}
-                  alt={selectedName}
-                  className="rounded-circle"
-                  style={{ width: "40px", height: "40px", objectFit: "cover" }}
-                  onError={(e) => {
-                    // console.log(e)
-                    e.target.onerror = null;
-                    e.target.src = defaultUser; // Fallback image
+            {selectedImage ? (
+              <img
+                src={selectedImage}
+                alt={selectedName}
+                className="rounded-circle"
+                style={{ width: "40px", height: "40px", objectFit: "cover" }}
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = defaultUser; // Fallback image
+                }}
+              />
+            ) : (
+              selectedImage !== "" && selectedName !== "" && (
+                <div
+                  style={{
+                    width: "30px",
+                    height: "30px",
+                    borderRadius: "50%",
+                    backgroundColor: getRandomColor(),
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
                   }}
-                />
-              ) : (
-                (selectedImage !== "" && selectedName !== "") ?
-                  <div
-                    style={{
-                      width: "30px",
-                      height: "30px",
-                      borderRadius: "50%",
-                      backgroundColor: getRandomColor(), // Function to get a random color
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <span
-                      style={{ color: "#fff", fontWeight: "bold" }}
-                    >
-                      {selectedName.charAt(0).toUpperCase()}{" "}
-                      {/* Display first letter */}
-                    </span>
-                  </div> : <></>
-              )}
+                >
+                  <span style={{ color: "#fff", fontWeight: "bold" }}>
+                    {selectedName.charAt(0).toUpperCase()}
+                  </span>
+                </div>
+              )
+            )}
             <p>{selectedName}</p>
           </div>
           {selectedChat === null ? (
@@ -670,33 +665,31 @@ const Messages = () => {
                 {messages[selectedChat]?.map((msg, index) => (
                   <div
                     key={index}
-                    className={`d-flex ${msg?.sender === "You" ? "justify-content-end" : "justify-content-start"
-                      }`}
+                    className={`d-flex ${msg?.sender === "You" ? "justify-content-end" : "justify-content-start"}`}
                   >
                     <div className="message-container">
                       <p className="mb-0">{msg.text}</p>
                       <small className="text-muted">{msg.time}</small>
                     </div>
                   </div>
-
                 ))}
               </div>
               <div ref={chatBottom1Ref} />
-              <form style={{ bottom: "1%", right: "10%" }} className="d-flex position-fixed">
-                <input
-                  type="text"
-                  value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
-                  className="form-control me-2"
-                  placeholder="Type your message"
-                />
-                <button disabled={inputValue === "" ? true : false} onClick={handleSendMessage} className="btn btn-primary">
-                  Send
-                </button>
-              </form>
-
-
             </div>
+          )}
+          {selectedChat !== null && (
+            <form className="d-flex mt-3" onSubmit={handleSendMessage}>
+              <input
+                type="text"
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                className="form-control me-2"
+                placeholder="Type your message"
+              />
+              <button type="submit" disabled={!inputValue} className="btn btn-primary">
+                Send
+              </button>
+            </form>
           )}
         </section>
 
@@ -761,7 +754,7 @@ const Messages = () => {
                   </div>
                 ))}
               </div>
-              <div ref={chatBottomRef} />
+              <div ref={chatBottom1Ref} />
               <form
                 className="d-flex fixed-bottom p-3 py-3 app-black"
                 style={{ borderTop: "1px solid #ddd" }}
@@ -1094,7 +1087,7 @@ const Messages = () => {
               </div>
             ))}
           </div>
-          <div ref={chatBottom1Ref} />
+          <div ref={chatBottomRef} />
           <form className="d-flex mt-3">
             <input
               type="text"

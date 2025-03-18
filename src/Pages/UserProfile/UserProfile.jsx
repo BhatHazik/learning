@@ -69,6 +69,7 @@ export default function UserProfile() {
   }, [expertId]);
 
 
+
   const fetchPastMatches = async () => {
 
     try {
@@ -319,7 +320,8 @@ export default function UserProfile() {
                 >
                   <span>
                     <img
-                      src={course?.thumbnail || "default-image-url"}
+                      src={course?.thumbnail || defaultCourse}
+                      onError={(e) => e.target.src = defaultCourse}
                       alt="Course image"
                     />
                   </span>
@@ -329,10 +331,10 @@ export default function UserProfile() {
                       <h6>{course?.category || "No title available"}</h6>
                     </div>
                     <div className="pricing-card-userCourseview">
-                      <h5>
+                      {/* <h5>
                         {course?.tags?.split(" ").slice(0, 2).join(" ") +
                           "..." || "No tags available"}
-                      </h5>
+                      </h5> */}
                     </div>
                   </div>
                   <p>{course?.name}</p>

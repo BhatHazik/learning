@@ -42,7 +42,7 @@ const Card = ({
   activeTab,
 }) => (
   <div className="card-bottom-courses" onClick={() => onClick(id)}>
-    <img loading="lazy" src={thumbnail || cardImage} alt="Course image" />
+    <img loading="lazy" src={thumbnail || cardImage} alt="Course image" onError={(e) => e.target.src = defaultCourse} />
 
     <div className="middle-sec-card-courses">
       <div className="addCourse-card-courses">

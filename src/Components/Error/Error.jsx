@@ -1,10 +1,10 @@
 import React from 'react';
 
-const Error = ({ imageSrc, message }) => {
-  
+const Error = ({ imageSrc, message, className="w-100" , view="mobile-view" }) => {
+  console.log(className)
   return (
-    <div style={{  minHeight: "50vh" }} className="d-flex flex-column align-items-center justify-content-center w-100">
-      <div className="w-100 mt-2 app-white d-flex flex-column align-items-center justify-content-center p-3 rounded-2">
+    <div style={{  minHeight: "50vh" }} className={`${view} align-items-center justify-content-center w-100`}>
+      <div className={`d-flex flex-column ${className} mt-2 app-white align-items-center justify-content-center p-3 rounded-2`}>
         <img src={imageSrc} alt="error" className="w-100" />
         <h4 className="text-center border border-1 fs-5 fw-light p-1 px-2 text-nowrap rounded-2">
           {message}

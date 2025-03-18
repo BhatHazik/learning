@@ -134,9 +134,13 @@ const Card = ({
         {!isHovered && (
             <img
               loading="lazy"
-              src={thumbnail}
+              src={thumbnail || defaultCourse}
               alt="Course image"
               style={{ objectFit: "cover",zIndex:"9", width: "100%", position: "absolute", top:"0"}}
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = defaultCourse;
+              }}
             />
           )}
           {isHovered && (
@@ -464,7 +468,7 @@ const UserCourses = ({ search }) => {
         <div className="wrapper-userCourses w-100">
           
         {categoriesLoading ? (
-  <CategorySkeletonLoader />
+  <CategorySkeletonLoader view="desktop-view"/>
 ) : categories.length > 0 ? (
   <div style={{ zIndex: "100" }} className="overflow-x-auto desktop-view py-1 px-2  justify-content-start mt-2 rounded-1 app-white gap-2">
     {categories.map((category, index) => (
@@ -472,7 +476,7 @@ const UserCourses = ({ search }) => {
         key={index}
         style={{ cursor: "pointer" }}
         className={`p-1 px-3 rounded-2 fs-6 border-2 ${
-          mobileActiveTab === category.subcategory_name ? "app-black app-text-white border-black" : "border border-1 text-secondary"
+          mobileActiveTab === category.subcategory_name ? "bg-gradient-custom-div app-text-white border-black" : "border border-1 text-secondary"
         }`}
         onClick={() => setMobileActiveTab(category.subcategory_name)}
       >

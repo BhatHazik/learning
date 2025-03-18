@@ -4,7 +4,7 @@ import useFetch from "../../hooks/useFetch";
 import { BASE_URI } from "../../Config/url";
 import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSquarePlus } from "@fortawesome/free-solid-svg-icons";
+import { faHeart, faSquarePlus } from "@fortawesome/free-solid-svg-icons";
 import { FaStar } from "react-icons/fa"; // For star icons
 import axios from "axios";
 import toast from "react-hot-toast";
@@ -65,7 +65,7 @@ const Card = ({
 >
 
       <span>
-        <img src={thumbnail} alt="Course" />
+        <img src={thumbnail || defaultCourse} alt="Course" onError={(e) => e.target.src = defaultCourse}/>
       </span>
       <div className="middle-sec-card-myLearning">
         <div className="addCourse-card-myLearning">
@@ -463,11 +463,13 @@ if(status === 'purchased'){
             error?.response?.data?.message === "No courses found" ? (
               <div className="no-courses-myLearning">
                 <div>
-                <h1 className="fs-2">No Courses Purchased Yet!</h1>
-                <h5>Purchase a course and join the world of athletes!</h5>
-                <Link to="/userCourses" className="text-decoration-none text-white">
-                  <FontAwesomeIcon icon={faSquarePlus} className="add-icon-courses" />
-                </Link>
+                <h1 className="fs-2">{activeTab === "favourite" ? "No Favourite Courses Found!" : "No Courses Purchased Yet!"}</h1>
+                <h5>{activeTab === "favourite" ? "Heart a course to add to favorites!" : "Purchase a course and join the world of athletes!"}</h5>
+                {activeTab !== "favourite" && (
+                  <Link to="/categories" className="text-decoration-none text-white">
+                    <FontAwesomeIcon icon={faSquarePlus} className="add-icon-courses" />
+                  </Link>
+                )}
                 </div>
               </div>
             ) : (

@@ -99,7 +99,11 @@ const Categories = ({search}) => {
               </div>
             </div>
           )) : 
-          <Error imageSrc={fight} message={"No Categories Found!"}/>
+          <>
+          
+          <Error imageSrc={fight} message={"No Categories Found!"} className="w-50" view="desktop-view"/>
+          <Error imageSrc={fight} message={"No Categories Found!"} view="mobile-view"/>
+          </>
           )}
         </div>
       </div>

@@ -187,7 +187,7 @@ export default function Login() {
           );
           setShowPopup(true);
         } else {
-          toast.error(`Error: ${err?.response?.data?.message}`);
+          toast.error(`${err?.response?.data?.message}`);
         }
       });
   };

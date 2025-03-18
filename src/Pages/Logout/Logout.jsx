@@ -46,6 +46,7 @@ const Logout = () => {
           <div size="lg" onClick={handleLogout} style={{cursor:"pointer"}} className="app-black p-2 app-text-white fw-regular rounded">
             {isLoading ? <PulseLoader size={8} color="white" /> : "Logout"}
           </div>
+          
         </div>
       </div>
     </div>

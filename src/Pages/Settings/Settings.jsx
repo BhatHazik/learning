@@ -9,7 +9,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { PulseLoader } from "react-spinners";
 import "./Settings.css";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { RxCross2 } from "react-icons/rx";
 import { GoArrowDown } from "react-icons/go";
 import { MdDelete } from "react-icons/md";
@@ -569,25 +569,27 @@ export default function Settings() {
     setIsModalEmailChange(false);
   };
 
-  const handleNextAction = () => {
-    axios
-      .delete(`${BASE_URI}/api/v1/auth/deleteAccount`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        data: { password: oldpassword },
-      })
-      .then((resp) => {
-        setIsModalDelete(false);
-        setFinalDelete(true);
-        localStorage.removeItem("user");
-        localStorage.removeItem("userType");
-        localStorage.removeItem("token");
-        localStorage.removeItem("rememberMe");
-      })
-      .catch((err) => {
-        toast.error(err?.response?.data?.message);
-      });
+  const handleNextAction = async () => {
+    try {
+      const response = await axios.patch(
+        `${BASE_URI}/api/v1/auth/deleteAccount`,
+        { password: oldpassword },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setIsModalDelete(false);
+      setFinalDelete(true);
+      localStorage.removeItem("user");
+      localStorage.removeItem("userType");
+      localStorage.removeItem("token");
+      localStorage.removeItem("rememberMe");
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "An error occurred while deleting the account");
+    }
   };
 
   // const handleEditNameClick = () => {
@@ -817,9 +819,7 @@ export default function Settings() {
       // Close the modal
     } catch (error) {
       toast.error(error.response.data.message);
-      console.error("Error changing email:", error);
-      console.error("Error config:", error.config);
-      console.error("Error request:", error.request);
+      
     }
   };
 
@@ -1362,14 +1362,14 @@ export default function Settings() {
               <div className="mb-2 app-white justify-content-center rounded-2">
                 <div className="d-flex mb-4">
                   <div 
-                    className={`me-3 py-2 px-3 rounded-2 ${matchesActiveTab === "past" ? "app-black app-text-white" : "border"}`}
+                    className={`me-3 py-2 px-3 rounded-2 ${matchesActiveTab === "past" ? "bg-gradient-custom-div app-text-white" : "border"}`}
                     style={{ cursor: "pointer" }}
                     onClick={() => setMatchesActiveTab("past")}
                   >
                     Past Competitions
                   </div>
                   <div 
-                    className={`py-2 px-3 rounded-2 ${matchesActiveTab === "upcoming" ? "app-black app-text-white" : "border"}`}
+                    className={`py-2 px-3 rounded-2 ${matchesActiveTab === "upcoming" ? "bg-gradient-custom-div app-text-white" : "border"}`}
                     style={{ cursor: "pointer" }}
                     onClick={() => setMatchesActiveTab("upcoming")}
                   >
@@ -4395,6 +4395,14 @@ export default function Settings() {
                   Delete Account
                 </div>
               </div>
+              <Popup isOpen={finalDelete} >
+                  Your account has been successfully deleted!
+                  <div className="modal-footer justify-content-center">
+                    <Link to={"/"} className="text-decoration-none">
+                      <button className="app-red border-0 rounded-1 app-text-white py-2 px-3 fw-lightBold mb-0 h-auto">Continue</button>
+                    </Link>
+                  </div>
+                </Popup>
             </div>
           )}
         </div>
@@ -4472,6 +4480,20 @@ export default function Settings() {
                       placeholder="Enter your password"
                       onChange={(e) => setOldPassword(e.target.value)}
                     />
+                    <div className="d-flex align-items-center gap-2 justify-content-end m-3">
+                      <button
+                        className="app-black border-0 rounded-1 app-text-white py-1 px-3 fw-lightBold mb-0 h-auto"
+                        onClick={()=>setIsModalDelete(false)}
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        className="app-red border-0 rounded-1 app-text-white py-1 px-3 fw-lightBold mb-0 h-auto"
+                        onClick={handleNextAction}
+                      >
+                        Delete
+                      </button>
+                  </div>  
                   </div>
         </Popup>
       
@@ -4520,6 +4542,8 @@ export default function Settings() {
                     </button>
                   </div>
       </Popup>
+
+      
       
     </>
   );
