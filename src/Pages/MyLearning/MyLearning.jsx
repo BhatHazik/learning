@@ -110,7 +110,7 @@ const Card = ({
                 color: "white",
                 cursor: "pointer"
               }}
-              onClick={handleAddToCart}
+              
             >
               {ispurchased ? <h6>Purchased</h6> : <h6>Go to course</h6>}
             </div>

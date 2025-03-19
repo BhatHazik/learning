@@ -90,20 +90,64 @@ const Messages = () => {
   const [searchChat, setSearchChat] = useState("");
   const [hearted, setHearted] = useState({})
   const [isChatOpen, setIsChatOpen] = useState(false);
-
+  const [messageList, setMessageList] = useState(null);
 
   const popupRef = useRef(null);
   const userType = localStorage.getItem("userType");
   const token = localStorage.getItem("token");
   const chatListUrl = `${BASE_URI}/api/v1/chat${searchChat && `?search=${searchChat}`}`;
   const chatBottomRef = useRef(null);
-  const chatBottom1Ref = useRef(null);
   const inputRef = useRef(null);
+  const desktopMainChatRef = useRef(null);
+  const desktopChatRef = useRef(null);
+  const mobileChatRef = useRef(null);
+  
   const fetchOptions = {
     headers: {
       Authorization: "Bearer " + token,
     },
   };
+
+  // Force-scroll function that works reliably
+  const forceScrollToBottom = () => {
+    // For mobile chat container
+    if (mobileChatRef.current) {
+      setTimeout(() => {
+        mobileChatRef.current.scrollTo({
+          top: mobileChatRef.current.scrollHeight,
+          behavior: 'smooth'
+        });
+      }, 200);
+    }
+    
+    // For desktop main chat
+    if (desktopMainChatRef.current) {
+      setTimeout(() => {
+        desktopMainChatRef.current.scrollTo({
+          top: desktopMainChatRef.current.scrollHeight,
+          behavior: 'smooth'
+        });
+      }, 200);
+    }
+    
+    // For desktop responsive chat
+    if (desktopChatRef.current) {
+      setTimeout(() => {
+        desktopChatRef.current.scrollTo({
+          top: desktopChatRef.current.scrollHeight,
+          behavior: 'smooth'
+        });
+      }, 200);
+    }
+  };
+  
+  // Trigger scroll when messages or selected chat changes
+  useEffect(() => {
+    if (selectedChat && messages[selectedChat]?.length > 0) {
+      // Set a timeout to allow the DOM to update first
+      setTimeout(forceScrollToBottom, 300);
+    }
+  }, [messages, selectedChat]);
 
   const { data, refetch } = useFetch(chatListUrl, fetchOptions);
   const chatList = useMemo(() => data?.data || [], [data]);
@@ -117,9 +161,6 @@ const Messages = () => {
       setHearted(initialHearted);
     }
   }, [chatList]);
-
-  // const time = new Date(Date.now()).toLocaleTimeString(
-  // )
 
   const handleOpenChat = (receiverId, receiverEmail, image, name) => {
     // console.log(receiverId, receiverEmail, image, name);
@@ -154,18 +195,17 @@ const Messages = () => {
           ...prevMessages,
           [receiverId]: sortedMessages, // Save the sorted messages for the selected chat
         }));
+        
+        // Force scroll after API response with a longer delay
+        setTimeout(forceScrollToBottom, 500);
       })
       .catch((err) => {
       });
   };
 
-
-
-
-
   const handleSendMessage = (e) => {
     e.preventDefault();
-    if (!selectedChat || selectedChat === "") return;
+    if (!selectedChat || selectedChat === "" || !inputValue.trim()) return;
     // Create a new message object
     const newMessage = {
       id: Date.now(), // Unique ID for the message
@@ -183,15 +223,11 @@ const Messages = () => {
       [selectedChat]: [...(prevMessages[selectedChat] || []), newMessage],
     }));
 
-
-// console.log(inputValue,selectedEmail);
-
     socket?.emit("private_message", {
       msg: inputValue,
       friend: selectedEmail,
     })
       , (response) => {
-  
       };
     setInputValue("");
     
@@ -199,18 +235,41 @@ const Messages = () => {
     if (inputRef.current) {
       inputRef.current.focus();
     }
+    
+    // Force scroll after sending
+    setTimeout(forceScrollToBottom, 300);
   };
 
+  // Add socket message listener effect
   useEffect(() => {
-    // console.log(chatBottomRef.current);
-        chatBottomRef.current?.scrollIntoView({ behavior: "smooth" });
-        chatBottom1Ref.current?.scrollIntoView({ behavior: "smooth" });
-      // }, 100); // Delay to allow DOM to update
-    // }
-  }, [messages, selectedChat]);
-
-
-
+    if (!socket || !selectedChat) return;
+  
+    const messageListener = (message) => {
+      const newMessage = {
+        id: Date.now(),
+        text: message.message,
+        sender: "Receiver",
+        time: new Date(message.date).toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+      };
+      
+      setMessages((prev) => ({
+        ...prev,
+        [selectedChat]: [...(prev[selectedChat] || []), newMessage],
+      }));
+      
+      // Force scroll after receiving socket message
+      setTimeout(forceScrollToBottom, 300);
+    };
+  
+    socket.on('privateMessage', messageListener);
+  
+    return () => {
+      socket.off('privateMessage', messageListener);
+    };
+  }, [socket, selectedChat]);
 
   const handleOutsideClick = (e) => {
     if (popupRef.current && !popupRef.current.contains(e.target)) {
@@ -252,40 +311,6 @@ const Messages = () => {
   useEffect(() => {
     handleComposeClick();
   }, [allExpertsInput]);
-
-
-  useEffect(() => {
-    if (!socket || !selectedChat) return;
-  
-    const messageListener = (message) => {
-      const newMessage = {
-        id: Date.now(), // Unique ID for the message
-        text: message.message,
-        sender: "Receiver",
-        time: new Date(message.date).toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-        }),
-      };
-      setMessages((prev) => ({
-        ...prev,
-        [selectedChat]: [...(prev[selectedChat] || []), newMessage],
-      }));
-    };
-  
-    socket.on('privateMessage', messageListener);
-  
-    return () => {
-      socket.off('privateMessage', messageListener);
-    };
-  }, [socket, selectedChat]);
-
-
-
-
-
-
-
 
   const addToFavorites = async (e, receiverId) => {
     e.stopPropagation();
@@ -660,8 +685,12 @@ const Messages = () => {
               <p>Select a conversation to start messaging</p>
             </div>
           ) : (
-            <div className="d-flex flex-column justify-content-between" style={{ height: "55vh", overflowY: "auto" }}>
-              <div className="d-flex flex-column">
+            <div 
+              ref={desktopChatRef}
+              className="d-flex flex-column justify-content-between" 
+              style={{ height: "55vh", overflowY: "auto" }}
+            >
+              <div className="d-flex flex-column w-100">
                 {messages[selectedChat]?.map((msg, index) => (
                   <div
                     key={index}
@@ -674,7 +703,6 @@ const Messages = () => {
                   </div>
                 ))}
               </div>
-              <div ref={chatBottom1Ref} />
             </div>
           )}
           {selectedChat !== null && (
@@ -686,7 +714,7 @@ const Messages = () => {
                 className="form-control me-2"
                 placeholder="Type your message"
               />
-              <button type="submit" disabled={!inputValue} className="btn btn-primary">
+              <button type="submit" disabled={!inputValue.trim()} className="btn btn-primary">
                 Send
               </button>
             </form>
@@ -739,7 +767,11 @@ const Messages = () => {
               <p>Select a conversation to start yoyo</p>
             </div>
           ) : (
-            <div className="messages-long-messages d-flex flex-column justify-content-between" style={{ overflowY: "auto" }}>
+            <div 
+              ref={mobileChatRef}
+              className="messages-long-messages d-flex flex-column justify-content-between" 
+              style={{ overflowY: "auto" }}
+            >
               <div className="d-flex flex-column">
                 {messages[selectedChat]?.map((msg, index) => (
                   <div
@@ -754,7 +786,6 @@ const Messages = () => {
                   </div>
                 ))}
               </div>
-              <div ref={chatBottom1Ref} />
               <form
                 className="d-flex fixed-bottom p-3 py-3 app-black"
                 style={{ borderTop: "1px solid #ddd" }}
@@ -1069,6 +1100,7 @@ const Messages = () => {
         </div>
       ) : (
         <div
+          ref={desktopMainChatRef}
           className="d-flex flex-column justify-content-between"
           style={{ height: "calc(100vh - 20rem)", overflowY: "auto" }}
         >
@@ -1087,7 +1119,6 @@ const Messages = () => {
               </div>
             ))}
           </div>
-          <div ref={chatBottomRef} />
           <form className="d-flex mt-3">
             <input
               type="text"
@@ -1166,6 +1197,7 @@ const Messages = () => {
         </div>
       ) : (
         <div
+          ref={mobileChatRef}
           className="d-flex flex-column justify-content-between"
           style={{ height: "calc(100vh - 10rem)", overflowY: "auto", paddingBottom:"55px" }}
         >
@@ -1184,7 +1216,6 @@ const Messages = () => {
               </div>
             ))}
           </div>
-          <div ref={chatBottomRef} />
           <form
             className="d-flex fixed-bottom p-3 py-3 app-black"
             style={{ borderTop: "1px solid #ddd" }}

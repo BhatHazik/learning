@@ -64,13 +64,55 @@ const Support = () => {
   const userType = localStorage.getItem("userType");
   const token = localStorage.getItem("token");
   const chatListUrl =`${BASE_URI}/api/v1/chat/supportChat${searchChat && `?search=${searchChat}`}`;
-  const chatBottomRef = useRef(null);
-  const chatBottom1Ref = useRef(null);
+  const desktopMainChatRef = useRef(null);
+  const desktopChatRef = useRef(null);
+  const mobileChatRef = useRef(null);
   const fetchOptions = {
     headers: {
       Authorization: "Bearer " + token,
     },
   };
+
+  // Force-scroll function that works reliably
+  const forceScrollToBottom = () => {
+    // For mobile chat container
+    if (mobileChatRef.current) {
+      setTimeout(() => {
+        mobileChatRef.current.scrollTo({
+          top: mobileChatRef.current.scrollHeight,
+          behavior: 'smooth'
+        });
+      }, 200);
+    }
+    
+    // For desktop main chat
+    if (desktopMainChatRef.current) {
+      setTimeout(() => {
+        desktopMainChatRef.current.scrollTo({
+          top: desktopMainChatRef.current.scrollHeight,
+          behavior: 'smooth'
+        });
+      }, 200);
+    }
+    
+    // For desktop responsive chat
+    if (desktopChatRef.current) {
+      setTimeout(() => {
+        desktopChatRef.current.scrollTo({
+          top: desktopChatRef.current.scrollHeight,
+          behavior: 'smooth'
+        });
+      }, 200);
+    }
+  };
+  
+  // Trigger scroll when messages or selected chat changes
+  useEffect(() => {
+    if (selectedChat && messages[selectedChat]?.length > 0) {
+      // Set a timeout to allow the DOM to update first
+      setTimeout(forceScrollToBottom, 300);
+    }
+  }, [messages, selectedChat]);
 
   const { data,refetch } = useFetch(chatListUrl, fetchOptions);
   const chatList = useMemo(() => data?.data || [], [data]);
@@ -106,23 +148,17 @@ const handleOpenChat = async (receiverId, receiverEmail, image, name) => {
         [receiverId]: sortedMessages,
       }));
 
-      // setTimeout(() => {
-      //   chatBottomRef?.current?.scrollIntoView({ behavior: "smooth" });
-      //   chatBottom1Ref?.current?.scrollIntoView({ behavior: "smooth" });
-      // }, 100);
+      // Force scroll after API response with a longer delay
+      setTimeout(forceScrollToBottom, 500);
     })
     .catch((err) => {
       console.error("Error fetching chat messages:", err);
     });
 };
   
-
-
-
-
   const handleSendMessage = (e) => {
     e.preventDefault();
-    if (!selectedChat) return;
+    if (!selectedChat || !inputValue.trim()) return;
     // Create a new message object
     const newMessage = {
       id: Date.now(),
@@ -151,19 +187,40 @@ const handleOpenChat = async (receiverId, receiverEmail, image, name) => {
     if (inputRef.current) {
       inputRef.current.focus();
     }
+    
+    // Force scroll after sending
+    setTimeout(forceScrollToBottom, 300);
   };
 
+  // Add socket message listener effect
   useEffect(() => {
-    
-        chatBottomRef.current?.scrollIntoView({ behavior: "smooth" });
-        chatBottom1Ref.current?.scrollIntoView({ behavior: "smooth" });
-      // }, 100); // Delay to allow DOM to update
-    // }
-  }, [messages, selectedChat]);
-
-
-
+    if (!socket || !selectedChat) return;
   
+    const messageListener = (message) => {
+      const newMessage = {
+        id: Date.now(),
+        text: message.message,
+        sender: "Receiver",
+        time: new Date(message.date).toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+      };
+      setMessages((prev) => ({
+        ...prev,
+        [selectedChat]: [...(prev[selectedChat] || []), newMessage],
+      }));
+
+      // Force scroll after receiving socket message
+      setTimeout(forceScrollToBottom, 300);
+    };
+  
+    socket.on('supportMessage', messageListener);
+  
+    return () => {
+      socket.off('supportMessage', messageListener);
+    };
+  }, [socket, selectedChat]);
 
   const handleOutsideClick = (e) => {
     if (popupRef.current && !popupRef.current.contains(e.target)) {
@@ -208,40 +265,6 @@ const handleOpenChat = async (receiverId, receiverEmail, image, name) => {
   }, [allExpertsInput]);
 
   
-
-  useEffect(() => {
-    if (!socket || !selectedChat) return;
-  
-    const messageListener = (message) => {
-      const newMessage = {
-        id: Date.now(),
-        text: message.message,
-        sender: "Receiver",
-        time: new Date(message.date).toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-        }),
-      };
-      setMessages((prev) => ({
-        ...prev,
-        [selectedChat]: [...(prev[selectedChat] || []), newMessage],
-      }));
-
-      setTimeout(() => {
-        chatBottomRef?.current?.scrollIntoView({ behavior: "smooth" });
-        chatBottom1Ref?.current?.scrollIntoView({ behavior: "smooth" });
-      }, 100);
-    };
-  
-    socket.on('supportMessage', messageListener);
-  
-    return () => {
-      socket.off('supportMessage', messageListener);
-    };
-  }, [socket, selectedChat]);
-
-  
-    
 
   useEffect(() => {
     if (popupVisible) {
@@ -405,7 +428,11 @@ const handleOpenChat = async (receiverId, receiverEmail, image, name) => {
               <p>Select a conversation to start</p>
             </div>
           ) : (
-            <div className="messages-long-messages d-flex flex-column justify-content-between" style={{ overflowY: "auto" }}>
+            <div 
+              ref={mobileChatRef}
+              className="messages-long-messages d-flex flex-column justify-content-between" 
+              style={{ overflowY: "auto" }}
+            >
               <div className="d-flex flex-column">
                 {messages[selectedChat]?.map((msg, index) => (
                   <div
@@ -419,7 +446,6 @@ const handleOpenChat = async (receiverId, receiverEmail, image, name) => {
                   </div>
                 ))}
               </div>
-              <div ref={chatBottom1Ref} />
               <form onSubmit={handleSendMessage} className="d-flex mt-3">
                 <input
                   type="text"
@@ -475,7 +501,11 @@ const handleOpenChat = async (receiverId, receiverEmail, image, name) => {
               <p>Select a conversation to start messaging</p>
             </div>
           ) : (
-            <div className="d-flex flex-column justify-content-between" style={{ height: "60vh", overflowY: "auto" }}>
+            <div 
+              ref={desktopChatRef}
+              className="d-flex flex-column justify-content-between" 
+              style={{ height: "60vh", overflowY: "auto" }}
+            >
               <div className="d-flex flex-column" >
                 {messages[selectedChat]?.map((msg, index) => (
                   <div
@@ -489,7 +519,6 @@ const handleOpenChat = async (receiverId, receiverEmail, image, name) => {
                   </div>
                 ))}
               </div>
-              <div ref={chatBottom1Ref || chatBottomRef} />
             </div>
           )}
           {selectedChat !== null && (
@@ -502,7 +531,7 @@ const handleOpenChat = async (receiverId, receiverEmail, image, name) => {
                 placeholder="Type your message"
                
               />
-              <button type="submit" disabled={!inputValue} className="btn btn-primary">
+              <button type="submit" disabled={!inputValue.trim()} className="btn btn-primary">
                 Send
               </button>
             </form>
@@ -521,12 +550,12 @@ const handleOpenChat = async (receiverId, receiverEmail, image, name) => {
         </div>
         {userType === "user" && (
           <div className="position-relative">
-            <button
+            {/* <button
               onClick={() => handleComposeClick("click")}
               className="app-black app-text-white rounded-1 border-0 py-2 px-3 fw-bold mb-0"
             >
               Compose
-            </button>
+            </button> */}
             <Popup
               isOpen={allExpertsPopUp}
               onClose={() => setAllExpertsPopUp(false)}
@@ -782,6 +811,7 @@ const handleOpenChat = async (receiverId, receiverEmail, image, name) => {
         </div>
       ) : (
         <div
+          ref={desktopMainChatRef}
           className="d-flex flex-column justify-content-between"
           style={{ height: "calc(100vh - 20rem)", overflowY: "auto"}}
         >
@@ -800,7 +830,6 @@ const handleOpenChat = async (receiverId, receiverEmail, image, name) => {
               </div>
             ))}
           </div>
-          <div ref={chatBottom1Ref} />
           <form onSubmit={handleSendMessage} className="d-flex mt-3">
             <input
               type="text"
@@ -812,7 +841,7 @@ const handleOpenChat = async (receiverId, receiverEmail, image, name) => {
             />
             <button
               type="submit"
-              disabled={inputValue === ""}
+              disabled={!inputValue.trim()}
               className="btn btn-primary"
             >
               Send
@@ -873,7 +902,11 @@ const handleOpenChat = async (receiverId, receiverEmail, image, name) => {
           <p>Select a conversation to start messaging</p>
         </div>
       ) : (
-        <div className="d-flex flex-column justify-content-between" style={{ height: "calc(100vh - 10rem)", overflowY: "auto" , paddingBottom:"55px"}}>
+        <div 
+          ref={mobileChatRef}
+          className="d-flex flex-column justify-content-between" 
+          style={{ height: "calc(100vh - 10rem)", overflowY: "auto", paddingBottom:"55px" }}
+        >
           <div className="message-list">
             {messages[selectedChat]?.map((msg, index) => (
               <div
@@ -889,7 +922,6 @@ const handleOpenChat = async (receiverId, receiverEmail, image, name) => {
               </div>
             ))}
           </div>
-          <div ref={chatBottomRef} />
           <form 
             className="d-flex fixed-bottom p-3 py-3 app-black"
             style={{ borderTop: "1px solid #ddd" }}
@@ -905,7 +937,7 @@ const handleOpenChat = async (receiverId, receiverEmail, image, name) => {
             />
             <button
               type="submit"
-              disabled={inputValue === ""}
+              disabled={!inputValue.trim()}
               className="app-red rounded-1 border-0 px-4 app-text-white"
             >
               <IoIosSend className="fs-5"/>

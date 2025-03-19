@@ -1437,7 +1437,7 @@ export default function UserWallet() {
 {withdrawalAmount && !isNaN(withdrawalAmount) ? (
   coinCost > 0 ? (
     <p className="app-text-red text-center fw-bold mt-2">
-      {`You will get $${coinCost} for these coins!`}
+      {`You will be charged $${coinCost} for these coins!`}
     </p>
   ) : (
     <p className="text-warning text-center fw-bold mt-2">

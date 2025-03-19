@@ -620,7 +620,7 @@ const UserCourseOverview = () => {
                 </div>
               </div>
 
-              <div className="details-right-mid-userCourseview">
+              <div className="details-right-mid-userCourseview mt-2">
                 <span>
                   <div
                     className="overView-profile cursor-pointer"
@@ -631,7 +631,8 @@ const UserCourseOverview = () => {
                     <img
                       src={courseData?.course?.profile_picture}
                       alt="Profile"
-                      style={{ width: "8%", height: "8%", borderRadius: "50%" }}
+                      // style={{ width: "8%", height: "8%", borderRadius: "50%" }}
+                      className="rounded-circle w-10 h-25"
                       onError={(e) => {
                         e.target.onerror = null;
                         e.target.src = defaultUser; // Fallback image
@@ -649,16 +650,16 @@ const UserCourseOverview = () => {
                 </span>
                 <span>
                   <h5>Enrolled:</h5>
-                  <h6>{courseData?.course?.total_enrollments || 0}</h6>
+                  <h6>{courseData?.course?.enrolled || 0}</h6>
                 </span>
-                <span>
+                {/* <span>
                   <h5>Certification:</h5>
                   <h6>
                     {courseData?.course?.certification
                       ? "Yes"
                       : "No certification available"}
                   </h6>
-                </span>
+                </span> */}
               </div>
               <div className="left-top-mid-userCourseview">
                 <h3>Description</h3>
@@ -994,16 +995,16 @@ const UserCourseOverview = () => {
             )}
             <span className="d-flex fw-medium gap-1 pt-1">
               <p>Ratings:</p>{" "}
-              <p className="fw-normal">{courseData?.review?.totalReviews}</p>
+              <p className="fw-normal">{courseData?.review?.totalReviews || 0}</p>
             </span>
             <span className="d-flex fw-medium gap-1 pt-1">
               <p>Students:</p>{" "}
-              <p className="fw-normal">{courseData?.course?.enrolled}</p>
+              <p className="fw-normal">{courseData?.course?.enrolled || 0}</p>
             </span>
             <span className="d-flex fw-medium gap-1 pt-1">
               <p>Duration:</p>{" "}
               <p className="fw-normal">
-                {formatTime(courseData?.course?.total_duration)}
+                {formatTime(courseData?.course?.total_duration || 0)}
               </p>
             </span>
 

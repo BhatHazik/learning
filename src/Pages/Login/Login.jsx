@@ -361,7 +361,7 @@ export default function Login() {
                 Forgot Password?
               </Link>
             </div>
-            <button className="mobile-view custom-box border-0 app-text-white p-2 app-red w-100">
+            <button className="mobile-view justify-content-center align-self-center custom-box border-0 app-text-white p-2 app-red w-100">
               {isLoading ? <PulseLoader size={8} color="white" /> : "Sign In"}
             </button>
             <button className="desktop-view bg-gradient-custom-div border-0 justify-content-center align-self-center rounded-1 app-text-white p-2 w-100">
