@@ -41,7 +41,7 @@ const LikeButton = ({
 
       toast.success(hearted ? "Removed from favorites" : "Added to favorites");
     } catch (err) {
-      console.error(err);
+      // console.error(err);
       toast.error("Failed to update favorites");
       setHearted(hearted); // Revert state on error
     }

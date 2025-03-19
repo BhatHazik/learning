@@ -103,7 +103,7 @@ export const Navbar = ({ collapsed, search, setSearch, cartItemNumber }) => {
       
       setBallance(response.data.data[0].total_points);
     } catch (error) {
-      console.error("Error fetching wallet ballance:", error);
+      // console.error("Error fetching wallet ballance:", error);
     }
   };
 

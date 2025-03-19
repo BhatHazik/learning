@@ -59,7 +59,7 @@ const App = () => {
       // console.log(res)
       dispatch(payoutActions.setNotifications(res?.data?.data?.length));
     }).catch((err)=>{
-      console.log(err.response.data.message)
+      // console.log(err.response.data.message)
       if(err.response.data.message){
         dispatch(payoutActions.setNotifications("0"));
       }

@@ -213,7 +213,7 @@ const Bookings = () => {
             Authorization: `Bearer ${token}`
           }
         });
-        console.log(response.data.data)
+        // console.log(response.data.data)
 
           setBookings(response.data.data);
       

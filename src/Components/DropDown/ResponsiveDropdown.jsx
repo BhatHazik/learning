@@ -18,15 +18,15 @@ const CourseDropdown = ({
   checkedLesson = null,
 }) => {
   // For debugging - logs only the first time
-  useEffect(() => {
-    console.log("CourseDropdown mounted with:", {
-      chapterTitle: course?.chapterTitle,
-      hasVideoChange: typeof handleVideoChange === 'function',
-      hasCheckedLesson: typeof checkedLesson === 'function',
-      hasLessons: Array.isArray(course?.lessons),
-      lessonsCount: Array.isArray(course?.lessons) ? course.lessons.length : 0
-    });
-  }, []);
+  // useEffect(() => {
+  //   console.log("CourseDropdown mounted with:", {
+  //     chapterTitle: course?.chapterTitle,
+  //     hasVideoChange: typeof handleVideoChange === 'function',
+  //     hasCheckedLesson: typeof checkedLesson === 'function',
+  //     hasLessons: Array.isArray(course?.lessons),
+  //     lessonsCount: Array.isArray(course?.lessons) ? course.lessons.length : 0
+  //   });
+  // }, []);
 
   const [isOpen, setIsOpen] = useState(isFirst);
   const [selected, setSelected] = useState(null);
@@ -62,7 +62,7 @@ const CourseDropdown = ({
     if (option?.video_url) {
       // Check if handleVideoChange exists before calling it
       if (typeof handleVideoChange === 'function') {
-        console.log("Changing video to:", option.video_url);
+        // console.log("Changing video to:", option.video_url);
         handleVideoChange(
           option.video_type || '',
           option.video_url,
@@ -71,7 +71,7 @@ const CourseDropdown = ({
         );
       } else if (typeof setVideoUrl === 'function') {
         // Fallback to just setting the URL if that's all we have
-        console.log("Falling back to setVideoUrl:", option.video_url);
+        // console.log("Falling back to setVideoUrl:", option.video_url);
         setVideoUrl(option.video_url);
       }
 

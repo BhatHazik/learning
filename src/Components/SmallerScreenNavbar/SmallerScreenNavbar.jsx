@@ -198,7 +198,7 @@ export default function SmallerScreenNavbar({ collapsed, search, setSearch, cart
       
       
     } catch (error) {
-      console.error("Error fetching wallet ballance:", error);
+      // console.error("Error fetching wallet ballance:", error);
     }
   };
 
