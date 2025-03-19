@@ -43,7 +43,10 @@ const Logout = () => {
         <div>
           <h2 className="mb-3">Confirm Logout</h2>
           <p className="mb-4">Are you sure you want to logout?</p>
-          <div size="lg" onClick={handleLogout} style={{cursor:"pointer"}} className="app-black p-2 app-text-white fw-regular rounded">
+          <div size="lg" onClick={handleLogout} style={{cursor:"pointer"}} className="mobile-view justify-content-center app-black p-2 app-text-white fw-regular rounded">
+            {isLoading ? <PulseLoader size={8} color="white" /> : "Logout"}
+          </div>
+          <div size="lg" onClick={handleLogout} style={{cursor:"pointer"}} className="desktop-view justify-content-center bg-gradient-custom-div align-self-center px-2 p-2 app-text-white fw-regular rounded">
             {isLoading ? <PulseLoader size={8} color="white" /> : "Logout"}
           </div>
           

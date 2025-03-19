@@ -588,7 +588,7 @@ const UserManagement = () => {
                     />
                     <div className="col-12 button-group">
                       {isEditable ? (
-                        <div className="button-btn">
+                        <div className="button-btn ms-2 mt-1">
                           <button
                             className="btn comission-button"
                             style={{

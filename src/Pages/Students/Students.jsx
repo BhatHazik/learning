@@ -7,7 +7,7 @@ import { HashLoader } from "react-spinners";
 import SearchNotFound from "../../assets/searchNotFound.svg";
 import Error from "../../Components/Error/Error";
 import { CustomLoader } from "../../Components/CustomLoader/CustomLoader";
-
+import defaultUser from "../../assets/defaultUser.svg";
 const UserManagement = () => {
   const [activeTab, setActiveTab] = useState("users");
   const [experts, setStudents] = useState([]);
@@ -211,7 +211,11 @@ const UserManagement = () => {
                                     height: "33px",
                                     borderRadius: "50%",
                                     objectFit: "cover",
-                                    marginRight: "10px",
+                                    marginRight: "10px",  
+                                  }}
+                                  onError={(e) => {
+                                    e.target.onerror = null;
+                                    e.target.src = defaultUser; // Fallback image
                                   }}
                                 />
                               ) : (

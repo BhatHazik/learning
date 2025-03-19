@@ -17,6 +17,7 @@ import { TbDragDrop } from "react-icons/tb";
 import Modal from "../../Components/Modal/Modal";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import VideoPlayer from "../../Components/VideoPlayer/VideoPlayer";
+import MobileVideoPlayer from "../../Components/VideoPlayer/MobilePlayer";
 import formatTime from "../../utils/formatTime";
 import { ShimmerPostDetails } from "react-shimmer-effects";
 import { PulseLoader } from "react-spinners";
@@ -349,50 +350,81 @@ export default function AddLesson({ setEditCourse, setCourseId }) {
   const onDragEnd = async (result) => {
     const { destination, source, draggableId } = result;
 
-    if (!destination) {
+    // If there's no destination or the item was dropped back at its original position, do nothing
+    if (!destination || 
+        (destination.droppableId === source.droppableId && 
+         destination.index === source.index)) {
       return;
     }
 
-    const sourceChapterId = source.droppableId;
-    const destinationChapterId = destination.droppableId;
-
-    const sourceChapter = chapters.find(
-      (chap) => chap.id === Number(sourceChapterId)
-    );
-    const destinationChapter = chapters.find(
-      (chap) => chap.id === Number(destinationChapterId)
-    );
-
-    const draggedLesson = sourceChapter.lessons.find(
-      (lesson) => lesson.id === Number(draggableId)
-    );
-    const draggedLessonSequence = draggedLesson?.sequence;
-
-    const destinationLesson = destinationChapter.lessons[destination.index];
-    const destinationLessonSequence = destinationLesson?.sequence;
-
-   
-
-    const payload = {
-      course_id: id,
-      swapSequence: draggedLessonSequence,
-      swapWithSequence: destinationLessonSequence,
-      chapter_id_from: Number(sourceChapterId),
-      chapter_id_to: Number(destinationChapterId),
-    };
-  
-
     try {
+      const sourceChapterId = parseInt(source.droppableId);
+      const destinationChapterId = parseInt(destination.droppableId);
+      const lessonId = parseInt(draggableId);
+
+      // Show loading indicator 
+      toast.loading("Updating sequence...", { id: "sequence-update" });
+
+      // Find the source and destination chapters
+      const sourceChapter = chapters.find(chapter => chapter.id === sourceChapterId);
+      const destinationChapter = chapters.find(chapter => chapter.id === destinationChapterId);
+
+      if (!sourceChapter || !destinationChapter) {
+        console.error("Could not find source or destination chapter");
+        return;
+      }
+
+      // Find the lesson being dragged
+      const draggedLesson = sourceChapter.lessons.find(lesson => lesson.id === lessonId);
+      if (!draggedLesson) {
+        console.error("Could not find the dragged lesson");
+        return;
+      }
+
+      // Calculate the new sequence based on the destination index
+      // When dealing with destination, we need to find the correct sequence value
+      let newSequence;
+      const sortedDestinationLessons = [...destinationChapter.lessons].sort((a, b) => a.sequence - b.sequence);
+      
+      if (sortedDestinationLessons.length === 0) {
+        // If there are no lessons in the destination chapter, use a default sequence value
+        newSequence = 1;
+      } else if (destination.index === 0) {
+        // If dropping at the beginning, use a value less than the first lesson's sequence
+        newSequence = sortedDestinationLessons[0].sequence - 1;
+      } else if (destination.index >= sortedDestinationLessons.length) {
+        // If dropping at the end, use a value greater than the last lesson's sequence
+        newSequence = sortedDestinationLessons[sortedDestinationLessons.length - 1].sequence + 1;
+      } else {
+        // If dropping in the middle, use the average of the surrounding lessons' sequences
+        const lessonBefore = sortedDestinationLessons[destination.index - 1];
+        const lessonAfter = sortedDestinationLessons[destination.index];
+        newSequence = (lessonBefore.sequence + lessonAfter.sequence) / 2;
+      }
+
+      // Prepare the payload for the API call
+      const payload = {
+        course_id: id,
+        swapSequence: draggedLesson.sequence,
+        swapWithSequence: newSequence,
+        chapter_id_from: sourceChapterId,
+        chapter_id_to: destinationChapterId
+      };
+
+      console.log("Sending sequence update payload:", payload);
+
+      // Make the API call to update the sequence
       await axios.patch(`${BASE_URI}/api/v1/lessons/changeSeq`, payload, {
         headers: {
           Authorization: "Bearer " + token,
         },
       });
     
-      toast.success("Sequence updated successfully");
+      toast.success("Sequence updated successfully", { id: "sequence-update" });
       refetch();
     } catch (error) {
-      // toast.error("Error updating sequence");
+      console.error("Error updating sequence:", error);
+      toast.error("Error updating sequence", { id: "sequence-update" });
     }
   };
 
@@ -433,7 +465,13 @@ export default function AddLesson({ setEditCourse, setCourseId }) {
       <header className="d-flex align-items-center justify-content-between py-2 px-3 w-100 app-white mt-2 mb-2">
         <h3 className="fw-bold text-capitalize">{title || "Course Name"}</h3>
         <button
-          className="app-black border-0 rounded-1 app-text-white px-2 py-2 fw-lightBold mb-0 h-auto"
+          className="mobile-view app-black border-0 rounded-1 app-text-white px-2 py-2 fw-lightBold mb-0 h-auto"
+          onClick={handleEditCourse}
+        >
+          Edit Course
+        </button>
+        <button
+          className="desktop-view bg-gradient-custom-div border-0 rounded-1 app-text-white px-2 py-2 fw-lightBold mb-0 h-auto"
           onClick={handleEditCourse}
         >
           Edit Course
@@ -453,13 +491,22 @@ export default function AddLesson({ setEditCourse, setCourseId }) {
 
           {!isAddChapter && chapters?.length === undefined && (
 
+            <>
             <button
-              className="app-red border-0 rounded-1 app-text-white px-4 py-2 fs-5 mt-5"
+              className="mobile-view app-red border-0 rounded-1 app-text-white px-4 py-2 fs-5 mt-5"
               onClick={() => setIsAddChapter(true)}
             >
               <MdAddBox className="fs-1 me-2" />
               Add Chapter
             </button>
+             <button
+              className="desktop-view bg-gradient-custom-div border-0 rounded-1 app-text-white px-4 py-2 fs-5 mt-5"
+              onClick={() => setIsAddChapter(true)}
+            >
+              <MdAddBox className="fs-1 me-2" />
+              Add Chapter
+            </button>
+            </>
           )}
 
           <DragDropContext onDragEnd={onDragEnd}>
@@ -469,11 +516,13 @@ export default function AddLesson({ setEditCourse, setCourseId }) {
                   <Droppable
                     droppableId={String(chapter.id)}
                     key={chapter.id}
-                    index={index}
+                    type="lesson"
                   >
-                    {(provided) => (
+                    {(provided, snapshot) => (
                       <div
-                        className="rounded-2 border border-secondary-subtle text-start px-2 py-3 mb-3 "
+                        className={`rounded-2 border border-secondary-subtle text-start px-2 py-3 mb-3 ${
+                          snapshot.isDraggingOver ? "bg-light" : ""
+                        }`}
                         {...provided.droppableProps}
                         ref={provided.innerRef}
                       >
@@ -488,14 +537,25 @@ export default function AddLesson({ setEditCourse, setCourseId }) {
                             />
                             <div className="d-flex justify-content-end gap-3 mb-3">
                               <button
-                                className="app-black border-0 rounded-1 app-text-white py-2 px-3 fw-light mb-0 h-auto"
-                                // style={{ background: "transparent" }}
+                                className="border rounded-1 app-text-black py-2 px-3 fw-light mb-0 h-auto"
                                 onClick={() => setEditingChapterId(null)}
                               >
                                 Cancel
                               </button>
                               <button
-                                className="app-red border-0 rounded-1 app-text-white py-2 px-3 fw-light mb-0 h-auto"
+                                className="mobile-view app-red border-0 rounded-1 app-text-white py-2 px-3 fw-light mb-0 h-auto"
+                                onClick={() =>
+                                  saveChanges(chapter.id, chapter.sequence)
+                                }
+                              >
+                                {isLoadingAddChapter ? (
+                                  <PulseLoader size={8} color="white" />
+                                ) : (
+                                  "Save Changes"
+                                )}
+                              </button>
+                              <button
+                                className="desktop-view bg-gradient-custom-div border-0 rounded-1 app-text-white py-2 px-3 fw-light mb-0 h-auto"
                                 onClick={() =>
                                   saveChanges(chapter.id, chapter.sequence)
                                 }
@@ -526,7 +586,13 @@ export default function AddLesson({ setEditCourse, setCourseId }) {
                               />
                             </div>
                             <button
-                              className="app-black rounded-1 border-0 app-text-white py-2 px-3 fw-lightBold mb-0 h-auto addlesson-button"
+                              className="mobile-view app-black rounded-1 border-0 app-text-white py-2 px-3 fw-lightBold mb-0 h-auto addlesson-button"
+                              onClick={() => handleAddLessonClick(chapter.id)}
+                            >
+                              Add Lesson
+                            </button>
+                            <button
+                              className="desktop-view bg-gradient-custom-div rounded-1 border-0 app-text-white py-2 px-3 fw-lightBold mb-0 h-auto addlesson-button"
                               onClick={() => handleAddLessonClick(chapter.id)}
                             >
                               Add Lesson
@@ -534,18 +600,20 @@ export default function AddLesson({ setEditCourse, setCourseId }) {
                           </div>
                         )}
 
-                        {chapter.lessons.map((lesson) => (
+                        {chapter.lessons.map((lesson, idx) => (
                           <Draggable
                             key={lesson.id}
                             draggableId={String(lesson.id)}
-                            index={index}
+                            index={idx}
                           >
-                            {(provided) => (
+                            {(provided, snapshot) => (
                               <div
                                 ref={provided.innerRef}
                                 {...provided.draggableProps}
                                 {...provided.dragHandleProps}
-                                className="p-3 rounded-2 border border-secondary-subtle my-3"
+                                className={`p-3 rounded-2 border border-secondary-subtle my-3 ${
+                                  snapshot.isDragging ? "bg-white shadow-lg" : ""
+                                }`}
                                 onClick={() =>
                                   handleAddLessonClick(chapter.id, lesson)
                                 }
@@ -560,7 +628,7 @@ export default function AddLesson({ setEditCourse, setCourseId }) {
                                       }}
                                     />
                                     <p className="primary-color mb-0 text-capitalize">
-                                      {index + 1}. {lesson.title}
+                                      {idx + 1}. {lesson.title}
                                     </p>
                                   </div>
                                   <div className="d-flex gap-5">
@@ -572,10 +640,22 @@ export default function AddLesson({ setEditCourse, setCourseId }) {
                                 </div>
                                 {selectedLesson &&
                                   selectedLesson.id === lesson.id && (
-                                    <VideoPlayer
-                                      videoUrl={selectedLesson.video_url}
-                                      videoType={selectedLesson.video_type}
-                                    />
+                                    <div className="mt-3 video-container">
+                                      <div className="d-none d-md-block">
+                                        <VideoPlayer
+                                          videoUrl={selectedLesson.video_url}
+                                          videoType={selectedLesson.video_type}
+                                          className="w-100"
+                                        />
+                                      </div>
+                                      <div className="d-block d-md-none">
+                                        <MobileVideoPlayer
+                                          videoUrl={selectedLesson.video_url}
+                                          videoType={selectedLesson.video_type}
+                                          className="w-100"
+                                        />
+                                      </div>
+                                    </div>
                                   )}
                               </div>
                             )}
@@ -800,8 +880,7 @@ export default function AddLesson({ setEditCourse, setCourseId }) {
                                 <div className="d-flex align-items-center gap-2">
                                   <button
                                     type="button"
-                                    className="app-black border-0 rounded-1 app-text-white py-2 px-4 mt-4"
-                                    // style={{ background: "#CC3737" }}
+                                    className="mobile-view app-black rounded-1 border-0 app-text-white py-2 px-4 mt-4"
                                     onClick={() => setIsDelete(true)}
                                   >
                                     {isLoadingDeleteLesson ? (
@@ -812,7 +891,28 @@ export default function AddLesson({ setEditCourse, setCourseId }) {
                                   </button>
                                   <button
                                     type="submit"
-                                    className="app-red border-0 rounded-1 app-text-white py-2 px-2 mt-4"
+                                    className="mobile-view app-red rounded-1 border-0 app-text-white py-2 px-2 mt-4"
+                                  >
+                                    {isLoadingAddLesson ? (
+                                      <PulseLoader size={8} color="white" />
+                                    ) : (
+                                      "Save Changes"
+                                    )}
+                                  </button>
+                                  <button
+                                    type="button"
+                                    className="desktop-view rounded-1 border app-text-black py-2 px-4 mt-4"
+                                    onClick={() => setIsDelete(true)}
+                                  >
+                                    {isLoadingDeleteLesson ? (
+                                      <PulseLoader size={8} color="white" />
+                                    ) : (
+                                      "Delete"
+                                    )}
+                                  </button>
+                                  <button
+                                    type="submit"
+                                    className="desktop-view bg-gradient-custom-div rounded-1 border-0 app-text-white py-2 px-2 mt-4"
                                   >
                                     {isLoadingAddLesson ? (
                                       <PulseLoader size={8} color="white" />
@@ -825,14 +925,31 @@ export default function AddLesson({ setEditCourse, setCourseId }) {
                                 <div className="d-flex align-items-center gap-5">
                                   <button
                                     type="button"
-                                    className="app-black rounded-1 border-0 app-text-white py-2 px-3 fw-light mb-0 h-auto"
+                                    className="mobile-view app-black rounded-1 border-0 app-text-white py-2 px-3 fw-light mb-0 h-auto"
                                     onClick={() => handleAddLessonClick(null)}
                                   >
                                     Cancel
                                   </button>
                                   <button
                                     type="submit"
-                                    className="app-red rounded-1 border-0 app-text-white py-2 px-3 fw-light mb-0 h-auto"
+                                    className="mobile-view app-red rounded-1 border-0 app-text-white py-2 px-3 fw-light mb-0 h-auto"
+                                  >
+                                    {isLoadingAddLesson ? (
+                                      <PulseLoader size={8} color="white" />
+                                    ) : (
+                                      "Add Lesson"
+                                    )}
+                                  </button>
+                                  <button
+                                    type="button"
+                                    className="desktop-view rounded-1 border app-text-black py-2 px-3 fw-light mb-0 h-auto"
+                                    onClick={() => handleAddLessonClick(null)}
+                                  >
+                                    Cancel
+                                  </button>
+                                  <button
+                                    type="submit"
+                                    className="desktop-view bg-gradient-custom-div rounded-1 border-0 app-text-white py-2 px-3 fw-light mb-0 h-auto"
                                   >
                                     {isLoadingAddLesson ? (
                                       <PulseLoader size={8} color="white" />
@@ -877,13 +994,29 @@ export default function AddLesson({ setEditCourse, setCourseId }) {
               </div>
               <div className="d-flex justify-content-end align-items-center gap-5 w-100">
                 <button
-                  className="app-black rounded-1 border-0 app-text-white py-2 px-3 fw-lightBold mb-0 h-auto"
+                  className="mobile-view app-black rounded-1 border-0 app-text-white py-2 px-3 fw-lightBold mb-0 h-auto"
                   onClick={() => setIsAddChapter(false)}
                 >
                   Cancel
                 </button>
                 <button
-                  className="app-red rounded-1 border-0 app-text-white py-2 px-3 fw-lightBold mb-0 h-auto "
+                  className="mobile-view app-red rounded-1 border-0 app-text-white py-2 px-3 fw-lightBold mb-0 h-auto"
+                  onClick={handleAddChapter}
+                >
+                  {isLoadingAddChapter ? (
+                    <PulseLoader size={8} color="white" />
+                  ) : (
+                    "Add Chapter"
+                  )}
+                </button>
+                <button
+                  className="desktop-view text-black rounded-1 border app-text-white py-2 px-3 fw-lightBold mb-0 h-auto"
+                  onClick={() => setIsAddChapter(false)}
+                >
+                  Cancel
+                </button>
+                <button
+                  className="desktop-view bg-gradient-custom-div rounded-1 border-0 app-text-white py-2 px-3 fw-lightBold mb-0 h-auto"
                   onClick={handleAddChapter}
                 >
                   {isLoadingAddChapter ? (
@@ -898,11 +1031,20 @@ export default function AddLesson({ setEditCourse, setCourseId }) {
 
           {chapters?.length > 0 && (
             <div className="w-100 text-start flex justify-content-center align-items-center gap-2 addlesson-content">
-              <button onClick={handleSendApproval} className="app-black rounded-1 border-0 app-text-white py-2 px-3 fw-lightBold mb-0 h-auto">
+              <button onClick={handleSendApproval} className="mobile-view app-black rounded-1 border-0 app-text-white py-2 px-3 fw-lightBold mb-0 h-auto">
                 Send Approval Request
               </button>
               <button
-                className="app-red rounded-1 border-0 app-text-white py-2 px-3 fw-lightBold mb-0 h-auto"
+                className="mobile-view app-red rounded-1 border-0 app-text-white py-2 px-3 fw-lightBold mb-0 h-auto"
+                onClick={() => setIsAddChapter(true)}
+              >
+                Add Chapter
+              </button>
+              <button onClick={handleSendApproval} className="desktop-view rounded-1 border  app-text-black py-2 px-3 fw-lightBold mb-0 h-auto">
+                Send Approval Request
+              </button>
+              <button
+                className="desktop-view bg-gradient-custom-div rounded-1 border-0 app-text-white py-2 px-3 fw-lightBold mb-0 h-auto"
                 onClick={() => setIsAddChapter(true)}
               >
                 Add Chapter
@@ -917,13 +1059,25 @@ export default function AddLesson({ setEditCourse, setCourseId }) {
           <h5 className="mb-4">Are you sure to delete the lesson?</h5>
           <div className="d-flex align-items-center justify-content-center gap-5">
             <button
-              className="app-black rounded-1 border-0 app-text-white py-2 px-3 fw-light mb-0 h-auto"
+              className="mobile-view app-black rounded-1 border-0 app-text-white py-2 px-3 fw-light mb-0 h-auto"
               onClick={closeModal}
             >
               Cancel
             </button>
             <button
-              className="app-red rounded-1 border-0 app-text-white py-2 px-3 fw-light mb-0 h-auto"
+              className="desktop-view rounded-1 border app-text-black py-2 px-3 fw-light mb-0 h-auto"
+              onClick={closeModal}
+            >
+              Cancel
+            </button>
+            <button
+              className="mobile-view app-red rounded-1 border-0 app-text-white py-2 px-3 fw-light mb-0 h-auto"
+              onClick={handleDeleteLesson}
+            >
+              Continue
+            </button>
+            <button
+              className="desktop-view bg-gradient-custom-div rounded-1 border-0 app-text-white py-2 px-3 fw-light mb-0 h-auto"
               onClick={handleDeleteLesson}
             >
               Continue

@@ -7,16 +7,26 @@ import formatTime from '../../utils/formatTime';
 import toast from 'react-hot-toast';
 
 const CourseDropdown = ({
-  course, // { title, options: [ { name, duration } ] }
+  course = {}, // { title, options: [ { name, duration } ] }
   placeholder = "Select an option",
   onSelect = () => {},
   icon = null, // optional custom icon component
   style = {},
   isFirst = false,
-  setVideoUrl,
-  handleVideoChange,
-  checkedLesson,
+  setVideoUrl = () => {},
+  handleVideoChange = null,
+  checkedLesson = null,
 }) => {
+  // For debugging - logs only the first time
+  useEffect(() => {
+    console.log("CourseDropdown mounted with:", {
+      chapterTitle: course?.chapterTitle,
+      hasVideoChange: typeof handleVideoChange === 'function',
+      hasCheckedLesson: typeof checkedLesson === 'function',
+      hasLessons: Array.isArray(course?.lessons),
+      lessonsCount: Array.isArray(course?.lessons) ? course.lessons.length : 0
+    });
+  }, []);
 
   const [isOpen, setIsOpen] = useState(isFirst);
   const [selected, setSelected] = useState(null);
@@ -30,7 +40,7 @@ const CourseDropdown = ({
     if (contentRef.current) {
       setContentHeight(contentRef.current.scrollHeight);
     }
-  }, [isOpen, course.lessons]);
+  }, [isOpen, course?.lessons]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -49,15 +59,28 @@ const CourseDropdown = ({
     onSelect({ courseTitle: course.chapterTitle, ...option });
 
     // Set the video URL and handle lesson checking when a lesson is clicked
-    if (option.video_url) {
-      handleVideoChange(
-        option.video_url,
-        option.thumbnail,
-        option.lesson_id
-      );
-      checkedLesson({
-        lesson_id: option.lesson_id
-      });
+    if (option?.video_url) {
+      // Check if handleVideoChange exists before calling it
+      if (typeof handleVideoChange === 'function') {
+        console.log("Changing video to:", option.video_url);
+        handleVideoChange(
+          option.video_type || '',
+          option.video_url,
+          option.thumbnail || '',
+          option.lesson_id || ''
+        );
+      } else if (typeof setVideoUrl === 'function') {
+        // Fallback to just setting the URL if that's all we have
+        console.log("Falling back to setVideoUrl:", option.video_url);
+        setVideoUrl(option.video_url);
+      }
+
+      // Check if checkedLesson exists before calling it
+      if (typeof checkedLesson === 'function') {
+        checkedLesson({
+          lesson_id: option.lesson_id || ''
+        });
+      }
     } else {
       toast.error("Unlock to watch locked videos!");
     }

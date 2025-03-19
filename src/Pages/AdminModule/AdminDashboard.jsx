@@ -523,13 +523,27 @@ const revenueData = {
       </div>
 
       {/* Time Period Selector */}
-      <div className="w-100 mb-2 gap-3 ps-3 p-2 px-2 justify-content-start mt-2 rounded-1 app-white d-flex gap-2">
+      <div className="mobile-view w-100 mb-2 gap-3 ps-3 p-2 px-2 justify-content-start mt-2 rounded-1 app-white gap-2">
         {["week", "month", "year", "all time"].map((btnType) => (
           <h4
             key={btnType}
             style={{ cursor: "pointer" }}
             className={`p-1 px-2 rounded-2 fs-6 fw-regular border-2 ${
               type === btnType ? "app-black app-text-white border-black" : "border border-1 text-secondary"
+            }`}
+            onClick={() => setType(btnType)}
+          >
+            {btnType.charAt(0).toUpperCase() + btnType.slice(1)}
+          </h4>
+        ))}
+      </div>
+      <div className="desktop-view w-100 mb-2 gap-3 ps-3 p-2 px-2 justify-content-start mt-2 rounded-1 app-white gap-2">
+        {["week", "month", "year", "all time"].map((btnType) => (
+          <h4
+            key={btnType}
+            style={{ cursor: "pointer" }}
+            className={`p-1 px-2 rounded-2 fs-6 fw-regular border-2 ${
+              type === btnType ? "bg-gradient-custom-div app-text-white border-black" : "border border-1 text-secondary"
             }`}
             onClick={() => setType(btnType)}
           >
@@ -544,7 +558,13 @@ const revenueData = {
           <div className="card p-0 w-100 custom-box">
             <div className="card-body" style={{ maxHeight: "500px" }}>
               <h5
-                className="p-1 rounded-1 fs-6 fw-normal app-black app-text-white"
+                className="mobile-view p-1 rounded-1 fs-6 fw-normal app-black app-text-white"
+                style={{ width: "max-content" }}
+              >
+                New Enrollments
+              </h5>
+              <h5
+                className="desktop-view p-1 rounded-1 fs-6 fw-normal bg-gradient-custom-div app-text-white"
                 style={{ width: "max-content" }}
               >
                 New Enrollments
@@ -557,11 +577,17 @@ const revenueData = {
           <div className="card p-0 w-100 custom-box">
             <div className="card-body" style={{ maxHeight: "500px"}}>
               <h5
-                className="p-1 rounded-1 fs-6 fw-normal app-black app-text-white"
+                className="mobile-view p-1 rounded-1 fs-6 fw-normal app-black app-text-white"
                 style={{ width: "max-content" }}
               >
                 Revenue
               </h5>
+              <h5
+                className="desktop-view p-1 rounded-1 fs-6 fw-normal bg-gradient-custom-div app-text-white"
+                style={{ width: "max-content" }}
+              >
+                Revenue
+                  </h5>
               <Bar data={revenueData} options={chartOptions} height={200}/>
             </div>
           </div>
@@ -574,7 +600,13 @@ const revenueData = {
   <div className="card p-0 w-100 custom-box">
     <div className="card-body" style={{ maxHeight: "400px" }}>
       <h5
-        className="p-1 rounded-1 fs-6 fw-normal app-black app-text-white"
+        className="mobile-view p-1 rounded-1 fs-6 fw-normal app-black app-text-white"
+        style={{ width: "max-content" }}
+      >
+                Course Completion Rate
+                </h5>
+                <h5
+        className="desktop-view p-1 rounded-1 fs-6 fw-normal bg-gradient-custom-div app-text-white"
         style={{ width: "max-content" }}
       >
                 Course Completion Rate
@@ -592,7 +624,13 @@ const revenueData = {
   <div className="card p-0 w-100 custom-box">
     <div className="card-body" style={{ maxHeight: "400px", paddingBottom: "20px" }}>
       <h5
-        className="p-1 rounded-1 fs-6 fw-normal app-black app-text-white"
+        className="mobile-view p-1 rounded-1 fs-6 fw-normal app-black app-text-white"
+        style={{ width: "max-content" }}
+      >
+        Most Bought Courses
+      </h5>
+      <h5
+        className="desktop-view p-1 rounded-1 fs-6 fw-normal bg-gradient-custom-div app-text-white"
         style={{ width: "max-content" }}
       >
         Most Bought Courses

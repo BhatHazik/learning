@@ -223,10 +223,16 @@ export const SignUp = () => {
           {/* <div className="mb-2">
             <p style={{border:"2px solid #F90815"}} className="">want to become a expert?</p>
           </div> */}
-          <button className="custom-box border-0 mb-1 mt-2 p-2 app-text-white app-red" onClick={signUpHandler}>
+          <button className="mobile-view custom-box border-0 mb-1 mt-2 p-2 app-text-white app-red" onClick={signUpHandler}>
             {isLoading ? <PulseLoader size={8} color="white" /> : "Signup As Expert!"}
           </button>
-          <button className="custom-box border-0 mb-3  p-2 app-text-white app-black" onClick={signUpHandler}>
+          <button className="mobile-view custom-box border-0 mb-3  p-2 app-text-white app-black" onClick={signUpHandler}>
+            {isLoading ? <PulseLoader size={8} color="white" /> : "Signup Now!"}
+          </button>
+          <button className="desktop-view justify-content-center align-self-center rounded-1 w-100 mt-2 border mb-3  p-2 app-text-black" onClick={signUpHandler}>
+            {isLoading ? <PulseLoader size={8} color="white" /> : "Signup As Expert!"}
+          </button>
+          <button className="desktop-view bg-gradient-custom-div border-0 mb-3 justify-content-center align-self-center rounded-1 w-100 p-2 app-text-white app-black" onClick={signUpHandler}>
             {isLoading ? <PulseLoader size={8} color="white" /> : "Signup Now!"}
           </button>
         </div>

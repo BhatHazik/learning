@@ -44,6 +44,8 @@ export default function CourseEdit() {
   const [isDelete, setIsDelete] = useState(false);
   const [finalDelete, setFinalDelete] = useState(false);
   const [isLoadingDeleteCourse, setIsLoadingDeleteCourse] = useState(false);
+  const [isLoadingAddChapter, setIsLoadingAddChapter] = useState(false);
+  const [isTagsLoading, setIsTagsLoading] = useState(false);
   const tagsUrl = `${BASE_URI}/api/v1/tags`;
   const categoriesUrl = `${BASE_URI}/api/v1/category/with-subcategories`;
   const fetchOptions = {
@@ -134,11 +136,13 @@ export default function CourseEdit() {
   const fetchTags = async () => {
     if (searchTerm) {
       try {
+        setIsTagsLoading(true);
         const response = await axios.get(`${BASE_URI}/api/v1/tags?search=${searchTerm}`, fetchOptions);
-    
-        setTags(response?.data?.data); // Adjust based on your API response structure
+        setTags(response?.data?.data);
       } catch (error) {
         console.error('Error fetching tags:', error);
+      } finally {
+        setIsTagsLoading(false);
       }
     } else {
       setTags([]); // Clear tags if search term is empty
@@ -336,13 +340,38 @@ export default function CourseEdit() {
 
   return (
     <div className="w-100 mb-4">
+      <style>
+        {`
+          .skeleton-loading {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+          }
+
+          @keyframes loading {
+            0% {
+              background-position: 200% 0;
+            }
+            100% {
+              background-position: -200% 0;
+            }
+          }
+        `}
+      </style>
       <header className="d-flex align-items-center justify-content-between px-2 ps-3 py-2 mt-2 mb-2 app-white">
         <h3 className="fw-semibold fs-5">{isEditMode ? "Edit Course" : "Course Creation"}</h3>
-        <button className="app-black rounded-2 border-0 py-1 px-3 fw-lightBold mb-0 h-auto app-black">
-          <Link onClick={handleCancel} to="/courses" className="text-decoration-none text-white">
-            Cancel
-          </Link>
-        </button>
+        <div className="d-flex gap-2">
+          <button className="mobile-view app-black rounded-2 border-0 py-1 px-3 fw-lightBold mb-0 h-auto app-black">
+            <Link onClick={handleCancel} to="/courses" className="text-decoration-none text-white">
+              Cancel
+            </Link>
+          </button>
+          <button className="desktop-view bg-gradient-custom-div rounded-2 border-0 py-1 px-3 fw-lightBold mb-0 h-auto">
+            <Link onClick={handleCancel} to="/courses" className="text-decoration-none text-white">
+              Cancel
+            </Link>
+          </button>
+        </div>
       </header>
       <main className="custom-box p-md-5 p-3 app-white mx-2 mb-5">
         <form onSubmit={handleSubmit}>
@@ -476,66 +505,95 @@ export default function CourseEdit() {
             <label htmlFor="tag_ids" className="d-block mb-1 fs-5 fw-light">
               Select Tags <span className="text-danger">*</span>
             </label>
-            <div className="container mt-4">
-  <span style={{ display: "flex", gap: "1rem" }}>
-    <input
-      type="text"
-      placeholder="Search tags..."
-      value={searchTerm}
-      onChange={(e) => setSearchTerm(e.target.value)}
-      className="px-5 py-2-half-5 border-secondary-subtle border rounded-2 w-100"
-      style={{ borderColor: "#007bff", borderWidth: "2px" }}
-    />
-    {tags.length === 0 && searchTerm !== "" && (
-      <div
-        style={{
-          border: "1px solid #007bff",
-          cursor: "pointer",
-          padding: "0.3rem 0.6rem",
-          borderRadius: "0.5rem",
-          backgroundColor: "#007bff",
-          color: "white",
-          transition: "background-color 0.3s",
-        }}
-        onClick={handleCreateTag}
-        className="text-center"
-      >
-        Create tag
-      </div>
-    )}
-  </span>
+            <div className="container p-0">
+              <div className="d-flex flex-column flex-md-row align-items-center gap-3">
+                <input
+                  type="text"
+                  placeholder="Search tags..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="form-control px-3 py-2 border-secondary-subtle border rounded-2"
+                  style={{ width: tags.length === 0 && searchTerm !== "" ? "90%" : "100%" }}
+                />
+                {tags.length === 0 && searchTerm !== "" && (
+                  <>
+                  <div className="mobile-view justify-content-center" style={{ width: "50%" }}>
+                    <button
+                      type="button"
+                      onClick={handleCreateTag}
+                      className="btn mobile-view app-black app-text-white rounded-2 py-2 px-3 w-100 text-nowrap"
+                      style={{ fontSize: "0.9rem" }}
+                    >
+                      Create Tag
+                    </button>
+                  </div>
+                  <div className="desktop-view justify-content-center" style={{ width: "20%" }}>
+                    <button
+                      type="button"
+                      onClick={handleCreateTag}
+                      className="btn desktop-view bg-gradient-custom-div justify-content-center rounded-2 py-2 px-3 w-100"
+                    >
+                      Create Tag
+                    </button>
+                  </div>
+                  </>
+                )}
+              </div>
 
-  <div className="row mt-4">
-    {tags?.map((tag) => (
-      <div
-        key={tag.id} // Adjust based on your tag structure
-        className={`col-4 mb-2`} // 3 columns layout with Bootstrap
-      >
-        <div
-          className={`tag-item p-2 rounded border ${selectedTags.includes(tag) ? 'bg-primary text-white' : 'bg-light'}`}
-          onClick={() => handleTagSelect(tag)}
-          style={{ cursor: "pointer", transition: "background-color 0.3s" }}
-        >
-          {tag.name} {/* Adjust based on your tag structure */}
-        </div>
-      </div>
-    ))}
-  </div>
+              <div className="row mt-3 g-2">
+                {isTagsLoading ? (
+                  // Skeleton loading for tags
+                  Array(6).fill(0).map((_, index) => (
+                    <div key={index} className="col-6 col-md-4">
+                      <div className="tag-item p-2 rounded border d-flex align-items-center justify-content-center" style={{ height: "100%", background: "#f0f0f0" }}>
+                        <div className="skeleton-loading" style={{ width: "80%", height: "20px" }}></div>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  tags?.map((tag) => (
+                    <div
+                      key={tag.id}
+                      className="col-6 col-md-4"
+                    >
+                      <div
+                        className={`tag-item p-2 rounded border d-flex align-items-center justify-content-center ${
+                          selectedTags.includes(tag) 
+                            ? 'mobile-view app-black app-text-white desktop-view bg-gradient-custom-div' 
+                            : 'bg-light'
+                        }`}
+                        onClick={() => handleTagSelect(tag)}
+                        style={{ cursor: "pointer", transition: "all 0.3s ease", height: "100%" }}
+                      >
+                        <span className="text-center">{tag.name}</span>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
 
-  <div className="selected-tags mt-4 d-flex flex-wrap gap-1">
-    {selectedTags.map((tag) => (
-      <span key={tag.id} className="badge bg-secondary d-flex align-items-center">
-        {tag.name} {/* Adjust based on your tag structure */}
-        <button
-          onClick={() => handleTagRemove(tag)}
-          className="btn-close btn-close-white ms-2"
-          aria-label="Close"
-        ></button>
-      </span>
-    ))}
-  </div>
-</div>
-
+              {selectedTags.length > 0 && (
+                <div className="selected-tags mt-3">
+                  <p className="mb-2 fs-6 fw-light">Selected Tags:</p>
+                  <div className="d-flex flex-wrap gap-2">
+                    {selectedTags.map((tag) => (
+                      <span 
+                        key={tag.id} 
+                        className="badge mobile-view app-black app-text-white desktop-view bg-gradient-custom-div d-flex align-items-center py-2 px-3"
+                      >
+                        {tag.name}
+                        <button
+                          type="button"
+                          onClick={() => handleTagRemove(tag)}
+                          className="btn-close btn-close-white ms-2"
+                          aria-label="Close"
+                        ></button>
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
 
           <div className="mb-3">
@@ -678,14 +736,31 @@ export default function CourseEdit() {
               <>
                 <button
                   type="button"
-                  className="app-black rounded-1 border-0 app-text-white py-2 px-3 fw-light mb-0 h-auto"
+                  className="mobile-view app-black rounded-1 border-0 app-text-white py-2 px-3 fw-light mb-0 h-auto"
                   onClick={() => setIsDelete(true)}
                 >
                   Delete
                 </button>
                 <button
                   type="submit"
-                  className="app-red rounded-1 border-0 app-text-white py-2 px-3 fw-light mb-0 h-auto"
+                  className="mobile-view app-red rounded-1 border-0 app-text-white py-2 px-3 fw-light mb-0 h-auto"
+                >
+                  {loading ? (
+                    <PulseLoader size={8} color="white" />
+                  ) : (
+                    "Save Changes"
+                  )}
+                </button>
+                <button
+                  type="button"
+                  className="desktop-view rounded-1 border app-text-black py-2 px-3 fw-light mb-0 h-auto"
+                  onClick={() => setIsDelete(true)}
+                >
+                  Delete
+                </button>
+                <button
+                  type="submit"
+                  className="desktop-view bg-gradient-custom-div rounded-1 border-0 app-text-white py-2 px-3 fw-light mb-0 h-auto"
                 >
                   {loading ? (
                     <PulseLoader size={8} color="white" />
@@ -726,13 +801,29 @@ export default function CourseEdit() {
       <Popup isOpen={isDelete} onClose={closeModal} title={"Are you sure to delete the course?"}>
         <div className="d-flex align-items-center justify-content-center gap-5">
           <button
-            className="app-black border-0 rounded-1 app-text-white py-2 px-3 fw-light mb-0 h-auto"
+            className="border rounded-1 app-text-black py-2 px-3 fw-light mb-0 h-auto desktop-view"
             onClick={closeModal}
           >
             Cancel
           </button>
           <button
-            className="app-red border-0 rounded-1 app-text-white py-2 px-3 fw-light mb-0 h-auto"
+            className="bg-gradient-custom-div border-0 rounded-1 app-text-white py-2 px-3 fw-light mb-0 h-auto desktop-view"
+            onClick={handleDeleteCourse}
+          >
+            {isLoadingDeleteCourse ? (
+              <PulseLoader size={8} color="white" />
+            ) : (
+              " Continue"
+            )}
+          </button>
+          <button
+            className="app-black border-0 rounded-1 app-text-white py-2 px-3 fw-light mb-0 h-auto mobile-view"
+            onClick={closeModal}
+          >
+            Cancel
+          </button>
+          <button
+            className="app-red border-0 rounded-1 app-text-white py-2 px-3 fw-light mb-0 h-auto mobile-view"
             onClick={handleDeleteCourse}
           >
             {isLoadingDeleteCourse ? (

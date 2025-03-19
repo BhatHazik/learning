@@ -174,8 +174,9 @@ const userType = localStorage.getItem("userType");
   // };
 
   const handleVideoChange = useCallback(
-    (video_url, video_thumb, lesson_id, noLesson) => {
+    (video_type, video_url, video_thumb, lesson_id, noLesson) => {
       setVideo_url(video_url);
+      setVideo_type(video_type);
       setVideo_thumb(video_thumb);
       setSelectedLesson(lesson_id);
     },
@@ -488,6 +489,7 @@ const userType = localStorage.getItem("userType");
                             key={idx}
                             onClick={() =>
                               handleVideoChange(
+                                lesson?.video_type,
                                 lesson?.video_url,
                                 lesson?.thumbnail,
                                 lesson?.lesson_id
@@ -560,6 +562,7 @@ const userType = localStorage.getItem("userType");
                             key={idx}
                             onClick={() =>
                               handleVideoChange(
+                                lesson?.video_type,
                                 lesson?.video_url,
                                 lesson?.thumbnail,
                                 lesson?.lesson_id
@@ -600,7 +603,7 @@ const userType = localStorage.getItem("userType");
               </div>
               
 
-              <div className="details-right-mid-userCourseview">
+              <div className="details-right-mid-userCourseview mt-2">
               <div  className="overView-profile cursor-pointer"
                     onClick={() => {
                       navigate(`/UserProfile/${courseData[0]?.expert_id}`);
@@ -676,6 +679,7 @@ const userType = localStorage.getItem("userType");
                             key={idx}
                             onClick={() =>
                               handleVideoChange(
+                                lesson?.video_type,
                                 lesson?.video_url,
                                 lesson?.thumbnail,
                                 lesson?.lesson_id
@@ -824,7 +828,8 @@ const userType = localStorage.getItem("userType");
               placeholder="Select a course option"
               isFirst={index === 0}
               setVideoUrl={setVideo_url}
-              // onSelect={handleSelection}
+              handleVideoChange={handleVideoChange}
+              checkedLesson={() => {}}
             />
           ))}
 

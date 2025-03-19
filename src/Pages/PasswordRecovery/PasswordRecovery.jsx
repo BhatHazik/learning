@@ -89,7 +89,13 @@ function PasswordRecovery() {
                 </div>
                 <div className="text-center d-md-flex align-items-center justify-content-center w-100">
                   <button
-                    className="app-black rounded-1 border-0 app-text-white py-2 w-md-50 w-100 text-center mt-4"
+                    className="mobile-view app-black custom-box border-0 app-text-white py-2 w-md-50 w-100 text-center mt-4"
+                    type="submit"
+                  >
+                    Send Password Reset Link
+                  </button>
+                  <button
+                    className="desktop-view justify-content-center bg-gradient-custom-div rounded-1 border-0 app-text-white py-2 w-md-50 w-100 text-center mt-4"
                     type="submit"
                   >
                     Send Password Reset Link

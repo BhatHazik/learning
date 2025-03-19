@@ -1,7 +1,7 @@
 import React from 'react';
 
 const Error = ({ imageSrc, message, className="w-100" , view="mobile-view" }) => {
-  console.log(className)
+  // console.log(className)
   return (
     <div style={{  minHeight: "50vh" }} className={`${view} align-items-center justify-content-center w-100`}>
       <div className={`d-flex flex-column ${className} mt-2 app-white align-items-center justify-content-center p-3 rounded-2`}>

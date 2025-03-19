@@ -41,6 +41,7 @@ import Rating from "../../Components/Rating/Rating";
 import Error from "../../Components/Error/Error";
 import review from "../../assets/reviews.svg";
 import PopUp from "../../Components/PopUp/PopUp";
+import defaultCourse from "../../assets/defaultCourse.svg";
 // import { LineWave } from "react-spinners";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_KEY);
@@ -55,7 +56,7 @@ const UserCourseOverview = () => {
   const [selectedLesson, setSelectedLesson] = useState("");
   const [video_url, setVideo_url] = useState("");
   const [video_thumb, setVideo_thumb] = useState("");
-  const [viseo_type, setVideo_type] = useState("");
+  const [video_type, setVideo_type] = useState("");
   const [hearted, setHearted] = useState(null);
   const [isExpanded, setIsExpanded] = useState(false);
   const [showButton, setShowButton] = useState(false);
@@ -197,17 +198,18 @@ const UserCourseOverview = () => {
   }, [courseData?.course?.description]);
 
   useEffect(() => {
-    setVideo_url(
-      courseData?.courseChapters?.chapters[0]?.lessons[0]?.video_url
-    );
-    setVideo_type(
-      courseData?.courseChapters?.chapters[0]?.lessons[0]?.video_type
-    );
-    setVideo_thumb(courseData?.course?.thumbnail);
-
-    setSelectedLesson(
-      courseData?.courseChapters?.chapters[0]?.lessons[0]?.lesson_id
-    );
+    if (courseData?.courseChapters?.chapters?.[0]?.lessons?.[0]) {
+      setVideo_url(
+        courseData.courseChapters.chapters[0].lessons[0].video_url
+      );
+      setVideo_type(
+        courseData.courseChapters.chapters[0].lessons[0].video_type
+      );
+      setVideo_thumb(courseData?.course?.thumbnail);
+      setSelectedLesson(
+        courseData.courseChapters.chapters[0].lessons[0].lesson_id
+      );
+    }
     setHearted(courseData?.course?.is_favourite);
   }, [courseData]);
 
@@ -231,8 +233,10 @@ const UserCourseOverview = () => {
   });
 
   const handleVideoChange = useCallback(
-    (video_url, video_thumb, lesson_id, noLesson) => {
+    (video_type, video_url, video_thumb, lesson_id, noLesson) => {
+      // console.log(video_type, video_url, video_thumb, lesson_id, noLesson)
       setVideo_url(video_url);
+      setVideo_type(video_type);
       setVideo_thumb(video_thumb);
       setSelectedLesson(lesson_id);
     },
@@ -510,7 +514,7 @@ const UserCourseOverview = () => {
               /> */}
               <VideoPlayer
                 videoUrl={video_url}
-                videoType={viseo_type}
+                videoType={video_type}
                 className="tumbnail-userCourseview"
               />
 
@@ -575,6 +579,7 @@ const UserCourseOverview = () => {
                                 paymentPopUpClick();
                               } else {
                                 handleVideoChange(
+                                  lesson?.video_type,
                                   lesson?.video_url,
                                   lesson?.thumbnail,
                                   lesson?.lesson_id
@@ -627,6 +632,10 @@ const UserCourseOverview = () => {
                       src={courseData?.course?.profile_picture}
                       alt="Profile"
                       style={{ width: "8%", height: "8%", borderRadius: "50%" }}
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = defaultUser; // Fallback image
+                      }}
                     />
                     <h6>{courseData?.course?.name}</h6>
                   </div>
@@ -727,6 +736,7 @@ const UserCourseOverview = () => {
                                 paymentPopUpClick();
                               } else {
                                 handleVideoChange(
+                                  lesson?.video_type,
                                   lesson?.video_url,
                                   lesson?.thumbnail,
                                   lesson?.lesson_id
@@ -779,6 +789,10 @@ const UserCourseOverview = () => {
                               loading="lazy"
                               src={review?.profile_picture}
                               alt="profile image"
+                              onError={(e) => {
+                                e.target.onerror = null;
+                                e.target.src = defaultUser; // Fallback image
+                              }}
                             />
                           ) : (
                             <FaUserCircle className="fs-1" />
@@ -832,6 +846,10 @@ const UserCourseOverview = () => {
                       <img
                         src={course?.thumbnail || cardImage}
                         alt="Course image"
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = defaultCourse; // Fallback image
+                        }}
                       />
                     </span>
 
@@ -913,7 +931,7 @@ const UserCourseOverview = () => {
       </PopUp>
         <MobileVideoPlayer
           videoUrl={video_url}
-          videoType={viseo_type}
+          videoType={video_type}
           className="w-100 rounded-3"
         />
 
@@ -937,6 +955,8 @@ const UserCourseOverview = () => {
               placeholder="Select a course option"
               isFirst={index === 0}
               setVideoUrl={setVideo_url}
+              handleVideoChange={handleVideoChange}
+              checkedLesson={() => {}}
               // onSelect={handleSelection}
             />
           ))}

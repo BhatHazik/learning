@@ -48,7 +48,7 @@ const UserPurchasedCourse = () => {
   const [selectedLesson, setSelectedLesson] = useState("");
   const [video_url, setVideo_url] = useState("");
   const [video_thumb, setVideo_thumb] = useState("");
-  const [viseo_type, setVideo_type] = useState("");
+  const [video_type, setVideo_type] = useState("");
   const [is_rated, setIs_rated] = useState(false);
   const [editRatingPopUp, setEditRatingPopUp] = useState(false);
   const [addRatingPopUp, setAddRatingPopUp] = useState(false);
@@ -203,20 +203,25 @@ const UserPurchasedCourse = () => {
  
 
   useEffect(() => {
-    setVideo_url(
-      courseData?.courseChapters?.chapters[0]?.lessons[0]?.video_url
-    );
-    setVideo_type(
-      courseData?.courseChapters?.chapters[0]?.lessons[0]?.video_type
-    );
-    setVideo_thumb(courseData?.course?.thumbnail);
-
-    setSelectedLesson(
-      courseData?.courseChapters?.chapters[0]?.lessons[0]?.lesson_id
-    );
-    checkedLesson({
-      lesson_id: courseData?.courseChapters?.chapters[0]?.lessons[0]?.lesson_id
-    })
+    if (courseData?.courseChapters?.chapters?.[0]?.lessons?.[0]) {
+      setVideo_url(
+        courseData.courseChapters.chapters[0].lessons[0].video_url
+      );
+      setVideo_type(
+        courseData.courseChapters.chapters[0].lessons[0].video_type
+      );
+      setVideo_thumb(courseData?.course?.thumbnail);
+      setSelectedLesson(
+        courseData.courseChapters.chapters[0].lessons[0].lesson_id
+      );
+      
+      // Only try to check the lesson if we have a valid lesson_id
+      if (courseData.courseChapters.chapters[0].lessons[0].lesson_id) {
+        checkedLesson({
+          lesson_id: courseData.courseChapters.chapters[0].lessons[0].lesson_id
+        });
+      }
+    }
   }, [courseData]);
 
   const chapters = useMemo(
@@ -239,9 +244,9 @@ const UserPurchasedCourse = () => {
   });
 
   const handleVideoChange = useCallback(
-    
-    (video_url, video_thumb, lesson_id, noLesson) => {
+    (video_type, video_url, video_thumb, lesson_id, noLesson) => {
       setVideo_url(video_url);
+      setVideo_type(video_type);
       setVideo_thumb(video_thumb);
       setSelectedLesson(lesson_id);
       checkedLesson({
@@ -944,7 +949,7 @@ const UserPurchasedCourse = () => {
               /> */}
               <VideoPlayer
                 videoUrl={video_url}
-                videoType={viseo_type}
+                videoType={video_type}
                 className="tumbnail-userCourseview"
               />
 
@@ -997,6 +1002,7 @@ const UserPurchasedCourse = () => {
                             key={idx}
                             onClick={() =>
                               handleVideoChange(
+                                lesson?.video_type,
                                 lesson?.video_url,
                                 lesson?.thumbnail,
                                 lesson?.lesson_id
@@ -1121,6 +1127,7 @@ const UserPurchasedCourse = () => {
                             key={idx}
                             onClick={() =>
                               handleVideoChange(
+                                lesson?.video_type,
                                 lesson?.video_url,
                                 lesson?.thumbnail,
                                 lesson?.lesson_id
@@ -1211,7 +1218,7 @@ const UserPurchasedCourse = () => {
          
           <MobileVideoPlayer
                 videoUrl={video_url}
-                videoType={viseo_type}
+                videoType={video_type}
                 className="w-100 rounded-3"
               />
         

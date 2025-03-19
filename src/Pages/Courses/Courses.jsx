@@ -156,7 +156,7 @@ const Courses = ({ search, setEditCourse, setCourseId }) => {
   return (
     <>
       <div className="wrapper-courses">
-        {reasonPopUp && (
+        {/* {reasonPopUp && (
           <div className="popup wrapper-expert">
             <div className="popup-content-review">
               <div className="popup-buttons-review">
@@ -190,7 +190,7 @@ const Courses = ({ search, setEditCourse, setCourseId }) => {
               </div>
             </div>
           </div>
-        )}
+        )} */}
         <div className="bg-gradient-custom-div rounded">
           <div className="top-courses">
             <h4>My Courses</h4>
@@ -557,13 +557,25 @@ const Courses = ({ search, setEditCourse, setCourseId }) => {
       <div className="d-flex w-100 justify-content-end gap-2">
         <button
           onClick={handleCancelReason}
-          className="app-black py-1 px-2 border-0 app-text-white rounded-1 "
+          className="mobile-view app-black py-1 px-2 border-0 app-text-white rounded-1 "
         >
           Cancel
         </button>
         <button
           onClick={(e) => handleEditCourse(e, activeId)}
-          className="app-red py-1 px-2 border-0 app-text-white rounded-1"
+          className="mobile-view app-red py-1 px-2 border-0 app-text-white rounded-1"
+        >
+          Edit Course
+        </button>
+        <button
+          onClick={handleCancelReason}
+          className="desktop-view rounded-1 border app-text-black py-1 px-2 fw-light mb-0 h-auto"
+        >
+          Cancel
+        </button>
+        <button
+          onClick={(e) => handleEditCourse(e, activeId)}
+          className="desktop-view bg-gradient-custom-div py-1 px-2 border-0 app-text-white rounded-1"
         >
           Edit Course
         </button>

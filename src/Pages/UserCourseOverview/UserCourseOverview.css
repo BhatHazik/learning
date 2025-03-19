@@ -29,7 +29,7 @@
   padding-left: 2vw;
   padding-right: 2rem;
   overflow-y: auto;
-  padding-bottom: 8vw;
+  padding-bottom: 4vw;
 }
 .top-userCourseview h3 {
   font-size: 1.7vw;
@@ -239,7 +239,7 @@
 }
 .details-right-mid-userCourseview {
   /* height: 27%; */
-  margin-top: 17.5rem;
+  /* margin-top: 17.5rem; */
   width: 100%;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   border-radius: 0.5vw;
